@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import SubsList from "./SubsList";
 
 export default async function SubsPage({
   searchParams,
@@ -40,6 +41,11 @@ export default async function SubsPage({
     },
   });
 
+  const serialized = subs.map((sub) => ({
+    ...sub,
+    createdAt: sub.createdAt.toISOString(),
+  }));
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
       <div className="flex items-center justify-between">
@@ -64,63 +70,7 @@ export default async function SubsPage({
         />
       </form>
 
-      {subs.length === 0 ? (
-        <p className="mt-8 text-center text-zinc-500 dark:text-zinc-400">
-          {q ? "No subs match your search." : "No subs yet. Add your first sub to get started."}
-        </p>
-      ) : (
-        <ul className="mt-6 divide-y divide-zinc-200 dark:divide-zinc-800">
-          {subs.map((sub) => (
-            <li key={sub.id}>
-              <Link
-                href={`/subs/${sub.id}`}
-                className="block py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
-                    {sub.fullName}
-                  </h2>
-                  {sub.contactInfo && (
-                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {sub.contactInfo}
-                    </span>
-                  )}
-                </div>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {sub.subType.map((type) => (
-                    <span
-                      key={type}
-                      className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-                    >
-                      {type}
-                    </span>
-                  ))}
-                  {sub.arrangementType.map((type) => (
-                    <span
-                      key={type}
-                      className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
-                    >
-                      {type}
-                    </span>
-                  ))}
-                </div>
-                {sub.tags.length > 0 && (
-                  <div className="mt-1 flex flex-wrap gap-1">
-                    {sub.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs text-zinc-400 dark:text-zinc-500"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      <SubsList subs={serialized} query={q} />
     </div>
   );
 }
