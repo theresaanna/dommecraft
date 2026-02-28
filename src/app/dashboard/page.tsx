@@ -67,6 +67,21 @@ export default async function DashboardPage() {
 
   const subNameMap = new Map(topEarnerSubs.map((s) => [s.id, s.fullName]));
 
+  // Recent hub projects (DOMME only)
+  const recentProjects = isDomme
+    ? await prisma.project.findMany({
+        where: { userId: session.user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          name: true,
+          category: { select: { name: true } },
+          _count: { select: { notes: true } },
+        },
+      })
+    : [];
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
@@ -236,20 +251,51 @@ export default async function DashboardPage() {
               Open Hub
             </Link>
           </div>
-          <div className="px-4 py-4">
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Organize your content ideas, session plans, contracts, and notes
-              in one central place.
-            </p>
-          </div>
-          <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
-            <Link
-              href="/hub"
-              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-            >
-              View all projects &rarr;
-            </Link>
-          </div>
+          {recentProjects.length === 0 ? (
+            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              <p>No projects yet.</p>
+              <Link
+                href="/hub"
+                className="mt-2 inline-block text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+              >
+                Create your first project
+              </Link>
+            </div>
+          ) : (
+            <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {recentProjects.map((project) => (
+                <li key={project.id}>
+                  <Link
+                    href={`/hub/projects/${project.id}`}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  >
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      {project.name}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                        {project.category.name}
+                      </span>
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {project._count.notes}{" "}
+                        {project._count.notes === 1 ? "note" : "notes"}
+                      </span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          {recentProjects.length > 0 && (
+            <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+              <Link
+                href="/hub"
+                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
+                View all projects &rarr;
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
