@@ -1,30 +1,46 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email,
       password,
-      callbackUrl,
+      redirect: false,
     });
 
-    setIsLoading(false);
+    if (result?.error) {
+      setError("Invalid email or password.");
+      setIsLoading(false);
+      return;
+    }
+
+    router.push(callbackUrl);
   }
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+          {error}
+        </div>
+      )}
+
       <div className="space-y-3">
         <button
           onClick={() => signIn("discord", { callbackUrl })}
