@@ -131,7 +131,7 @@ describe("POST /api/auth/register", () => {
     expect(mockHash).toHaveBeenCalledWith("mypassword", 12);
   });
 
-  it("creates user with role DOMME", async () => {
+  it("defaults to DOMME role when no role provided", async () => {
     mockFindUnique.mockResolvedValue(null);
     mockHash.mockResolvedValue("$2a$12$hashed" as never);
     mockCreate.mockResolvedValue({
@@ -144,6 +144,90 @@ describe("POST /api/auth/register", () => {
 
     await POST(
       createRequest({ email: "new@example.com", password: "password123" })
+    );
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          role: "DOMME",
+        }),
+      })
+    );
+  });
+
+  it("creates user with SUB role when role is SUB", async () => {
+    mockFindUnique.mockResolvedValue(null);
+    mockHash.mockResolvedValue("$2a$12$hashed" as never);
+    mockCreate.mockResolvedValue({
+      id: "new-user",
+      email: "new@example.com",
+      name: null,
+      role: "SUB",
+      createdAt: new Date(),
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "new@example.com",
+        password: "password123",
+        role: "SUB",
+      })
+    );
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          role: "SUB",
+        }),
+      })
+    );
+  });
+
+  it("creates user with DOMME role when role is explicitly DOMME", async () => {
+    mockFindUnique.mockResolvedValue(null);
+    mockHash.mockResolvedValue("$2a$12$hashed" as never);
+    mockCreate.mockResolvedValue({
+      id: "new-user",
+      email: "new@example.com",
+      name: null,
+      role: "DOMME",
+      createdAt: new Date(),
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "new@example.com",
+        password: "password123",
+        role: "DOMME",
+      })
+    );
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          role: "DOMME",
+        }),
+      })
+    );
+  });
+
+  it("defaults to DOMME for invalid role value", async () => {
+    mockFindUnique.mockResolvedValue(null);
+    mockHash.mockResolvedValue("$2a$12$hashed" as never);
+    mockCreate.mockResolvedValue({
+      id: "new-user",
+      email: "new@example.com",
+      name: null,
+      role: "DOMME",
+      createdAt: new Date(),
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "new@example.com",
+        password: "password123",
+        role: "ADMIN",
+      })
     );
 
     expect(mockCreate).toHaveBeenCalledWith(
