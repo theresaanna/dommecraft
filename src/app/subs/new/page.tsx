@@ -2,8 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import TagInput from "@/components/TagInput";
 
 const ARRANGEMENT_OPTIONS = [
   "Online",
@@ -25,11 +26,34 @@ const SUB_TYPE_OPTIONS = [
   "Switch",
 ];
 
+type Suggestions = {
+  tags: string[];
+  softLimits: string[];
+  hardLimits: string[];
+};
+
 export default function NewSubPage() {
   const router = useRouter();
   const { status } = useSession();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [suggestions, setSuggestions] = useState<Suggestions>({
+    tags: [],
+    softLimits: [],
+    hardLimits: [],
+  });
+  const [tags, setTags] = useState<string[]>([]);
+  const [softLimits, setSoftLimits] = useState<string[]>([]);
+  const [hardLimits, setHardLimits] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch("/api/subs/suggestions")
+        .then((r) => r.json())
+        .then((data) => setSuggestions(data))
+        .catch(() => {});
+    }
+  }, [status]);
 
   if (status === "unauthenticated") {
     router.push("/login");
@@ -49,9 +73,9 @@ export default function NewSubPage() {
       arrangementType: form.getAll("arrangementType"),
       subType: form.getAll("subType"),
       timezone: form.get("timezone") || null,
-      softLimits: splitTags(form.get("softLimits") as string),
-      hardLimits: splitTags(form.get("hardLimits") as string),
-      tags: splitTags(form.get("tags") as string),
+      softLimits,
+      hardLimits,
+      tags,
       privateNotes: form.get("privateNotes") || null,
     };
 
@@ -195,55 +219,34 @@ export default function NewSubPage() {
         </div>
 
         {/* Soft Limits */}
-        <div>
-          <label
-            htmlFor="softLimits"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-          >
-            Soft Limits
-          </label>
-          <input
-            id="softLimits"
-            name="softLimits"
-            type="text"
-            placeholder="Comma-separated (e.g. roleplay, bondage)"
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          />
-        </div>
+        <TagInput
+          label="Soft Limits"
+          name="softLimits"
+          placeholder="Type and press Enter or comma to add..."
+          suggestions={suggestions.softLimits}
+          value={softLimits}
+          onChange={setSoftLimits}
+        />
 
         {/* Hard Limits */}
-        <div>
-          <label
-            htmlFor="hardLimits"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-          >
-            Hard Limits
-          </label>
-          <input
-            id="hardLimits"
-            name="hardLimits"
-            type="text"
-            placeholder="Comma-separated"
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          />
-        </div>
+        <TagInput
+          label="Hard Limits"
+          name="hardLimits"
+          placeholder="Type and press Enter or comma to add..."
+          suggestions={suggestions.hardLimits}
+          value={hardLimits}
+          onChange={setHardLimits}
+        />
 
         {/* Tags */}
-        <div>
-          <label
-            htmlFor="tags"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-          >
-            Tags
-          </label>
-          <input
-            id="tags"
-            name="tags"
-            type="text"
-            placeholder="Comma-separated"
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          />
-        </div>
+        <TagInput
+          label="Tags"
+          name="tags"
+          placeholder="Type and press Enter or comma to add..."
+          suggestions={suggestions.tags}
+          value={tags}
+          onChange={setTags}
+        />
 
         {/* Private Notes */}
         <div>
@@ -271,12 +274,4 @@ export default function NewSubPage() {
       </form>
     </div>
   );
-}
-
-function splitTags(value: string): string[] {
-  if (!value) return [];
-  return value
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
 }
