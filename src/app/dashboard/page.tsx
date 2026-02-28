@@ -223,6 +223,36 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      {isDomme && (
+        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              Creation Hub
+            </h2>
+            <Link
+              href="/hub"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            >
+              Open Hub
+            </Link>
+          </div>
+          <div className="px-4 py-4">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Organize your content ideas, session plans, contracts, and notes
+              in one central place.
+            </p>
+          </div>
+          <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+            <Link
+              href="/hub"
+              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            >
+              View all projects &rarr;
+            </Link>
+          </div>
+        </div>
+      )}
+
       <form
         action={async () => {
           "use server";
