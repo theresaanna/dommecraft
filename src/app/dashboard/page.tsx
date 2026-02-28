@@ -43,9 +43,15 @@ export default async function DashboardPage() {
           </Link>
         </div>
         {subs.length === 0 ? (
-          <p className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            No subs yet. Add your first sub to get started.
-          </p>
+          <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p>No subs yet.</p>
+            <Link
+              href="/subs/new"
+              className="mt-2 inline-block text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+            >
+              Add your first sub to get started
+            </Link>
+          </div>
         ) : (
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {subs.map((sub) => (
