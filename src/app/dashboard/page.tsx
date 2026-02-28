@@ -13,7 +13,7 @@ export default async function DashboardPage() {
         Dashboard
       </h1>
       <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-        Welcome, {session.user.name || session.user.email}
+        Welcome, {session.user.name || session.user.email || "User"}
       </p>
       <form
         action={async () => {

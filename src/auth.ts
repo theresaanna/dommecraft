@@ -57,17 +57,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      // On initial sign-in, add user data to the token
-      if (user) {
+    async jwt({ token, user }) {
+      if (user?.id) {
         token.id = user.id;
-        // Fetch role from DB
         const dbUser = await prisma.user.findUnique({
-          where: { id: user.id! },
-          select: { role: true },
+          where: { id: user.id },
+          select: { role: true, name: true, email: true },
         });
         if (dbUser) {
           token.role = dbUser.role;
+          // Ensure name/email are on the token for OAuth users
+          if (dbUser.name) token.name = dbUser.name;
+          if (dbUser.email) token.email = dbUser.email;
         }
       }
       return token;
@@ -76,6 +77,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "DOMME" | "SUB";
+        // Fallback display: use token name, email, or "User"
+        if (!session.user.name && token.name) {
+          session.user.name = token.name;
+        }
       }
       return session;
     },
