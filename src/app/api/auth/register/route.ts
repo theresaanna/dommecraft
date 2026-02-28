@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, name } = body;
+    const { email, password, name, role } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -20,6 +20,9 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const validRoles = ["DOMME", "SUB"];
+    const userRole = validRoles.includes(role) ? role : "DOMME";
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -39,7 +42,7 @@ export async function POST(request: Request) {
         email,
         passwordHash,
         name: name || null,
-        role: "DOMME",
+        role: userRole,
       },
       select: {
         id: true,

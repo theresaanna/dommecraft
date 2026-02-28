@@ -30,6 +30,22 @@ describe("RegisterForm", () => {
     expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
   });
 
+  it("renders role selector with Domme and Sub options", () => {
+    render(<RegisterForm />);
+
+    expect(screen.getByText("I am a...")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Domme" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Sub" })).toBeInTheDocument();
+  });
+
+  it("defaults to Domme role", () => {
+    render(<RegisterForm />);
+
+    // Domme button should have the active styling (bg-zinc-900)
+    const dommeButton = screen.getByRole("button", { name: "Domme" });
+    expect(dommeButton.className).toContain("bg-zinc-900");
+  });
+
   it("renders create account button", () => {
     render(<RegisterForm />);
 
@@ -85,6 +101,43 @@ describe("RegisterForm", () => {
           name: "Test User",
           email: "test@example.com",
           password: "password123",
+          role: "DOMME",
+        }),
+      });
+    });
+  });
+
+  it("sends SUB role when Sub is selected", async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "new-user",
+          email: "test@example.com",
+          name: "Test User",
+        }),
+    });
+    mockSignIn.mockResolvedValue(undefined);
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("button", { name: "Sub" }));
+    await user.type(screen.getByLabelText("Display Name"), "Test User");
+    await user.type(screen.getByLabelText("Email"), "test@example.com");
+    await user.type(screen.getByLabelText("Password"), "password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "password123");
+    await user.click(
+      screen.getByRole("button", { name: /create account/i })
+    );
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "Test User",
+          email: "test@example.com",
+          password: "password123",
+          role: "SUB",
         }),
       });
     });

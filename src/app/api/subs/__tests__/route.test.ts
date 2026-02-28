@@ -47,6 +47,19 @@ describe("GET /api/subs", () => {
     expect(data.error).toBe("Unauthorized");
   });
 
+  it("returns 403 when user is not a DOMME", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "SUB" },
+      expires: "",
+    } as never);
+
+    const res = await GET(new Request("http://localhost:3000/api/subs"));
+    const data = await res.json();
+
+    expect(res.status).toBe(403);
+    expect(data.error).toBe("Forbidden");
+  });
+
   it("returns empty array when user has no subs", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-1", role: "DOMME" },
@@ -173,6 +186,268 @@ describe("GET /api/subs", () => {
     );
   });
 
+  it("sorts by expendableIncome field", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?sort=expendableIncome&order=asc"
+      )
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderBy: { expendableIncome: "asc" },
+      })
+    );
+  });
+
+  it("falls back to createdAt for invalid sort field", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request("http://localhost:3000/api/subs?sort=invalidField")
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderBy: { createdAt: "desc" },
+      })
+    );
+  });
+
+  it("defaults sort order to desc for invalid order", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request("http://localhost:3000/api/subs?order=invalid")
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        orderBy: { createdAt: "desc" },
+      })
+    );
+  });
+
+  it("filters by tags param", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?tags=loyal&tags=obedient"
+      )
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          tags: { hasSome: ["loyal", "obedient"] },
+        }),
+      })
+    );
+  });
+
+  it("filters by financial_min param (requires non-null expendableIncome)", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request("http://localhost:3000/api/subs?financial_min=100")
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          AND: expect.arrayContaining([
+            { expendableIncome: { not: null } },
+          ]),
+        }),
+      })
+    );
+  });
+
+  it("filters by financial_max param (requires non-null expendableIncome)", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request("http://localhost:3000/api/subs?financial_max=500")
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          AND: expect.arrayContaining([
+            { expendableIncome: { not: null } },
+          ]),
+        }),
+      })
+    );
+  });
+
+  it("filters by both financial_min and financial_max", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?financial_min=100&financial_max=500"
+      )
+    );
+
+    const call = mockFindMany.mock.calls[0][0];
+    expect(call?.where?.AND).toBeDefined();
+    expect(Array.isArray(call?.where?.AND)).toBe(true);
+  });
+
+  it("does not add AND clause when no financial params", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(new Request("http://localhost:3000/api/subs"));
+
+    const call = mockFindMany.mock.calls[0][0];
+    expect(call?.where?.AND).toBeUndefined();
+  });
+
+  it("combines multiple filter types", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?q=test&sub_type=Finsub&arrangement_type=Financial&tags=loyal&financial_min=100"
+      )
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: [
+            { fullName: { contains: "test", mode: "insensitive" } },
+            { contactInfo: { contains: "test", mode: "insensitive" } },
+            { privateNotes: { contains: "test", mode: "insensitive" } },
+          ],
+          subType: { hasSome: ["Finsub"] },
+          arrangementType: { hasSome: ["Financial"] },
+          tags: { hasSome: ["loyal"] },
+          AND: expect.arrayContaining([
+            { expendableIncome: { not: null } },
+          ]),
+        }),
+      })
+    );
+  });
+
+  it("filters by multiple sub_type values", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?sub_type=Finsub&sub_type=Brat"
+      )
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          subType: { hasSome: ["Finsub", "Brat"] },
+        }),
+      })
+    );
+  });
+
+  it("filters by multiple arrangement_type values", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request(
+        "http://localhost:3000/api/subs?arrangement_type=Online&arrangement_type=Financial"
+      )
+    );
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          arrangementType: { hasSome: ["Online", "Financial"] },
+        }),
+      })
+    );
+  });
+
+  it("includes expendableIncome in select", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(new Request("http://localhost:3000/api/subs"));
+
+    expect(mockFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        select: expect.objectContaining({
+          expendableIncome: true,
+        }),
+      })
+    );
+  });
+
+  it("includes archived subs when include_archived=true", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockFindMany.mockResolvedValue([]);
+
+    await GET(
+      new Request("http://localhost:3000/api/subs?include_archived=true")
+    );
+
+    const call = mockFindMany.mock.calls[0][0];
+    expect(call?.where?.isArchived).toBeUndefined();
+  });
+
   it("excludes archived subs by default", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-1", role: "DOMME" },
@@ -219,6 +494,19 @@ describe("POST /api/subs", () => {
 
     expect(res.status).toBe(401);
     expect(data.error).toBe("Unauthorized");
+  });
+
+  it("returns 403 when user is not a DOMME", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "SUB" },
+      expires: "",
+    } as never);
+
+    const res = await POST(createRequest({ fullName: "Test Sub" }));
+    const data = await res.json();
+
+    expect(res.status).toBe(403);
+    expect(data.error).toBe("Forbidden");
   });
 
   it("returns 400 when fullName is missing", async () => {

@@ -10,11 +10,17 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    if (session.user.role !== "DOMME") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     const { searchParams } = new URL(request.url);
     const q = searchParams.get("q");
     const subType = searchParams.getAll("sub_type");
     const arrangementType = searchParams.getAll("arrangement_type");
     const tags = searchParams.getAll("tags");
+    const financialMin = searchParams.get("financial_min");
+    const financialMax = searchParams.get("financial_max");
     const sort = searchParams.get("sort") || "createdAt";
     const order = searchParams.get("order") || "desc";
     const includeArchived = searchParams.get("include_archived") === "true";
@@ -44,10 +50,23 @@ export async function GET(request: Request) {
       where.tags = { hasSome: tags };
     }
 
+    if (financialMin || financialMax) {
+      where.AND = [
+        ...(Array.isArray(where.AND) ? where.AND : []),
+        ...(financialMin
+          ? [{ expendableIncome: { not: null } }]
+          : []),
+        ...(financialMax
+          ? [{ expendableIncome: { not: null } }]
+          : []),
+      ];
+    }
+
     const validSortFields = [
       "createdAt",
       "updatedAt",
       "fullName",
+      "expendableIncome",
     ];
     const sortField = validSortFields.includes(sort) ? sort : "createdAt";
     const sortOrder = order === "asc" ? "asc" : "desc";
@@ -63,6 +82,7 @@ export async function GET(request: Request) {
         subType: true,
         timezone: true,
         tags: true,
+        expendableIncome: true,
         isArchived: true,
         createdAt: true,
         updatedAt: true,
@@ -84,6 +104,10 @@ export async function POST(request: Request) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    if (session.user.role !== "DOMME") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const body = await request.json();
