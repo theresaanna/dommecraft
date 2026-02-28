@@ -27,6 +27,14 @@ model User {
   accounts Account[]
   sessions Session[]
 
+  // Owned data
+  subProfiles    SubProfile[]
+  badges         Badge[]
+  mediaItems     MediaItem[]
+  ratings        Rating[]
+  behaviorScores BehaviorScore[]
+  contracts      Contract[]
+
   @@map("users")
 }
 
@@ -73,4 +81,160 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+// ============================================================
+// SUB PROFILES
+// ============================================================
+
+model SubProfile {
+  id        String @id @default(cuid())
+  userId    String @map("user_id")
+
+  // Main visible fields
+  fullName        String   @map("full_name")
+  contactInfo     String?  @map("contact_info")
+  arrangementType String[] @map("arrangement_type")
+  subType         String[] @map("sub_type")
+  timezone        String?
+  softLimits      String[] @map("soft_limits")
+  hardLimits      String[] @map("hard_limits")
+
+  // Advanced fields
+  birthday         DateTime?
+  country          String?
+  occupation       String?
+  workSchedule     String?  @map("work_schedule")
+  financialLimits  String?  @map("financial_limits")
+  expendableIncome String?  @map("expendable_income")
+  preferences      String[]
+  bestExperiences  String?  @map("best_experiences")
+  worstExperiences String?  @map("worst_experiences")
+  personalityNotes String?  @map("personality_notes")
+  healthNotes      String?  @map("health_notes")
+  obedienceHistory String?  @map("obedience_history")
+
+  // System fields
+  avatarUrl    String?  @map("avatar_url")
+  tags         String[]
+  privateNotes String?  @map("private_notes")
+  isArchived   Boolean  @default(false) @map("is_archived")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badges         Badge[]
+  mediaItems     MediaItem[]
+  ratings        Rating[]
+  behaviorScores BehaviorScore[]
+  contracts      Contract[]
+
+  @@index([userId])
+  @@index([userId, fullName])
+  @@map("sub_profiles")
+}
+
+// ============================================================
+// SUB PROFILE LINKED SECTIONS
+// ============================================================
+
+model Badge {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  subId       String   @map("sub_id")
+  name        String
+  description String?
+  icon        String?
+  color       String?
+  earnedAt    DateTime @default(now()) @map("earned_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub  SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+
+  @@index([subId])
+  @@map("badges")
+}
+
+model MediaItem {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  subId       String   @map("sub_id")
+  title       String?
+  description String?
+  fileUrl     String   @map("file_url")
+  fileType    String   @map("file_type")
+  mimeType    String?  @map("mime_type")
+  fileSize    Int?     @map("file_size")
+  tags        String[]
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub  SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+
+  @@index([subId])
+  @@map("media_items")
+}
+
+model Rating {
+  id         String   @id @default(cuid())
+  userId     String   @map("user_id")
+  subId      String   @map("sub_id")
+  overall    Int
+  categories Json?
+  notes      String?
+  ratedAt    DateTime @default(now()) @map("rated_at")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub  SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+
+  @@index([subId])
+  @@map("ratings")
+}
+
+model BehaviorScore {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  subId     String   @map("sub_id")
+  overall   Int
+  breakdown Json?
+  notes     String?
+  scoredAt  DateTime @default(now()) @map("scored_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub  SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+
+  @@index([subId])
+  @@map("behavior_scores")
+}
+
+model Contract {
+  id        String         @id @default(cuid())
+  userId    String         @map("user_id")
+  subId     String         @map("sub_id")
+  title     String
+  content   String
+  status    ContractStatus @default(DRAFT)
+  startDate DateTime?      @map("start_date")
+  endDate   DateTime?      @map("end_date")
+  fileUrl   String?        @map("file_url")
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  user User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub  SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+
+  @@index([subId])
+  @@map("contracts")
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  TERMINATED
 }
