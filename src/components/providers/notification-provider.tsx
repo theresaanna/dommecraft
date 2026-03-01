@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
 
 type ToastData = {
@@ -52,6 +53,7 @@ export function NotificationProvider({
   pollInterval?: number;
 }) {
   const { data: session } = useSession();
+  const router = useRouter();
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const seenIds = useRef<Set<string>>(new Set());
   const initialLoadDone = useRef(false);
@@ -87,21 +89,26 @@ export function NotificationProvider({
           (n) => !seenIds.current.has(n.id)
         );
 
-        newNotifications.forEach((n) => {
-          seenIds.current.add(n.id);
+        if (newNotifications.length > 0) {
+          newNotifications.forEach((n) => {
+            seenIds.current.add(n.id);
 
-          setToasts((prev) => [
-            ...prev,
-            {
-              id: n.id,
-              message: n.message,
-              linkUrl: n.linkUrl,
-              type: n.type,
-            },
-          ]);
+            setToasts((prev) => [
+              ...prev,
+              {
+                id: n.id,
+                message: n.message,
+                linkUrl: n.linkUrl,
+                type: n.type,
+              },
+            ]);
 
-          triggerOSNotification(n.message);
-        });
+            triggerOSNotification(n.message);
+          });
+
+          // Re-render server components so notification counts update
+          router.refresh();
+        }
       } catch {
         // Silently ignore polling errors
       }
