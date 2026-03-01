@@ -33,6 +33,7 @@ export default async function SubLayout({
     { label: "Ratings", href: `/subs/${id}/ratings` },
     { label: "Behavior", href: `/subs/${id}/behavior` },
     { label: "Contracts", href: `/subs/${id}/contracts` },
+    { label: "Tasks", href: `/subs/${id}/tasks` },
   ];
 
   return (
