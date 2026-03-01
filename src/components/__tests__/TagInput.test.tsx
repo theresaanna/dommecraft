@@ -119,7 +119,7 @@ describe("TagInput", () => {
     expect(listbox).toBeInTheDocument();
     // alpha should not be in the dropdown since it's already selected
     const options = screen.getAllByRole("option");
-    const optionTexts = options.map((o) => o.textContent);
+    const optionTexts = options.map((o: HTMLElement) => o.textContent);
     expect(optionTexts).not.toContain("alpha");
     expect(optionTexts).toContain("beta");
   });
@@ -169,7 +169,7 @@ describe("TagInput", () => {
 
     // Click the "beta" suggestion
     const betaOption = screen.getAllByRole("option").find(
-      (el) => el.textContent === "beta"
+      (el: HTMLElement) => el.textContent === "beta"
     );
     await user.click(betaOption!);
 

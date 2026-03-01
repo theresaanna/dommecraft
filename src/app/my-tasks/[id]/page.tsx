@@ -18,7 +18,7 @@ export default async function MyTaskDetailPage({
     where: { linkedUserId: session.user.id },
     select: { id: true },
   });
-  const profileIds = linkedProfiles.map((p) => p.id);
+  const profileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
   const task = await prisma.task.findUnique({
     where: { id },
@@ -46,13 +46,13 @@ export default async function MyTaskDetailPage({
     completedAt: task.completedAt?.toISOString() || null,
     createdAt: task.createdAt.toISOString(),
     updatedAt: task.updatedAt.toISOString(),
-    subtasks: task.subtasks.map((s) => ({
+    subtasks: task.subtasks.map((s: (typeof task.subtasks)[number]) => ({
       id: s.id,
       title: s.title,
       isCompleted: s.isCompleted,
       sortOrder: s.sortOrder,
     })),
-    proofs: task.proofs.map((p) => ({
+    proofs: task.proofs.map((p: (typeof task.proofs)[number]) => ({
       id: p.id,
       fileUrl: p.fileUrl,
       fileType: p.fileType,

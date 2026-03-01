@@ -23,7 +23,7 @@ export default async function CategoriesPage() {
     },
   });
 
-  const serializedCategories = categories.map((c) => ({
+  const serializedCategories = categories.map((c: (typeof categories)[number]) => ({
     id: c.id,
     name: c.name,
     sortOrder: c.sortOrder,

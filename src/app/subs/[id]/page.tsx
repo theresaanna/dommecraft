@@ -131,7 +131,7 @@ export default async function SubDetailPage({
           </h2>
           {sub.tags.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
-              {sub.tags.map((tag) => (
+              {sub.tags.map((tag: string) => (
                 <span
                   key={tag}
                   className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"

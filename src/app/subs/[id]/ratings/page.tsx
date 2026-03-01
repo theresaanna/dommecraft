@@ -34,7 +34,7 @@ export default async function RatingsPage({
         </p>
       ) : (
         <ul className="mt-4 space-y-3">
-          {ratings.map((rating) => (
+          {ratings.map((rating: (typeof ratings)[number]) => (
             <li
               key={rating.id}
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"

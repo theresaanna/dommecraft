@@ -20,7 +20,7 @@ export async function GET(request: Request) {
       return NextResponse.json([]);
     }
 
-    const subProfileIds = linkedProfiles.map((p) => p.id);
+    const subProfileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");

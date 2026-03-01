@@ -69,7 +69,7 @@ export default async function HubPage() {
     },
   });
 
-  const serializedCategories = categories.map((c) => ({
+  const serializedCategories = categories.map((c: (typeof categories)[number]) => ({
     id: c.id,
     name: c.name,
     sortOrder: c.sortOrder,
@@ -77,7 +77,7 @@ export default async function HubPage() {
     createdAt: c.createdAt.toISOString(),
   }));
 
-  const serializedProjects = projects.map((p) => ({
+  const serializedProjects = projects.map((p: (typeof projects)[number]) => ({
     id: p.id,
     name: p.name,
     description: p.description,

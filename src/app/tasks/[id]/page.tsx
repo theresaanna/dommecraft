@@ -68,7 +68,7 @@ export default async function TaskDetailPage({
     updatedAt: task.updatedAt.toISOString(),
     sub: task.sub,
     project: task.project,
-    subtasks: task.subtasks.map((st) => ({
+    subtasks: task.subtasks.map((st: (typeof task.subtasks)[number]) => ({
       id: st.id,
       title: st.title,
       isCompleted: st.isCompleted,
@@ -76,7 +76,7 @@ export default async function TaskDetailPage({
       createdAt: st.createdAt.toISOString(),
       updatedAt: st.updatedAt.toISOString(),
     })),
-    proofs: task.proofs.map((p) => ({
+    proofs: task.proofs.map((p: (typeof task.proofs)[number]) => ({
       id: p.id,
       fileUrl: p.fileUrl,
       fileType: p.fileType,
@@ -85,11 +85,11 @@ export default async function TaskDetailPage({
       notes: p.notes,
       createdAt: p.createdAt.toISOString(),
     })),
-    dependsOn: task.dependsOn.map((d) => ({
+    dependsOn: task.dependsOn.map((d: (typeof task.dependsOn)[number]) => ({
       id: d.id,
       dependsOn: d.dependsOn,
     })),
-    dependedOnBy: task.dependedOnBy.map((d) => ({
+    dependedOnBy: task.dependedOnBy.map((d: (typeof task.dependedOnBy)[number]) => ({
       id: d.id,
       task: d.task,
     })),

@@ -160,8 +160,8 @@ export async function GET() {
 
   // Resolve top earner sub names
   const topEarnerSubIds = topEarners
-    .map((e) => e.subId)
-    .filter((id): id is string => id !== null);
+    .map((e: (typeof topEarners)[number]) => e.subId)
+    .filter((id: string | null): id is string => id !== null);
 
   const topEarnerSubs =
     topEarnerSubIds.length > 0
@@ -171,7 +171,7 @@ export async function GET() {
         })
       : [];
 
-  const subNameMap = new Map(topEarnerSubs.map((s) => [s.id, s.fullName]));
+  const subNameMap = new Map(topEarnerSubs.map((s: (typeof topEarnerSubs)[number]) => [s.id, s.fullName]));
 
   return NextResponse.json({
     subOverview: {
@@ -183,7 +183,7 @@ export async function GET() {
       allTimeCount: financialAllTime._count,
       recentTotal: financialRecent._sum.amount?.toString() || "0",
       recentCount: financialRecent._count,
-      topEarners: topEarners.map((e) => ({
+      topEarners: topEarners.map((e: (typeof topEarners)[number]) => ({
         subId: e.subId,
         subName: subNameMap.get(e.subId!) || "Unknown",
         total: e._sum.amount?.toString() || "0",
@@ -196,7 +196,7 @@ export async function GET() {
     },
     upcomingEvents,
     recentActivity: {
-      financialEntries: recentFinancialEntries.map((e) => ({
+      financialEntries: recentFinancialEntries.map((e: (typeof recentFinancialEntries)[number]) => ({
         id: e.id,
         amount: e.amount.toString(),
         currency: e.currency,
@@ -205,13 +205,13 @@ export async function GET() {
         createdAt: e.createdAt,
         subName: e.sub?.fullName || null,
       })),
-      completedTasks: recentCompletedTasks.map((t) => ({
+      completedTasks: recentCompletedTasks.map((t: (typeof recentCompletedTasks)[number]) => ({
         id: t.id,
         title: t.title,
         completedAt: t.completedAt,
         subName: t.sub.fullName,
       })),
-      recentNotes: recentNotes.map((n) => ({
+      recentNotes: recentNotes.map((n: (typeof recentNotes)[number]) => ({
         id: n.id,
         title: n.title,
         updatedAt: n.updatedAt,

@@ -13,7 +13,7 @@ export default async function MyTasksPage() {
     select: { id: true },
   });
 
-  const profileIds = linkedProfiles.map((p) => p.id);
+  const profileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
   const tasks = profileIds.length > 0
     ? await prisma.task.findMany({
@@ -34,7 +34,7 @@ export default async function MyTasksPage() {
     : [];
 
   // Serialize dates
-  const serializedTasks = tasks.map((t) => ({
+  const serializedTasks = tasks.map((t: (typeof tasks)[number]) => ({
     id: t.id,
     title: t.title,
     description: t.description,
@@ -45,7 +45,7 @@ export default async function MyTasksPage() {
     sub: t.sub,
     subtaskCount: t._count.subtasks,
     proofCount: t._count.proofs,
-    completedSubtasks: t.subtasks.filter((s) => s.isCompleted).length,
+    completedSubtasks: t.subtasks.filter((s: (typeof t.subtasks)[number]) => s.isCompleted).length,
     createdAt: t.createdAt.toISOString(),
   }));
 

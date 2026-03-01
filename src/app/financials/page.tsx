@@ -131,8 +131,8 @@ export default async function FinancialsPage({
   });
 
   const subIds = perSubRaw
-    .map((row) => row.subId)
-    .filter((id): id is string => id !== null);
+    .map((row: (typeof perSubRaw)[number]) => row.subId)
+    .filter((id: string | null): id is string => id !== null);
 
   const subsForNames =
     subIds.length > 0
@@ -142,9 +142,9 @@ export default async function FinancialsPage({
         })
       : [];
 
-  const subMap = new Map(subsForNames.map((s) => [s.id, s.fullName]));
+  const subMap = new Map(subsForNames.map((s: (typeof subsForNames)[number]) => [s.id, s.fullName]));
 
-  const perSub = perSubRaw.map((row) => ({
+  const perSub = perSubRaw.map((row: (typeof perSubRaw)[number]) => ({
     subId: row.subId,
     subName: row.subId ? subMap.get(row.subId) || "Unknown" : "Unlinked",
     total: row._sum.amount?.toString() || "0",
@@ -158,7 +158,7 @@ export default async function FinancialsPage({
     _count: true,
   });
 
-  const byCategory = byCategoryRaw.map((row) => ({
+  const byCategory = byCategoryRaw.map((row: (typeof byCategoryRaw)[number]) => ({
     category: row.category,
     total: row._sum.amount?.toString() || "0",
     count: row._count,
@@ -172,7 +172,7 @@ export default async function FinancialsPage({
   });
 
   // Serialize for client components
-  const serializedEntries = entries.map((entry) => ({
+  const serializedEntries = entries.map((entry: (typeof entries)[number]) => ({
     id: entry.id,
     amount: entry.amount.toString(),
     currency: entry.currency,

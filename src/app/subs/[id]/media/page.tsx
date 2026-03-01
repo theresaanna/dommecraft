@@ -34,7 +34,7 @@ export default async function MediaPage({
         </p>
       ) : (
         <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {mediaItems.map((item) => (
+          {mediaItems.map((item: (typeof mediaItems)[number]) => (
             <li
               key={item.id}
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"
@@ -53,7 +53,7 @@ export default async function MediaPage({
               )}
               {item.tags.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1">
-                  {item.tags.map((tag) => (
+                  {item.tags.map((tag: string) => (
                     <span
                       key={tag}
                       className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"

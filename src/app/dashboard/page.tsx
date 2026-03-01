@@ -56,8 +56,8 @@ export default async function DashboardPage() {
     : [];
 
   const topEarnerSubIds = topEarners
-    .map((e) => e.subId)
-    .filter((id): id is string => id !== null);
+    .map((e: (typeof topEarners)[number]) => e.subId)
+    .filter((id: string | null): id is string => id !== null);
 
   const topEarnerSubs =
     topEarnerSubIds.length > 0
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
         })
       : [];
 
-  const subNameMap = new Map(topEarnerSubs.map((s) => [s.id, s.fullName]));
+  const subNameMap = new Map(topEarnerSubs.map((s: (typeof topEarnerSubs)[number]) => [s.id, s.fullName]));
 
   // Recent hub projects (DOMME only)
   const recentProjects = isDomme
@@ -152,7 +152,7 @@ export default async function DashboardPage() {
         select: { id: true },
       })
     : [];
-  const subProfileIds = linkedProfiles.map((p) => p.id);
+  const subProfileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
   const subTasks =
     !isDomme && subProfileIds.length > 0
@@ -308,8 +308,81 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {isDomme && (
+      {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
         <div className="mt-8 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              Recent Activity
+            </h2>
+          </div>
+          <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            {recentFinancialEntries.slice(0, 3).map((entry: (typeof recentFinancialEntries)[number]) => (
+              <li key={`fin-${entry.id}`}>
+                <Link
+                  href="/financials"
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      Financial
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {entry.category}
+                      {entry.sub ? ` - ${entry.sub.fullName}` : ""}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    ${parseFloat(entry.amount.toString()).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {recentCompletedTasks.slice(0, 3).map((task: (typeof recentCompletedTasks)[number]) => (
+              <li key={`task-${task.id}`}>
+                <Link
+                  href={`/tasks/${task.id}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                      Task Done
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {task.title}
+                    </span>
+                  </div>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {task.sub.fullName}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {recentNotes.slice(0, 3).map((note: (typeof recentNotes)[number]) => (
+              <li key={`note-${note.id}`}>
+                <Link
+                  href={`/hub/projects/${note.project.id}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                      Note
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {note.title || "Untitled"}
+                    </span>
+                  </div>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {note.project.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {isDomme && (
+        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               My Subs
@@ -333,7 +406,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {subs.map((sub) => (
+              {subs.map((sub: (typeof subs)[number]) => (
                 <li key={sub.id}>
                   <Link
                     href={`/subs/${sub.id}`}
@@ -343,7 +416,7 @@ export default async function DashboardPage() {
                       {sub.fullName}
                     </span>
                     <div className="flex gap-1">
-                      {sub.subType.slice(0, 2).map((type) => (
+                      {sub.subType.slice(0, 2).map((type: string) => (
                         <span
                           key={type}
                           className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
@@ -427,13 +500,13 @@ export default async function DashboardPage() {
                     Top Earners
                   </p>
                   <ul className="mt-2 space-y-1">
-                    {topEarners.map((entry) => (
+                    {topEarners.map((entry: (typeof topEarners)[number]) => (
                       <li
                         key={entry.subId}
                         className="flex items-center justify-between text-sm"
                       >
                         <span className="text-zinc-700 dark:text-zinc-300">
-                          {subNameMap.get(entry.subId!) || "Unknown"}
+                          {String(subNameMap.get(entry.subId!) || "Unknown")}
                         </span>
                         <span className="font-medium text-zinc-900 dark:text-zinc-50">
                           ${parseFloat(entry._sum.amount?.toString() || "0").toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -482,7 +555,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {recentProjects.map((project) => (
+              {recentProjects.map((project: (typeof recentProjects)[number]) => (
                 <li key={project.id}>
                   <Link
                     href={`/hub/projects/${project.id}`}
@@ -568,7 +641,7 @@ export default async function DashboardPage() {
           {dommeTasks.length > 0 && (
             <>
               <ul className="divide-y divide-zinc-100 border-t border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
-                {dommeTasks.map((task) => (
+                {dommeTasks.map((task: (typeof dommeTasks)[number]) => (
                   <li key={task.id}>
                     <Link
                       href={`/tasks/${task.id}`}
@@ -646,7 +719,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {upcomingEvents.map((event) => {
+              {upcomingEvents.map((event: (typeof upcomingEvents)[number]) => {
                 const eventColor =
                   event.color || EVENT_SOURCE_COLORS[event.sourceType] || "#3b82f6";
                 return (
@@ -693,79 +766,6 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
-          <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-              Recent Activity
-            </h2>
-          </div>
-          <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-            {recentFinancialEntries.slice(0, 3).map((entry) => (
-              <li key={`fin-${entry.id}`}>
-                <Link
-                  href="/financials"
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
-                      Financial
-                    </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
-                      {entry.category}
-                      {entry.sub ? ` - ${entry.sub.fullName}` : ""}
-                    </span>
-                  </div>
-                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                    ${parseFloat(entry.amount.toString()).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                </Link>
-              </li>
-            ))}
-            {recentCompletedTasks.slice(0, 3).map((task) => (
-              <li key={`task-${task.id}`}>
-                <Link
-                  href={`/tasks/${task.id}`}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                      Task Done
-                    </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
-                      {task.title}
-                    </span>
-                  </div>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                    {task.sub.fullName}
-                  </span>
-                </Link>
-              </li>
-            ))}
-            {recentNotes.slice(0, 3).map((note) => (
-              <li key={`note-${note.id}`}>
-                <Link
-                  href={`/hub/projects/${note.project.id}`}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
-                      Note
-                    </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
-                      {note.title || "Untitled"}
-                    </span>
-                  </div>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                    {note.project.name}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       {!isDomme && (
         <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
@@ -795,7 +795,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {subTasks.map((task) => (
+              {subTasks.map((task: (typeof subTasks)[number]) => (
                 <li key={task.id}>
                   <Link
                     href={`/my-tasks/${task.id}`}
@@ -859,6 +859,54 @@ export default async function DashboardPage() {
           Sign out
         </button>
       </form>
+
+      {isDomme && (
+        <footer className="mt-12 border-t border-zinc-200 pb-8 pt-6 dark:border-zinc-800">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/subs/new"
+              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+            >
+              Add Sub
+            </Link>
+            <Link
+              href="/financials/new"
+              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+            >
+              New Entry
+            </Link>
+            <Link
+              href="/tasks/new"
+              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+            >
+              Create Task
+            </Link>
+            <Link
+              href="/calendar/new"
+              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+            >
+              New Event
+            </Link>
+          </div>
+          <div className="mt-4 text-center">
+            <Link
+              href="/notifications"
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+                unreadNotifications > 0
+                  ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+              }`}
+            >
+              {unreadNotifications > 0 && (
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
+              )}
+              {unreadNotifications > 0
+                ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
+                : "Notifications"}
+            </Link>
+          </div>
+        </footer>
+      )}
     </div>
   );
 }

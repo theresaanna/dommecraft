@@ -34,7 +34,7 @@ export default async function BehaviorPage({
         </p>
       ) : (
         <ul className="mt-4 space-y-3">
-          {scores.map((score) => (
+          {scores.map((score: (typeof scores)[number]) => (
             <li
               key={score.id}
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"

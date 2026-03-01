@@ -155,16 +155,15 @@ export default function CalendarPageClient() {
       },
     },
     callbacks: {
-      onRangeUpdate(range) {
+      onRangeUpdate(range: { start: { epochMilliseconds: number }; end: { epochMilliseconds: number } }) {
         const start = new Date(range.start.epochMilliseconds).toISOString();
         const end = new Date(range.end.epochMilliseconds).toISOString();
         currentRangeRef.current = { start, end };
         fetchEvents(start, end);
       },
-      onEventClick(calendarEvent) {
-        const raw = calendarEvent as unknown as Record<string, unknown>;
-        if (raw.sourceType === "STANDALONE") {
-          const originalEventId = raw.originalEventId as string;
+      onEventClick(calendarEvent: Record<string, unknown>) {
+        if (calendarEvent.sourceType === "STANDALONE") {
+          const originalEventId = calendarEvent.originalEventId as string;
           router.push(`/calendar/${originalEventId}/edit`);
         }
       },

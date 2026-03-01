@@ -88,7 +88,7 @@ export default async function SubsPage({
 
   // Client-side financial range filtering (expendableIncome is a free-text string,
   // so we parse it as a number for range comparison)
-  const filtered = subs.filter((sub) => {
+  const filtered = subs.filter((sub: (typeof subs)[number]) => {
     if (financialMin || financialMax) {
       const income = sub.expendableIncome
         ? parseFloat(sub.expendableIncome.replace(/[^0-9.]/g, ""))
@@ -100,7 +100,7 @@ export default async function SubsPage({
     return true;
   });
 
-  const serialized = filtered.map((sub) => ({
+  const serialized = filtered.map((sub: (typeof filtered)[number]) => ({
     ...sub,
     createdAt: sub.createdAt.toISOString(),
   }));
@@ -110,7 +110,7 @@ export default async function SubsPage({
     where: { userId: session.user.id, isArchived: false },
     select: { tags: true },
   });
-  const allTags = [...new Set(allSubs.flatMap((s) => s.tags))].sort();
+  const allTags = [...new Set<string>(allSubs.flatMap((s: (typeof allSubs)[number]) => s.tags))].sort();
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
