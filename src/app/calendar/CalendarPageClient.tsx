@@ -10,10 +10,11 @@ import {
 } from "@schedule-x/calendar";
 import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { Temporal } from "temporal-polyfill";
+import "temporal-polyfill/global"; // ScheduleX accesses Temporal as a global
 import "@schedule-x/theme-default/dist/index.css";
 import Link from "next/link";
 
-type CalendarEventData = {
+export type CalendarEventData = {
   id: string;
   title: string;
   description: string | null;
@@ -26,7 +27,7 @@ type CalendarEventData = {
   originalEventId: string;
 };
 
-function toScheduleXEvent(e: CalendarEventData) {
+export function toScheduleXEvent(e: CalendarEventData) {
   return {
     id: e.id,
     title: e.title,
@@ -154,15 +155,15 @@ export default function CalendarPageClient() {
       },
     },
     callbacks: {
-      onRangeUpdate(range: { start: { epochMilliseconds: number }; end: { epochMilliseconds: number } }) {
+      onRangeUpdate(range) {
         const start = new Date(range.start.epochMilliseconds).toISOString();
         const end = new Date(range.end.epochMilliseconds).toISOString();
         currentRangeRef.current = { start, end };
         fetchEvents(start, end);
       },
-      onEventClick(calendarEvent: Record<string, unknown>) {
-        if (calendarEvent.sourceType === "STANDALONE") {
-          const originalEventId = calendarEvent.originalEventId as string;
+      onEventClick(calendarEvent) {
+        if ((calendarEvent as Record<string, unknown>).sourceType === "STANDALONE") {
+          const originalEventId = (calendarEvent as Record<string, unknown>).originalEventId as string;
           router.push(`/calendar/${originalEventId}/edit`);
         }
       },
