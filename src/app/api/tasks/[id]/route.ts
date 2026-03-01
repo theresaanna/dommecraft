@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET(
   _request: Request,
@@ -161,14 +162,12 @@ export async function PATCH(
         }
 
         if (message && type) {
-          await prisma.notification.create({
-            data: {
-              userId: task.sub.linkedUserId,
-              type,
-              message,
-              linkUrl: `/my-tasks/${id}`,
-              taskId: id,
-            },
+          await createNotification({
+            userId: task.sub.linkedUserId,
+            type,
+            message,
+            linkUrl: `/my-tasks/${id}`,
+            taskId: id,
           });
         }
       }

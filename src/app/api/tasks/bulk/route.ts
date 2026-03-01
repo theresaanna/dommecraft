@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   try {
@@ -46,12 +47,33 @@ export async function POST(request: Request) {
     const whereClause = { id: { in: body.taskIds }, userId: session.user.id };
 
     switch (body.action) {
-      case "complete":
+      case "complete": {
         await prisma.task.updateMany({
           where: whereClause,
           data: { status: "COMPLETED", completedAt: new Date() },
         });
+
+        // Notify each sub that their task was completed
+        const completedTasks = await prisma.task.findMany({
+          where: { id: { in: body.taskIds } },
+          select: { id: true, title: true, sub: { select: { linkedUserId: true } } },
+        });
+
+        await Promise.all(
+          completedTasks
+            .filter((t) => t.sub.linkedUserId)
+            .map((t) =>
+              createNotification({
+                userId: t.sub.linkedUserId!,
+                type: "TASK_COMPLETED",
+                message: `Task approved: ${t.title}`,
+                linkUrl: `/my-tasks/${t.id}`,
+                taskId: t.id,
+              })
+            )
+        );
         break;
+      }
 
       case "archive":
         await prisma.task.updateMany({
