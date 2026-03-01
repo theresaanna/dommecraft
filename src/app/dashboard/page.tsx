@@ -176,7 +176,9 @@ export default async function DashboardPage() {
         })
       : [];
 
-  // Upcoming calendar events (DOMME only)
+  // Current and upcoming calendar events (DOMME only)
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
   const sevenDaysFromNow = new Date();
   sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
@@ -184,7 +186,7 @@ export default async function DashboardPage() {
     ? await prisma.calendarEvent.findMany({
         where: {
           userId,
-          startAt: { gte: now, lte: sevenDaysFromNow },
+          startAt: { gte: startOfToday, lte: sevenDaysFromNow },
           recurrenceRule: null,
         },
         orderBy: { startAt: "asc" },
@@ -731,10 +733,13 @@ export default async function DashboardPage() {
                 const eventColor =
                   event.color || EVENT_SOURCE_COLORS[event.sourceType] || "#3b82f6";
                 return (
-                  <li key={event.id}>
+                  <li
+                    key={event.id}
+                    style={{ backgroundColor: `${eventColor}10` }}
+                  >
                     <Link
                       href="/calendar"
-                      className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                      className="flex items-center justify-between px-4 py-3 hover:brightness-95 dark:hover:brightness-110"
                     >
                       <div className="flex items-center gap-2">
                         <span
