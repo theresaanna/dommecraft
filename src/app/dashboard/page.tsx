@@ -2,6 +2,7 @@ import { auth, signOut } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import UserAvatar from "@/components/UserAvatar";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -11,6 +12,11 @@ export default async function DashboardPage() {
 
   const isDomme = session.user.role === "DOMME";
   const userId = session.user.id;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { avatarUrl: true },
+  });
 
   const subs = isDomme
     ? await prisma.subProfile.findMany({
@@ -267,18 +273,25 @@ export default async function DashboardPage() {
         <p className="text-zinc-600 dark:text-zinc-400">
           Welcome, {session.user.name || session.user.email || "User"}
         </p>
-        <Link
-          href="/notifications"
-          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-            unreadNotifications > 0
-              ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-          }`}
-        >
-          {unreadNotifications > 0
-            ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
-            : "Notifications"}
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/notifications"
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              unreadNotifications > 0
+                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+            }`}
+          >
+            {unreadNotifications > 0
+              ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
+              : "Notifications"}
+          </Link>
+          <UserAvatar
+            name={session.user.name}
+            email={session.user.email}
+            avatarUrl={currentUser?.avatarUrl}
+          />
+        </div>
       </div>
 
       {isDomme && (

@@ -44,7 +44,11 @@ export function toScheduleXEvent(e: CalendarEventData) {
   };
 }
 
-export default function CalendarPageClient() {
+export default function CalendarPageClient({
+  defaultView = "month-grid",
+}: {
+  defaultView?: "month-grid" | "week" | "day";
+}) {
   const router = useRouter();
   const currentRangeRef = useRef<{ start: string; end: string } | null>(null);
 
@@ -72,7 +76,7 @@ export default function CalendarPageClient() {
 
   const calendar = useNextCalendarApp({
     views: [createViewMonthGrid(), createViewWeek(), createViewDay()],
-    defaultView: "month-grid",
+    defaultView,
     plugins: [eventsService],
     calendars: {
       standalone: {

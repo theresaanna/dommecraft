@@ -74,6 +74,8 @@ describe("POST /api/auth/register", () => {
       role: "DOMME",
       timezone: "UTC",
       avatarUrl: null,
+      theme: "SYSTEM",
+      calendarDefaultView: "MONTH",
       emailVerified: null,
       createdAt: new Date(),
       updatedAt: new Date(),

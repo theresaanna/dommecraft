@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { NotificationProvider } from "@/components/providers/notification-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,12 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=document.cookie.match(/theme=(LIGHT|DARK|SYSTEM)/);var m=t?t[1]:"SYSTEM";if(m==="DARK"||(m==="SYSTEM"&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark")}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <NotificationProvider>{children}</NotificationProvider>
+          <ThemeProvider>
+            <NotificationProvider>{children}</NotificationProvider>
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>

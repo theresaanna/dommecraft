@@ -21,9 +21,11 @@ model User {
   image         String?
   role          UserRole  @default(DOMME)
   timezone      String    @default("UTC")
-  avatarUrl     String?   @map("avatar_url")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  avatarUrl            String?              @map("avatar_url")
+  theme                Theme                @default(SYSTEM)
+  calendarDefaultView  CalendarDefaultView  @default(MONTH) @map("calendar_default_view")
+  createdAt            DateTime             @default(now()) @map("created_at")
+  updatedAt            DateTime             @updatedAt @map("updated_at")
 
   accounts Account[]
   sessions Session[]
@@ -57,6 +59,18 @@ model User {
 enum UserRole {
   DOMME
   SUB
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum CalendarDefaultView {
+  MONTH
+  WEEK
+  DAY
 }
 
 model Account {
