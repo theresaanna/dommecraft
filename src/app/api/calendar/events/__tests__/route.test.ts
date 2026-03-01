@@ -17,6 +17,10 @@ vi.mock("@/lib/calendar-utils", () => ({
   expandEvents: vi.fn().mockReturnValue([]),
 }));
 
+vi.mock("@/lib/notifications", () => ({
+  createNotification: vi.fn().mockResolvedValue({ id: "notif-1" }),
+}));
+
 import { GET, POST } from "@/app/api/calendar/events/route";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";

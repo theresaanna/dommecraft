@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   try {
@@ -47,6 +48,13 @@ export async function POST(request: Request) {
         linkedUserId: session.user.id,
         inviteCode: null,
       },
+    });
+
+    await createNotification({
+      userId: subProfile.userId,
+      type: "SUB_JOINED",
+      message: `${subProfile.fullName} has linked their account`,
+      linkUrl: `/subs/${subProfile.id}`,
     });
 
     return NextResponse.json(updated);

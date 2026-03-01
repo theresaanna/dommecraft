@@ -42,6 +42,17 @@ export async function PATCH(request: Request) {
 
     const body = await request.json();
 
+    if (body.markAll === true) {
+      const result = await prisma.notification.updateMany({
+        where: {
+          userId: session.user.id,
+          isRead: false,
+        },
+        data: { isRead: true },
+      });
+      return NextResponse.json({ updated: result.count });
+    }
+
     if (!Array.isArray(body.ids) || body.ids.length === 0) {
       return NextResponse.json(
         { error: "ids array is required" },
