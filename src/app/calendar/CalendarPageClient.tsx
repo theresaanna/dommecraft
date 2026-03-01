@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ScheduleXCalendar, useCalendarApp } from "@schedule-x/react";
+import { ScheduleXCalendar, useNextCalendarApp } from "@schedule-x/react";
 import {
   createViewDay,
   createViewWeek,
@@ -59,7 +59,7 @@ export default function CalendarPageClient() {
     [eventsService]
   );
 
-  const calendar = useCalendarApp({
+  const calendar = useNextCalendarApp({
     views: [createViewMonthGrid(), createViewWeek(), createViewDay()],
     defaultView: "month-grid",
     plugins: [eventsService],
