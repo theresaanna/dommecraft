@@ -40,6 +40,13 @@ model User {
   projects         Project[]
   notes            Note[]
 
+  // Task management
+  tasks              Task[]
+  subtasks           Subtask[]
+  taskProofs         TaskProof[]
+  notifications      Notification[]
+  linkedSubProfiles  SubProfile[] @relation("LinkedSubProfiles")
+
   @@map("users")
 }
 
@@ -96,6 +103,10 @@ model SubProfile {
   id        String @id @default(cuid())
   userId    String @map("user_id")
 
+  // Account linking
+  linkedUserId String? @map("linked_user_id")
+  inviteCode   String? @unique @map("invite_code")
+
   // Main visible fields
   fullName        String   @map("full_name")
   contactInfo     String?  @map("contact_info")
@@ -129,15 +140,18 @@ model SubProfile {
 
   // Relations
   user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  linkedUser       User?            @relation("LinkedSubProfiles", fields: [linkedUserId], references: [id], onDelete: SetNull)
   financialEntries FinancialEntry[]
   badges           Badge[]
   mediaItems       MediaItem[]
   ratings          Rating[]
   behaviorScores   BehaviorScore[]
   contracts        Contract[]
+  tasks            Task[]
 
   @@index([userId])
   @@index([userId, fullName])
+  @@index([linkedUserId])
   @@map("sub_profiles")
 }
 
@@ -304,6 +318,7 @@ model Project {
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   notes    Note[]
+  tasks    Task[]
 
   @@index([userId])
   @@index([categoryId])
@@ -323,7 +338,143 @@ model Note {
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks   Task[]
 
   @@index([projectId])
   @@map("notes")
+}
+
+// ============================================================
+// TASK MANAGEMENT
+// ============================================================
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  COMPLETED
+  ARCHIVED
+}
+
+model Task {
+  id               String       @id @default(cuid())
+  userId           String       @map("user_id")
+  subId            String       @map("sub_id")
+  projectId        String?      @map("project_id")
+  sourceNoteId     String?      @map("source_note_id")
+  title            String
+  description      String?
+  tags             String[]
+  deadline         DateTime?
+  priority         TaskPriority @default(MEDIUM)
+  status           TaskStatus   @default(NOT_STARTED)
+  completedAt      DateTime?    @map("completed_at")
+  recurrenceRule   String?      @map("recurrence_rule")
+  recurrenceEndDate DateTime?   @map("recurrence_end_date")
+  reminderOffset   Int?         @map("reminder_offset")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sub        SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
+  project    Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  sourceNote Note?      @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  subtasks   Subtask[]
+  proofs     TaskProof[]
+
+  // Dependencies
+  dependsOn    TaskDependency[] @relation("DependentTask")
+  dependedOnBy TaskDependency[] @relation("DependsOnTask")
+
+  notifications Notification[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, priority])
+  @@index([userId, deadline])
+  @@index([subId])
+  @@index([projectId])
+  @@map("tasks")
+}
+
+model Subtask {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  taskId      String   @map("task_id")
+  title       String
+  isCompleted Boolean  @default(false) @map("is_completed")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@map("subtasks")
+}
+
+model TaskDependency {
+  id              String @id @default(cuid())
+  taskId          String @map("task_id")
+  dependsOnTaskId String @map("depends_on_task_id")
+
+  task      Task @relation("DependentTask", fields: [taskId], references: [id], onDelete: Cascade)
+  dependsOn Task @relation("DependsOnTask", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, dependsOnTaskId])
+  @@map("task_dependencies")
+}
+
+model TaskProof {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  taskId    String   @map("task_id")
+  fileUrl   String   @map("file_url")
+  fileType  String   @map("file_type")
+  mimeType  String?  @map("mime_type")
+  fileSize  Int?     @map("file_size")
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@map("task_proofs")
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  TASK_SUBMITTED
+  TASK_COMPLETED
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String           @map("user_id")
+  type      NotificationType
+  message   String
+  linkUrl   String?          @map("link_url")
+  isRead    Boolean          @default(false) @map("is_read")
+  taskId    String?          @map("task_id")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@map("notifications")
 }

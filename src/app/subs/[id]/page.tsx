@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import InviteCodeButton from "./InviteCodeButton";
 
 export default async function SubDetailPage({
   params,
@@ -17,6 +18,9 @@ export default async function SubDetailPage({
   const sub = await prisma.subProfile.findUnique({
     where: { id, userId: session.user.id },
     include: {
+      linkedUser: {
+        select: { id: true, name: true, email: true },
+      },
       _count: {
         select: {
           badges: true,
@@ -24,6 +28,7 @@ export default async function SubDetailPage({
           ratings: true,
           behaviorScores: true,
           contracts: true,
+          tasks: true,
         },
       },
     },
@@ -35,6 +40,29 @@ export default async function SubDetailPage({
 
   return (
     <div className="space-y-8">
+      {/* Account Linking */}
+      <section>
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+          Account Link
+        </h2>
+        {sub.linkedUser ? (
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+            Linked to{" "}
+            <span className="font-medium text-zinc-900 dark:text-zinc-50">
+              {sub.linkedUser.name || sub.linkedUser.email || "Sub account"}
+            </span>
+          </p>
+        ) : (
+          <div className="mt-2">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+              Not linked to a sub account yet. Generate an invite code for your
+              sub to link their account.
+            </p>
+            <InviteCodeButton subId={sub.id} existingCode={sub.inviteCode} />
+          </div>
+        )}
+      </section>
+
       {/* Main Fields */}
       <section>
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
@@ -128,6 +156,7 @@ export default async function SubDetailPage({
           <CountCard label="Ratings" count={sub._count.ratings} />
           <CountCard label="Behavior Scores" count={sub._count.behaviorScores} />
           <CountCard label="Contracts" count={sub._count.contracts} />
+          <CountCard label="Tasks" count={sub._count.tasks} />
         </dl>
       </section>
     </div>
