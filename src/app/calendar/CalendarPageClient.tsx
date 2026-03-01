@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { ScheduleXCalendar, useNextCalendarApp } from "@schedule-x/react";
 import {
   createViewDay,
@@ -25,6 +25,23 @@ type CalendarEventData = {
   sourceTaskId: string | null;
   originalEventId: string;
 };
+
+function temporalToString(
+  value: unknown,
+  isAllDay: boolean
+): string {
+  if (typeof value === "string") return value;
+  const t = value as {
+    year: number;
+    month: number;
+    day: number;
+    hour?: number;
+    minute?: number;
+  };
+  const date = `${t.year}-${String(t.month).padStart(2, "0")}-${String(t.day).padStart(2, "0")}`;
+  if (isAllDay) return date;
+  return `${date} ${String(t.hour ?? 0).padStart(2, "0")}:${String(t.minute ?? 0).padStart(2, "0")}`;
+}
 
 function toScheduleXEvent(e: CalendarEventData) {
   const T = globalThis.Temporal;
@@ -129,14 +146,48 @@ export default function CalendarPageClient() {
         fetchEvents(start, end);
       },
       onEventClick(calendarEvent) {
-        const eventData = calendarEvent as unknown as CalendarEventData;
-        if (eventData.sourceType === "STANDALONE") {
-          setEditingEvent(eventData);
+        const raw = calendarEvent as unknown as Record<string, unknown>;
+        if (raw.sourceType === "STANDALONE") {
+          const T = globalThis.Temporal;
+          const isAllDay = raw.start instanceof T.PlainDate;
+          setEditingEvent({
+            id: raw.id as string,
+            title: raw.title as string,
+            description: (raw.description as string) ?? null,
+            start: temporalToString(raw.start, isAllDay),
+            end: temporalToString(raw.end, isAllDay),
+            calendarId: raw.calendarId as string,
+            isAllDay,
+            sourceType: raw.sourceType as string,
+            sourceTaskId: null,
+            originalEventId: raw.originalEventId as string,
+          });
           setShowForm(true);
         }
       },
     },
   });
+
+  // Fetch events once the calendar is mounted — the first onRangeUpdate
+  // fires during calendar creation before the component is fully ready.
+  useEffect(() => {
+    if (calendar) {
+      const timer = setTimeout(() => {
+        if (currentRangeRef.current) {
+          fetchEvents(
+            currentRangeRef.current.start,
+            currentRangeRef.current.end
+          );
+        } else {
+          const now = new Date();
+          const start = new Date(now.getFullYear(), now.getMonth(), 1);
+          const end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+          fetchEvents(start.toISOString(), end.toISOString());
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [calendar, fetchEvents]);
 
   function refetchCurrentRange() {
     if (currentRangeRef.current) {
