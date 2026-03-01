@@ -9,8 +9,11 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+  const isDomme = session.user.role === "DOMME";
+  const userId = session.user.id;
+
   const subs = await prisma.subProfile.findMany({
-    where: { userId: session.user.id, isArchived: false },
+    where: { userId, isArchived: false },
     orderBy: { updatedAt: "desc" },
     take: 5,
     select: {
@@ -21,12 +24,9 @@ export default async function DashboardPage() {
     },
   });
 
-  // Financial summary (DOMME only)
-  const isDomme = session.user.role === "DOMME";
-
   const financialTotals = isDomme
     ? await prisma.financialEntry.aggregate({
-        where: { userId: session.user.id },
+        where: { userId },
         _sum: { amount: true },
         _count: true,
       })
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
   const financialRecent = isDomme
     ? await prisma.financialEntry.aggregate({
-        where: { userId: session.user.id, date: { gte: thirtyDaysAgo } },
+        where: { userId, date: { gte: thirtyDaysAgo } },
         _sum: { amount: true },
         _count: true,
       })
@@ -46,7 +46,7 @@ export default async function DashboardPage() {
   const topEarners = isDomme
     ? await prisma.financialEntry.groupBy({
         by: ["subId"],
-        where: { userId: session.user.id, subId: { not: null } },
+        where: { userId, subId: { not: null } },
         _sum: { amount: true },
         orderBy: { _sum: { amount: "desc" } },
         take: 3,
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
   // Recent hub projects (DOMME only)
   const recentProjects = isDomme
     ? await prisma.project.findMany({
-        where: { userId: session.user.id },
+        where: { userId },
         orderBy: { updatedAt: "desc" },
         take: 5,
         select: {
@@ -86,7 +86,7 @@ export default async function DashboardPage() {
   const dommeTasks = isDomme
     ? await prisma.task.findMany({
         where: {
-          userId: session.user.id,
+          userId,
           status: { in: ["NOT_STARTED", "IN_PROGRESS", "SUBMITTED"] },
         },
         orderBy: [
@@ -107,14 +107,46 @@ export default async function DashboardPage() {
 
   const submittedCount = isDomme
     ? await prisma.task.count({
-        where: { userId: session.user.id, status: "SUBMITTED" },
+        where: { userId, status: "SUBMITTED" },
+      })
+    : 0;
+
+  // Task summary counts (DOMME only)
+  const now = new Date();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - now.getDay());
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const overdueCount = isDomme
+    ? await prisma.task.count({
+        where: {
+          userId,
+          status: { in: ["NOT_STARTED", "IN_PROGRESS", "SUBMITTED"] },
+          deadline: { lt: now },
+        },
+      })
+    : 0;
+
+  const inProgressCount = isDomme
+    ? await prisma.task.count({
+        where: { userId, status: "IN_PROGRESS" },
+      })
+    : 0;
+
+  const completedThisWeekCount = isDomme
+    ? await prisma.task.count({
+        where: {
+          userId,
+          status: "COMPLETED",
+          completedAt: { gte: startOfWeek },
+        },
       })
     : 0;
 
   // SUB tasks
   const linkedProfiles = !isDomme
     ? await prisma.subProfile.findMany({
-        where: { linkedUserId: session.user.id },
+        where: { linkedUserId: userId },
         select: { id: true },
       })
     : [];
@@ -143,14 +175,13 @@ export default async function DashboardPage() {
       : [];
 
   // Upcoming calendar events (DOMME only)
-  const now = new Date();
   const sevenDaysFromNow = new Date();
   sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
 
   const upcomingEvents = isDomme
     ? await prisma.calendarEvent.findMany({
         where: {
-          userId: session.user.id,
+          userId,
           startAt: { gte: now, lte: sevenDaysFromNow },
           recurrenceRule: null,
         },
@@ -166,9 +197,54 @@ export default async function DashboardPage() {
       })
     : [];
 
+  // Recent activity (DOMME only)
+  const recentFinancialEntries = isDomme
+    ? await prisma.financialEntry.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          amount: true,
+          currency: true,
+          category: true,
+          date: true,
+          sub: { select: { fullName: true } },
+        },
+      })
+    : [];
+
+  const recentCompletedTasks = isDomme
+    ? await prisma.task.findMany({
+        where: { userId, status: "COMPLETED" },
+        orderBy: { completedAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          completedAt: true,
+          sub: { select: { fullName: true } },
+        },
+      })
+    : [];
+
+  const recentNotes = isDomme
+    ? await prisma.note.findMany({
+        where: { userId },
+        orderBy: { updatedAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          updatedAt: true,
+          project: { select: { id: true, name: true } },
+        },
+      })
+    : [];
+
   // Notifications
   const unreadNotifications = await prisma.notification.count({
-    where: { userId: session.user.id, isRead: false },
+    where: { userId, isRead: false },
   });
 
   return (
@@ -187,6 +263,29 @@ export default async function DashboardPage() {
           </span>
         )}
       </div>
+
+      {isDomme && (
+        <div className="mt-6 flex gap-3">
+          <Link
+            href="/subs/new"
+            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+          >
+            Add Sub
+          </Link>
+          <Link
+            href="/financials"
+            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+          >
+            New Entry
+          </Link>
+          <Link
+            href="/tasks"
+            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+          >
+            Create Task
+          </Link>
+        </div>
+      )}
 
       <div className="mt-8 rounded-lg border border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
@@ -399,16 +498,9 @@ export default async function DashboardPage() {
       {isDomme && (
         <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <div className="flex items-center gap-2">
-              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                Tasks
-              </h2>
-              {submittedCount > 0 && (
-                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
-                  {submittedCount} awaiting review
-                </span>
-              )}
-            </div>
+            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              Task Summary
+            </h2>
             <Link
               href="/tasks"
               className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
@@ -416,62 +508,91 @@ export default async function DashboardPage() {
               View Tasks
             </Link>
           </div>
-          {dommeTasks.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-              <p>No active tasks.</p>
-              <Link
-                href="/tasks"
-                className="mt-2 inline-block text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-              >
-                Assign a task to a sub
-              </Link>
+          <div className="grid grid-cols-3 divide-x divide-zinc-100 dark:divide-zinc-800">
+            <div className="px-4 py-4 text-center">
+              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+                {overdueCount}
+              </p>
+              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Overdue
+              </p>
             </div>
-          ) : (
-            <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {dommeTasks.map((task) => (
-                <li key={task.id}>
-                  <Link
-                    href={`/tasks/${task.id}`}
-                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                  >
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                      {task.title}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
-                        {task.sub.fullName}
-                      </span>
-                      {task.status === "SUBMITTED" && (
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-                          Submitted
-                        </span>
-                      )}
-                      {task.deadline && (
-                        <span
-                          className={`text-xs ${
-                            new Date(task.deadline) < new Date() &&
-                            task.status !== "COMPLETED"
-                              ? "text-red-600 dark:text-red-400"
-                              : "text-zinc-500 dark:text-zinc-400"
-                          }`}
-                        >
-                          {new Date(task.deadline).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="px-4 py-4 text-center">
+              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                {inProgressCount}
+              </p>
+              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                In Progress
+              </p>
+            </div>
+            <div className="px-4 py-4 text-center">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {completedThisWeekCount}
+              </p>
+              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Done This Week
+              </p>
+            </div>
+          </div>
+          {submittedCount > 0 && (
+            <div className="border-t border-zinc-100 px-4 py-2 dark:border-zinc-800">
+              <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                {submittedCount} task{submittedCount === 1 ? "" : "s"} awaiting
+                review
+              </span>
+            </div>
           )}
           {dommeTasks.length > 0 && (
-            <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
-              <Link
-                href="/tasks"
-                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-              >
-                View all tasks &rarr;
-              </Link>
+            <>
+              <ul className="divide-y divide-zinc-100 border-t border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
+                {dommeTasks.map((task) => (
+                  <li key={task.id}>
+                    <Link
+                      href={`/tasks/${task.id}`}
+                      className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    >
+                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                        {task.title}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                          {task.sub.fullName}
+                        </span>
+                        {task.status === "SUBMITTED" && (
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                            Submitted
+                          </span>
+                        )}
+                        {task.deadline && (
+                          <span
+                            className={`text-xs ${
+                              new Date(task.deadline) < new Date() &&
+                              task.status !== "COMPLETED"
+                                ? "text-red-600 dark:text-red-400"
+                                : "text-zinc-500 dark:text-zinc-400"
+                            }`}
+                          >
+                            {new Date(task.deadline).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+                <Link
+                  href="/tasks"
+                  className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                >
+                  View all tasks &rarr;
+                </Link>
+              </div>
+            </>
+          )}
+          {dommeTasks.length === 0 && (
+            <div className="border-t border-zinc-200 px-4 py-4 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+              <p>No active tasks.</p>
             </div>
           )}
         </div>
@@ -545,6 +666,79 @@ export default async function DashboardPage() {
               </Link>
             </div>
           )}
+        </div>
+      )}
+
+      {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
+        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              Recent Activity
+            </h2>
+          </div>
+          <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+            {recentFinancialEntries.slice(0, 3).map((entry) => (
+              <li key={`fin-${entry.id}`}>
+                <Link
+                  href="/financials"
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      Financial
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {entry.category}
+                      {entry.sub ? ` - ${entry.sub.fullName}` : ""}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    ${parseFloat(entry.amount.toString()).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {recentCompletedTasks.slice(0, 3).map((task) => (
+              <li key={`task-${task.id}`}>
+                <Link
+                  href={`/tasks/${task.id}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                      Task Done
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {task.title}
+                    </span>
+                  </div>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {task.sub.fullName}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {recentNotes.slice(0, 3).map((note) => (
+              <li key={`note-${note.id}`}>
+                <Link
+                  href={`/hub/projects/${note.project.id}`}
+                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                      Note
+                    </span>
+                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      {note.title || "Untitled"}
+                    </span>
+                  </div>
+                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {note.project.name}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
