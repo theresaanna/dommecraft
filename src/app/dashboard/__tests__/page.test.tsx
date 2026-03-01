@@ -11,6 +11,7 @@ vi.mock("@/auth", () => ({
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
+    user: { findUnique: vi.fn().mockResolvedValue({ avatarUrl: null }) },
     subProfile: { findMany: vi.fn().mockResolvedValue([]) },
     financialEntry: {
       aggregate: vi.fn().mockResolvedValue({ _sum: { amount: null }, _count: 0 }),
@@ -56,16 +57,20 @@ describe("DashboardPage quick action links", () => {
     const page = await DashboardPage();
     render(page);
 
-    const link = screen.getByRole("link", { name: /create task/i });
-    expect(link).toHaveAttribute("href", "/tasks/new");
+    const links = screen.getAllByRole("link", { name: /create task/i });
+    links.forEach((link: HTMLElement) => {
+      expect(link).toHaveAttribute("href", "/tasks/new");
+    });
   });
 
   it("links 'New Event' to /calendar/new", async () => {
     const page = await DashboardPage();
     render(page);
 
-    const link = screen.getByRole("link", { name: /new event/i });
-    expect(link).toHaveAttribute("href", "/calendar/new");
+    const links = screen.getAllByRole("link", { name: /new event/i });
+    links.forEach((link: HTMLElement) => {
+      expect(link).toHaveAttribute("href", "/calendar/new");
+    });
   });
 
   it("links 'Add Sub' to /subs/new", async () => {
@@ -134,6 +139,31 @@ describe("DashboardPage SUB view", () => {
     const page = await DashboardPage();
     render(page);
 
-    expect(screen.getByText("My Tasks")).toBeInTheDocument();
+    const elements = screen.getAllByText("My Tasks");
+    expect(elements.length).toBeGreaterThanOrEqual(1);
+  });
+});
+
+describe("DashboardPage user avatar", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Test User", email: "test@test.com", role: "DOMME" },
+    });
+  });
+
+  it("renders avatar link to /settings", async () => {
+    const page = await DashboardPage();
+    render(page);
+
+    const settingsLink = screen.getByTitle("Settings");
+    expect(settingsLink).toHaveAttribute("href", "/settings");
+  });
+
+  it("shows user initials when no avatar image", async () => {
+    const page = await DashboardPage();
+    render(page);
+
+    expect(screen.getByText("TU")).toBeInTheDocument();
   });
 });

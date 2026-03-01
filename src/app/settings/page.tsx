@@ -1,20 +1,40 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import SettingsClient from "./SettingsClient";
 
 export default async function SettingsPage() {
   const session = await auth();
-  if (!session) {
+  if (!session?.user?.id) {
+    redirect("/login");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      name: true,
+      email: true,
+      avatarUrl: true,
+      theme: true,
+      calendarDefaultView: true,
+    },
+  });
+
+  if (!user) {
     redirect("/login");
   }
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-        Settings
-      </h1>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-        Signed in as {session.user.email}
-      </p>
+      <SettingsClient
+        initialSettings={{
+          name: user.name ?? "",
+          email: user.email ?? "",
+          avatarUrl: user.avatarUrl ?? null,
+          theme: user.theme,
+          calendarDefaultView: user.calendarDefaultView,
+        }}
+      />
     </div>
   );
 }

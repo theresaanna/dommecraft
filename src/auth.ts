@@ -35,10 +35,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         const dbUser = await prisma.user.findUnique({
           where: { id: user.id },
-          select: { role: true, name: true, email: true },
+          select: { role: true, name: true, email: true, avatarUrl: true, theme: true },
         });
         if (dbUser) {
           token.role = dbUser.role;
+          token.avatarUrl = dbUser.avatarUrl;
+          token.theme = dbUser.theme;
           // Ensure name/email are on the token for OAuth users
           if (dbUser.name) token.name = dbUser.name;
           if (dbUser.email) token.email = dbUser.email;
@@ -50,6 +52,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.id = token.id as string;
         session.user.role = token.role as "DOMME" | "SUB";
+        session.user.avatarUrl = (token.avatarUrl as string) ?? null;
+        session.user.theme = (token.theme as "LIGHT" | "DARK" | "SYSTEM") ?? "SYSTEM";
         // Fallback display: use token name, email, or "User"
         if (!session.user.name && token.name) {
           session.user.name = token.name;
