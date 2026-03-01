@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 const COLOR_OPTIONS = [
   { label: "Default", value: "" },
@@ -121,6 +122,7 @@ export default function CalendarEventForm({
         return;
       }
 
+      triggerNotificationRefresh();
       router.refresh();
       onClose();
     } catch {

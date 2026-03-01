@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "@/components/TagInput";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 type AvailableSub = {
   id: string;
@@ -95,6 +96,7 @@ export default function TaskForm({
         return;
       }
 
+      triggerNotificationRefresh();
       router.refresh();
       onClose();
     } catch {

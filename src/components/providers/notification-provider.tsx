@@ -32,6 +32,16 @@ function triggerOSNotification(message: string) {
   }
 }
 
+/**
+ * Dispatch this event after any action that creates a notification
+ * to trigger an immediate poll instead of waiting for the next interval.
+ */
+export function triggerNotificationRefresh() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("notifications:refresh"));
+  }
+}
+
 const DEFAULT_POLL_INTERVAL = 30000;
 
 export function NotificationProvider({
@@ -45,6 +55,7 @@ export function NotificationProvider({
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const seenIds = useRef<Set<string>>(new Set());
   const initialLoadDone = useRef(false);
+  const pollRef = useRef<(() => void) | null>(null);
 
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -96,10 +107,31 @@ export function NotificationProvider({
       }
     }
 
+    pollRef.current = poll;
+
+    // Poll on tab focus / visibility change
+    function handleVisibility() {
+      if (document.visibilityState === "visible") {
+        poll();
+      }
+    }
+
+    // Poll on custom refresh event (fired after notification-creating actions)
+    function handleRefresh() {
+      poll();
+    }
+
     poll();
     const interval = setInterval(poll, pollInterval);
-    return () => clearInterval(interval);
-  }, [session?.user?.id]);
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("notifications:refresh", handleRefresh);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("notifications:refresh", handleRefresh);
+    };
+  }, [session?.user?.id, pollInterval]);
 
   return (
     <>

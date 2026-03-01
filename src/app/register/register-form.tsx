@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { FormEvent, useState } from "react";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 export function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
@@ -68,6 +69,8 @@ export function RegisterForm() {
             data.error ||
               "Account created but invite code could not be linked"
           );
+        } else {
+          triggerNotificationRefresh();
         }
 
         window.location.href = "/my-tasks";
