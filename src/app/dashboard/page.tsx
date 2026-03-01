@@ -257,7 +257,7 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16">
+    <div className="mx-auto max-w-2xl px-4 pt-16 pb-40">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
         Dashboard
       </h1>
@@ -378,6 +378,14 @@ export default async function DashboardPage() {
               </li>
             ))}
           </ul>
+          <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+            <Link
+              href="/activity"
+              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            >
+              View all activity &rarr;
+            </Link>
+          </div>
         </div>
       )}
 
@@ -861,7 +869,7 @@ export default async function DashboardPage() {
       </form>
 
       {isDomme && (
-        <footer className="mt-12 border-t border-zinc-200 pb-8 pt-6 dark:border-zinc-800">
+        <footer className="sticky bottom-0 mt-12 border-t border-zinc-200 bg-background pb-8 pt-6 dark:border-zinc-800">
           <div className="flex items-center gap-3">
             <Link
               href="/subs/new"
