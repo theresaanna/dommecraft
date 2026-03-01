@@ -4,6 +4,10 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import SettingsClient from "../SettingsClient";
 
+vi.mock("next-auth/react", () => ({
+  signOut: vi.fn(),
+}));
+
 vi.mock("next/link", () => ({
   default: ({
     children,
@@ -41,20 +45,20 @@ describe("SettingsClient", () => {
   });
 
   it("renders the page heading", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Settings")).toBeInTheDocument();
   });
 
   it("renders back link to dashboard", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const link = screen.getByRole("link", { name: /dashboard/i });
     expect(link).toHaveAttribute("href", "/dashboard");
   });
 
   it("renders all section headings", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Avatar")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
@@ -63,27 +67,27 @@ describe("SettingsClient", () => {
   });
 
   it("displays initial name and email values", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Display Name")).toHaveValue("Test User");
     expect(screen.getByLabelText("Email")).toHaveValue("test@test.com");
   });
 
   it("displays initial theme value", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Theme")).toHaveValue("SYSTEM");
   });
 
   it("displays initial calendar default view value", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Default View")).toHaveValue("MONTH");
   });
 
   it("updates name field on input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Display Name");
     await user.clear(input);
@@ -94,7 +98,7 @@ describe("SettingsClient", () => {
 
   it("updates email field on input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Email");
     await user.clear(input);
@@ -105,7 +109,7 @@ describe("SettingsClient", () => {
 
   it("changes theme select", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.selectOptions(screen.getByLabelText("Theme"), "DARK");
 
@@ -114,7 +118,7 @@ describe("SettingsClient", () => {
 
   it("changes calendar default view select", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.selectOptions(screen.getByLabelText("Default View"), "WEEK");
 
@@ -129,7 +133,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -156,7 +160,7 @@ describe("SettingsClient", () => {
       })
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -169,7 +173,7 @@ describe("SettingsClient", () => {
     const user = userEvent.setup();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network")));
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -192,7 +196,7 @@ describe("SettingsClient", () => {
       )
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -212,6 +216,7 @@ describe("SettingsClient", () => {
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
         }}
+        userRole="DOMME"
       />
     );
 
@@ -220,7 +225,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows initials fallback when no avatarUrl", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("T")).toBeInTheDocument();
   });
@@ -232,6 +237,7 @@ describe("SettingsClient", () => {
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
         }}
+        userRole="DOMME"
       />
     );
 
@@ -239,7 +245,7 @@ describe("SettingsClient", () => {
   });
 
   it("does not show Remove button when no avatar", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.queryByText("Remove")).not.toBeInTheDocument();
   });
@@ -252,6 +258,7 @@ describe("SettingsClient", () => {
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
         }}
+        userRole="DOMME"
       />
     );
 
@@ -272,7 +279,7 @@ describe("SettingsClient", () => {
       });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const file = new File(["avatar"], "avatar.png", { type: "image/png" });
     const input = screen.getByTestId("avatar-file-input");
@@ -305,7 +312,7 @@ describe("SettingsClient", () => {
       })
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const file = new File(["avatar"], "avatar.png", { type: "image/png" });
     const input = screen.getByTestId("avatar-file-input");
@@ -319,7 +326,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows link to external calendar sync settings", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const link = screen.getByRole("link", {
       name: /external calendar sync/i,
@@ -328,7 +335,7 @@ describe("SettingsClient", () => {
   });
 
   it("includes all theme options", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const themeSelect = screen.getByLabelText("Theme");
     const options = themeSelect.querySelectorAll("option");
@@ -338,7 +345,7 @@ describe("SettingsClient", () => {
   });
 
   it("includes all calendar view options", () => {
-    render(<SettingsClient initialSettings={defaultSettings} />);
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
 
     const viewSelect = screen.getByLabelText("Default View");
     const options = viewSelect.querySelectorAll("option");

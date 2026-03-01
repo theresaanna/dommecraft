@@ -50,12 +50,14 @@ export async function POST(request: Request) {
       },
     });
 
-    await createNotification({
-      userId: subProfile.userId,
-      type: "SUB_JOINED",
-      message: `${subProfile.fullName} has linked their account`,
-      linkUrl: `/subs/${subProfile.id}`,
-    });
+    if (subProfile.userId) {
+      await createNotification({
+        userId: subProfile.userId,
+        type: "SUB_JOINED",
+        message: `${subProfile.fullName} has linked their account`,
+        linkUrl: `/subs/${subProfile.id}`,
+      });
+    }
 
     return NextResponse.json(updated);
   } catch (error) {

@@ -8,6 +8,18 @@ export async function DELETE() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { role: true },
+  });
+
+  if (!user || user.role !== "DOMME") {
+    return NextResponse.json(
+      { error: "Only dommes can delete their accounts" },
+      { status: 403 }
+    );
+  }
+
   await prisma.user.delete({
     where: { id: session.user.id },
   });
