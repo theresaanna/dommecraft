@@ -1,4 +1,4 @@
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -871,20 +871,6 @@ export default async function DashboardPage() {
           )}
         </div>
       )}
-
-      <form
-        action={async () => {
-          "use server";
-          await signOut({ redirectTo: "/login" });
-        }}
-      >
-        <button
-          type="submit"
-          className="mt-6 rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-        >
-          Sign out
-        </button>
-      </form>
 
       <footer className="sticky bottom-0 mt-12 border-t border-zinc-200 bg-background pb-8 pt-6 dark:border-zinc-800">
         <div className="flex items-center gap-3">

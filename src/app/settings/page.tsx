@@ -17,6 +17,7 @@ export default async function SettingsPage() {
       avatarUrl: true,
       theme: true,
       calendarDefaultView: true,
+      role: true,
     },
   });
 
@@ -34,6 +35,7 @@ export default async function SettingsPage() {
           theme: user.theme,
           calendarDefaultView: user.calendarDefaultView,
         }}
+        userRole={user.role}
       />
     </div>
   );

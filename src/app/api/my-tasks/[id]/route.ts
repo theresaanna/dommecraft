@@ -96,15 +96,17 @@ export async function PATCH(
     });
 
     // Create notification for the DOMME
-    await prisma.notification.create({
-      data: {
-        userId: task.userId, // the DOMME
-        type: "TASK_SUBMITTED",
-        message: `Task submitted for review: ${task.title}`,
-        linkUrl: `/tasks/${task.id}`,
-        taskId: task.id,
-      },
-    });
+    if (task.userId) {
+      await prisma.notification.create({
+        data: {
+          userId: task.userId,
+          type: "TASK_SUBMITTED",
+          message: `Task submitted for review: ${task.title}`,
+          linkUrl: `/tasks/${task.id}`,
+          taskId: task.id,
+        },
+      });
+    }
 
     return NextResponse.json(updatedTask);
   } catch (error) {
