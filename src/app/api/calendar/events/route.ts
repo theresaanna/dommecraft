@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { expandEvents } from "@/lib/calendar-utils";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET(request: Request) {
   try {
@@ -108,6 +109,14 @@ export async function POST(request: Request) {
         sourceType: "STANDALONE",
         timezone: body.timezone || "UTC",
       },
+    });
+
+    await createNotification({
+      userId: session.user.id,
+      type: "CALENDAR_REMINDER",
+      message: `Upcoming event: ${body.title.trim()}`,
+      linkUrl: "/calendar",
+      calendarEventId: event.id,
     });
 
     return NextResponse.json(event, { status: 201 });

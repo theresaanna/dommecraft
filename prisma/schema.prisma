@@ -464,20 +464,24 @@ enum NotificationType {
   TASK_UPDATED
   TASK_SUBMITTED
   TASK_COMPLETED
+  CALENDAR_REMINDER
+  SUB_JOINED
 }
 
 model Notification {
-  id        String           @id @default(cuid())
-  userId    String           @map("user_id")
-  type      NotificationType
-  message   String
-  linkUrl   String?          @map("link_url")
-  isRead    Boolean          @default(false) @map("is_read")
-  taskId    String?          @map("task_id")
-  createdAt DateTime         @default(now()) @map("created_at")
+  id              String           @id @default(cuid())
+  userId          String           @map("user_id")
+  type            NotificationType
+  message         String
+  linkUrl         String?          @map("link_url")
+  isRead          Boolean          @default(false) @map("is_read")
+  taskId          String?          @map("task_id")
+  calendarEventId String?          @map("calendar_event_id")
+  createdAt       DateTime         @default(now()) @map("created_at")
 
-  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  task Task? @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task          Task?          @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  calendarEvent CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([userId, isRead])
@@ -512,8 +516,9 @@ model CalendarEvent {
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
 
-  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  sourceTask Task? @relation(fields: [sourceTaskId], references: [id], onDelete: SetNull)
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sourceTask    Task?          @relation(fields: [sourceTaskId], references: [id], onDelete: SetNull)
+  notifications Notification[]
 
   @@index([userId])
   @@index([userId, startAt])

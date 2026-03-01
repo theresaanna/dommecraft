@@ -259,10 +259,13 @@ export default async function DashboardPage() {
           Welcome, {session.user.name || session.user.email || "User"}
         </p>
         {unreadNotifications > 0 && (
-          <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+          <Link
+            href="/notifications"
+            className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+          >
             {unreadNotifications} new{" "}
             {unreadNotifications === 1 ? "notification" : "notifications"}
-          </span>
+          </Link>
         )}
       </div>
 
