@@ -8,7 +8,7 @@ import {
   createViewMonthGrid,
 } from "@schedule-x/calendar";
 import { createEventsServicePlugin } from "@schedule-x/events-service";
-import { Temporal } from "temporal-polyfill";
+import "temporal-polyfill/global";
 import "@schedule-x/theme-default/dist/index.css";
 import Link from "next/link";
 import CalendarEventForm from "./CalendarEventForm";
@@ -27,17 +27,18 @@ type CalendarEventData = {
 };
 
 function toScheduleXEvent(e: CalendarEventData) {
+  const T = globalThis.Temporal;
   return {
     id: e.id,
     title: e.title,
     description: e.description ?? undefined,
     calendarId: e.calendarId,
     start: e.isAllDay
-      ? Temporal.PlainDate.from(e.start)
-      : Temporal.ZonedDateTime.from(e.start.replace(" ", "T") + ":00[UTC]"),
+      ? T.PlainDate.from(e.start)
+      : T.ZonedDateTime.from(e.start.replace(" ", "T") + ":00[UTC]"),
     end: e.isAllDay
-      ? Temporal.PlainDate.from(e.end)
-      : Temporal.ZonedDateTime.from(e.end.replace(" ", "T") + ":00[UTC]"),
+      ? T.PlainDate.from(e.end)
+      : T.ZonedDateTime.from(e.end.replace(" ", "T") + ":00[UTC]"),
     sourceType: e.sourceType,
     originalEventId: e.originalEventId,
   };
