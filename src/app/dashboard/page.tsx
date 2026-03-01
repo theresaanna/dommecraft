@@ -82,14 +82,87 @@ export default async function DashboardPage() {
       })
     : [];
 
+  // Tasks (DOMME: assigned tasks, SUB: received tasks)
+  const dommeTasks = isDomme
+    ? await prisma.task.findMany({
+        where: {
+          userId: session.user.id,
+          status: { in: ["NOT_STARTED", "IN_PROGRESS", "SUBMITTED"] },
+        },
+        orderBy: [
+          { deadline: { sort: "asc", nulls: "last" } },
+          { createdAt: "desc" },
+        ],
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          priority: true,
+          status: true,
+          deadline: true,
+          sub: { select: { fullName: true } },
+        },
+      })
+    : [];
+
+  const submittedCount = isDomme
+    ? await prisma.task.count({
+        where: { userId: session.user.id, status: "SUBMITTED" },
+      })
+    : 0;
+
+  // SUB tasks
+  const linkedProfiles = !isDomme
+    ? await prisma.subProfile.findMany({
+        where: { linkedUserId: session.user.id },
+        select: { id: true },
+      })
+    : [];
+  const subProfileIds = linkedProfiles.map((p) => p.id);
+
+  const subTasks =
+    !isDomme && subProfileIds.length > 0
+      ? await prisma.task.findMany({
+          where: {
+            subId: { in: subProfileIds },
+            status: { in: ["NOT_STARTED", "IN_PROGRESS"] },
+          },
+          orderBy: [
+            { deadline: { sort: "asc", nulls: "last" } },
+            { createdAt: "desc" },
+          ],
+          take: 5,
+          select: {
+            id: true,
+            title: true,
+            priority: true,
+            status: true,
+            deadline: true,
+          },
+        })
+      : [];
+
+  // Notifications
+  const unreadNotifications = await prisma.notification.count({
+    where: { userId: session.user.id, isRead: false },
+  });
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
         Dashboard
       </h1>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
-        Welcome, {session.user.name || session.user.email || "User"}
-      </p>
+      <div className="mt-2 flex items-center justify-between">
+        <p className="text-zinc-600 dark:text-zinc-400">
+          Welcome, {session.user.name || session.user.email || "User"}
+        </p>
+        {unreadNotifications > 0 && (
+          <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+            {unreadNotifications} new{" "}
+            {unreadNotifications === 1 ? "notification" : "notifications"}
+          </span>
+        )}
+      </div>
 
       <div className="mt-8 rounded-lg border border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
@@ -293,6 +366,167 @@ export default async function DashboardPage() {
                 className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 View all projects &rarr;
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+
+      {isDomme && (
+        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <div className="flex items-center gap-2">
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                Tasks
+              </h2>
+              {submittedCount > 0 && (
+                <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+                  {submittedCount} awaiting review
+                </span>
+              )}
+            </div>
+            <Link
+              href="/tasks"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            >
+              View Tasks
+            </Link>
+          </div>
+          {dommeTasks.length === 0 ? (
+            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              <p>No active tasks.</p>
+              <Link
+                href="/tasks"
+                className="mt-2 inline-block text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+              >
+                Assign a task to a sub
+              </Link>
+            </div>
+          ) : (
+            <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {dommeTasks.map((task) => (
+                <li key={task.id}>
+                  <Link
+                    href={`/tasks/${task.id}`}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  >
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      {task.title}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {task.sub.fullName}
+                      </span>
+                      {task.status === "SUBMITTED" && (
+                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                          Submitted
+                        </span>
+                      )}
+                      {task.deadline && (
+                        <span
+                          className={`text-xs ${
+                            new Date(task.deadline) < new Date() &&
+                            task.status !== "COMPLETED"
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-zinc-500 dark:text-zinc-400"
+                          }`}
+                        >
+                          {new Date(task.deadline).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          {dommeTasks.length > 0 && (
+            <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+              <Link
+                href="/tasks"
+                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
+                View all tasks &rarr;
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
+
+      {!isDomme && (
+        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+          <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
+            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              My Tasks
+            </h2>
+            <Link
+              href="/my-tasks"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            >
+              View All
+            </Link>
+          </div>
+          {subProfileIds.length === 0 ? (
+            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              <p>Your account is not linked yet.</p>
+              <Link
+                href="/link"
+                className="mt-2 inline-block text-zinc-700 underline hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+              >
+                Link your account with an invite code
+              </Link>
+            </div>
+          ) : subTasks.length === 0 ? (
+            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+              <p>No active tasks assigned.</p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              {subTasks.map((task) => (
+                <li key={task.id}>
+                  <Link
+                    href={`/my-tasks/${task.id}`}
+                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  >
+                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      {task.title}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs ${
+                          task.priority === "HIGH"
+                            ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                            : task.priority === "MEDIUM"
+                              ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
+                              : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                        }`}
+                      >
+                        {task.priority}
+                      </span>
+                      {task.deadline && (
+                        <span
+                          className={`text-xs ${
+                            new Date(task.deadline) < new Date()
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-zinc-500 dark:text-zinc-400"
+                          }`}
+                        >
+                          {new Date(task.deadline).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+          {subTasks.length > 0 && (
+            <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
+              <Link
+                href="/my-tasks"
+                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
+                View all tasks &rarr;
               </Link>
             </div>
           )}
