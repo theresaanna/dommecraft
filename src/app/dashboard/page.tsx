@@ -868,53 +868,62 @@ export default async function DashboardPage() {
         </button>
       </form>
 
-      {isDomme && (
-        <footer className="sticky bottom-0 mt-12 border-t border-zinc-200 bg-background pb-8 pt-6 dark:border-zinc-800">
-          <div className="flex items-center gap-3">
+      <footer className="sticky bottom-0 mt-12 border-t border-zinc-200 bg-background pb-8 pt-6 dark:border-zinc-800">
+        <div className="flex items-center gap-3">
+          {isDomme ? (
+            <>
+              <Link
+                href="/subs/new"
+                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+              >
+                Add Sub
+              </Link>
+              <Link
+                href="/financials/new"
+                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+              >
+                New Entry
+              </Link>
+              <Link
+                href="/tasks/new"
+                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+              >
+                Create Task
+              </Link>
+              <Link
+                href="/calendar/new"
+                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+              >
+                New Event
+              </Link>
+            </>
+          ) : (
             <Link
-              href="/subs/new"
+              href="/my-tasks"
               className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
             >
-              Add Sub
+              My Tasks
             </Link>
-            <Link
-              href="/financials/new"
-              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-            >
-              New Entry
-            </Link>
-            <Link
-              href="/tasks/new"
-              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-            >
-              Create Task
-            </Link>
-            <Link
-              href="/calendar/new"
-              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-            >
-              New Event
-            </Link>
-          </div>
-          <div className="mt-4 text-center">
-            <Link
-              href="/notifications"
-              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-                unreadNotifications > 0
-                  ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-                  : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-              }`}
-            >
-              {unreadNotifications > 0 && (
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
-              )}
-              {unreadNotifications > 0
-                ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
-                : "Notifications"}
-            </Link>
-          </div>
-        </footer>
-      )}
+          )}
+        </div>
+        <div className="mt-4 text-center">
+          <Link
+            href="/notifications"
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+              unreadNotifications > 0
+                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+            }`}
+          >
+            {unreadNotifications > 0 && (
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
+            )}
+            {unreadNotifications > 0
+              ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
+              : "Notifications"}
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }
