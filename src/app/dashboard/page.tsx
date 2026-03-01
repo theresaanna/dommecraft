@@ -195,6 +195,7 @@ export default async function DashboardPage() {
           startAt: true,
           isAllDay: true,
           sourceType: true,
+          color: true,
         },
       })
     : [];
@@ -248,6 +249,12 @@ export default async function DashboardPage() {
   const unreadNotifications = await prisma.notification.count({
     where: { userId, isRead: false },
   });
+
+  const EVENT_SOURCE_COLORS: Record<string, string> = {
+    STANDALONE: "#3b82f6",
+    TASK: "#f59e0b",
+    REMINDER: "#8b5cf6",
+  };
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
@@ -639,23 +646,24 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
-              {upcomingEvents.map((event) => (
-                <li key={event.id}>
-                  <Link
-                    href="/calendar"
-                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                  >
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                      {event.title}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                        {event.sourceType === "TASK"
-                          ? "Task"
-                          : event.sourceType === "REMINDER"
-                            ? "Reminder"
-                            : "Event"}
-                      </span>
+              {upcomingEvents.map((event) => {
+                const eventColor =
+                  event.color || EVENT_SOURCE_COLORS[event.sourceType] || "#3b82f6";
+                return (
+                  <li key={event.id}>
+                    <Link
+                      href="/calendar"
+                      className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: eventColor }}
+                        />
+                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                          {event.title}
+                        </span>
+                      </div>
                       <span className="text-xs text-zinc-500 dark:text-zinc-400">
                         {event.isAllDay
                           ? new Date(event.startAt).toLocaleDateString()
@@ -666,10 +674,10 @@ export default async function DashboardPage() {
                               minute: "2-digit",
                             })}
                       </span>
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           )}
           {upcomingEvents.length > 0 && (
