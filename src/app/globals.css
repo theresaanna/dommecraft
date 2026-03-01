@@ -30,3 +30,18 @@ body {
   height: 800px;
   max-height: 80vh;
 }
+
+/* Undo Tailwind preflight resets inside Schedule-X calendar */
+.sx-react-calendar-wrapper *,
+.sx-react-calendar-wrapper *::before,
+.sx-react-calendar-wrapper *::after {
+  border-style: revert;
+  border-width: revert;
+  border-color: revert;
+}
+
+.sx-react-calendar-wrapper button {
+  background-color: revert;
+  background-image: revert;
+  cursor: pointer;
+}

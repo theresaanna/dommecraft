@@ -70,7 +70,7 @@ describe("expandEvents", () => {
     expect(result).toHaveLength(0);
   });
 
-  it("uses color as calendarId when color is set", () => {
+  it("uses sourceType as calendarId regardless of color", () => {
     const events = [
       {
         id: "evt-1",
@@ -87,10 +87,10 @@ describe("expandEvents", () => {
     ];
 
     const result = expandEvents(events, rangeStart, rangeEnd);
-    expect(result[0].calendarId).toBe("#ff0000");
+    expect(result[0].calendarId).toBe("standalone");
   });
 
-  it("uses sourceType as calendarId when no color", () => {
+  it("maps sourceType to calendarId", () => {
     const events = [
       {
         id: "evt-1",
