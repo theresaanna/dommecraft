@@ -8,6 +8,7 @@ import {
   createViewMonthGrid,
 } from "@schedule-x/calendar";
 import { createEventsServicePlugin } from "@schedule-x/events-service";
+import { Temporal } from "temporal-polyfill";
 import "@schedule-x/theme-default/dist/index.css";
 import Link from "next/link";
 import CalendarEventForm from "./CalendarEventForm";
@@ -47,8 +48,23 @@ export default function CalendarPageClient() {
           const data: CalendarEventData[] = await res.json();
           eventsService.set(
             data.map((e) => ({
-              ...e,
+              id: e.id,
+              title: e.title,
               description: e.description ?? undefined,
+              calendarId: e.calendarId,
+              start: e.isAllDay
+                ? Temporal.PlainDate.from(e.start)
+                : Temporal.ZonedDateTime.from(
+                    e.start.replace(" ", "T") + ":00[UTC]"
+                  ),
+              end: e.isAllDay
+                ? Temporal.PlainDate.from(e.end)
+                : Temporal.ZonedDateTime.from(
+                    e.end.replace(" ", "T") + ":00[UTC]"
+                  ),
+              // Preserve for event click handler
+              sourceType: e.sourceType,
+              originalEventId: e.originalEventId,
             }))
           );
         }

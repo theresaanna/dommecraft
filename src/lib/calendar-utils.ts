@@ -58,7 +58,7 @@ export function expandEvents(
       for (const occurrence of occurrences) {
         const endDate = new Date(occurrence.getTime() + duration);
         expanded.push({
-          id: `${event.id}_${occurrence.toISOString()}`,
+          id: `${event.id}_${occurrence.getTime()}`,
           title: event.title,
           description: event.description,
           start: formatForScheduleX(occurrence, event.isAllDay),
