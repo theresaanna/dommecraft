@@ -61,8 +61,8 @@ export async function POST(request: Request) {
 
         await Promise.all(
           completedTasks
-            .filter((t) => t.sub.linkedUserId)
-            .map((t) =>
+            .filter((t: (typeof completedTasks)[number]) => t.sub.linkedUserId)
+            .map((t: (typeof completedTasks)[number]) =>
               createNotification({
                 userId: t.sub.linkedUserId!,
                 type: "TASK_COMPLETED",

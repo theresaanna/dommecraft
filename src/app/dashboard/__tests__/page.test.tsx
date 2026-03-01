@@ -47,7 +47,7 @@ describe("DashboardPage quick action links", () => {
     render(page);
 
     const links = screen.getAllByRole("link", { name: /new entry/i });
-    links.forEach((link) => {
+    links.forEach((link: HTMLElement) => {
       expect(link).toHaveAttribute("href", "/financials/new");
     });
   });

@@ -99,8 +99,8 @@ export async function GET(request: Request) {
 
     // Enrich per-sub with names
     const subIds = perSubRaw
-      .map((row) => row.subId)
-      .filter((id): id is string => id !== null);
+      .map((row: (typeof perSubRaw)[number]) => row.subId)
+      .filter((id: string | null): id is string => id !== null);
 
     const subs =
       subIds.length > 0
@@ -110,9 +110,9 @@ export async function GET(request: Request) {
           })
         : [];
 
-    const subMap = new Map(subs.map((s) => [s.id, s.fullName]));
+    const subMap = new Map(subs.map((s: (typeof subs)[number]) => [s.id, s.fullName]));
 
-    const perSub = perSubRaw.map((row) => ({
+    const perSub = perSubRaw.map((row: (typeof perSubRaw)[number]) => ({
       subId: row.subId,
       subName: row.subId ? subMap.get(row.subId) || "Unknown" : "Unlinked",
       total: row._sum.amount,
@@ -160,12 +160,12 @@ export async function GET(request: Request) {
       average: totals._avg.amount || 0,
       count: totals._count,
       perSub,
-      byCategory: byCategory.map((row) => ({
+      byCategory: byCategory.map((row: (typeof byCategory)[number]) => ({
         category: row.category,
         total: row._sum.amount,
         count: row._count,
       })),
-      trend: trend.map((row) => ({
+      trend: trend.map((row: (typeof trend)[number]) => ({
         period: row.period,
         total: row.total,
         count: row.count,

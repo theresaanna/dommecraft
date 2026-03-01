@@ -35,7 +35,7 @@ export default async function ProjectDetailPage({
     redirect("/hub");
   }
 
-  const serializedNotes = project.notes.map((note) => ({
+  const serializedNotes = project.notes.map((note: (typeof project.notes)[number]) => ({
     id: note.id,
     title: note.title,
     content: note.content,

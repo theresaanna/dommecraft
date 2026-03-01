@@ -106,7 +106,7 @@ export default async function TasksPage({
   });
 
   // Serialize dates to ISO strings
-  const serializedTasks = tasks.map((task) => ({
+  const serializedTasks = tasks.map((task: (typeof tasks)[number]) => ({
     id: task.id,
     title: task.title,
     description: task.description,

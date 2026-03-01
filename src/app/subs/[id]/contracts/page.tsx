@@ -34,7 +34,7 @@ export default async function ContractsPage({
         </p>
       ) : (
         <ul className="mt-4 space-y-3">
-          {contracts.map((contract) => (
+          {contracts.map((contract: (typeof contracts)[number]) => (
             <li
               key={contract.id}
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"

@@ -19,7 +19,7 @@ export async function GET(
       where: { linkedUserId: session.user.id },
       select: { id: true },
     });
-    const profileIds = linkedProfiles.map((p) => p.id);
+    const profileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -65,7 +65,7 @@ export async function PATCH(
       where: { linkedUserId: session.user.id },
       select: { id: true },
     });
-    const profileIds = linkedProfiles.map((p) => p.id);
+    const profileIds = linkedProfiles.map((p: (typeof linkedProfiles)[number]) => p.id);
 
     const task = await prisma.task.findUnique({
       where: { id },

@@ -24,7 +24,7 @@ export default async function CalendarSettingsPage() {
     },
   });
 
-  const serialized = externalCalendars.map((cal) => ({
+  const serialized = externalCalendars.map((cal: (typeof externalCalendars)[number]) => ({
     id: cal.id,
     provider: cal.provider,
     isActive: cal.isActive,

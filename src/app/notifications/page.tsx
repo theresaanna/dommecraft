@@ -15,7 +15,7 @@ export default async function NotificationsPage() {
     take: 100,
   });
 
-  const serialized = notifications.map((n) => ({
+  const serialized = notifications.map((n: (typeof notifications)[number]) => ({
     id: n.id,
     type: n.type,
     message: n.message,

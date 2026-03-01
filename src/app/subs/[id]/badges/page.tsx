@@ -34,7 +34,7 @@ export default async function BadgesPage({
         </p>
       ) : (
         <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {badges.map((badge) => (
+          {badges.map((badge: (typeof badges)[number]) => (
             <li
               key={badge.id}
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"
