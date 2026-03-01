@@ -67,6 +67,7 @@ export default function CalendarPageClient() {
     null
   );
   const currentRangeRef = useRef<{ start: string; end: string } | null>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const eventsService = useState(() => createEventsServicePlugin())[0];
 
@@ -163,6 +164,9 @@ export default function CalendarPageClient() {
             originalEventId: raw.originalEventId as string,
           });
           setShowForm(true);
+          setTimeout(() => {
+            formRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 0);
         }
       },
     },
@@ -248,7 +252,7 @@ export default function CalendarPageClient() {
       </div>
 
       {showForm && (
-        <div className="mt-4">
+        <div ref={formRef} className="mt-4">
           <CalendarEventForm event={editingEvent} onClose={handleFormClose} />
           {editingEvent && (
             <button
