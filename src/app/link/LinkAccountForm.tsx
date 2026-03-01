@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 export default function LinkAccountForm() {
   const router = useRouter();
@@ -29,6 +30,7 @@ export default function LinkAccountForm() {
       }
 
       setSuccess(true);
+      triggerNotificationRefresh();
       setTimeout(() => {
         router.push("/my-tasks");
         router.refresh();

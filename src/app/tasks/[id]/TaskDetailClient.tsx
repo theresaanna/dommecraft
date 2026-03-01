@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 import TaskForm from "../TaskForm";
 import SubtaskList from "./SubtaskList";
 import SubtaskForm from "./SubtaskForm";
@@ -159,6 +160,7 @@ export default function TaskDetailClient({
       });
 
       if (res.ok) {
+        triggerNotificationRefresh();
         router.refresh();
       }
     } catch {
