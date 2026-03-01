@@ -138,6 +138,42 @@ export default function CalendarPageClient() {
           onContainer: "#ddd6fe",
         },
       },
+      "#3b82f6": {
+        colorName: "blue",
+        label: "Blue",
+        lightColors: { main: "#3b82f6", container: "#dbeafe", onContainer: "#1e40af" },
+        darkColors: { main: "#60a5fa", container: "#1e3a5f", onContainer: "#bfdbfe" },
+      },
+      "#ef4444": {
+        colorName: "red",
+        label: "Red",
+        lightColors: { main: "#ef4444", container: "#fee2e2", onContainer: "#991b1b" },
+        darkColors: { main: "#f87171", container: "#450a0a", onContainer: "#fecaca" },
+      },
+      "#22c55e": {
+        colorName: "green",
+        label: "Green",
+        lightColors: { main: "#22c55e", container: "#dcfce7", onContainer: "#166534" },
+        darkColors: { main: "#4ade80", container: "#052e16", onContainer: "#bbf7d0" },
+      },
+      "#8b5cf6": {
+        colorName: "purple",
+        label: "Purple",
+        lightColors: { main: "#8b5cf6", container: "#ede9fe", onContainer: "#5b21b6" },
+        darkColors: { main: "#a78bfa", container: "#2e1065", onContainer: "#ddd6fe" },
+      },
+      "#f97316": {
+        colorName: "orange",
+        label: "Orange",
+        lightColors: { main: "#f97316", container: "#ffedd5", onContainer: "#9a3412" },
+        darkColors: { main: "#fb923c", container: "#431407", onContainer: "#fed7aa" },
+      },
+      "#ec4899": {
+        colorName: "pink",
+        label: "Pink",
+        lightColors: { main: "#ec4899", container: "#fce7f3", onContainer: "#9d174d" },
+        darkColors: { main: "#f472b6", container: "#500724", onContainer: "#fbcfe8" },
+      },
     },
     callbacks: {
       onRangeUpdate(range) {

@@ -46,7 +46,7 @@ export function expandEvents(
   const expanded: ExpandedEvent[] = [];
 
   for (const event of events) {
-    const calendarId = event.sourceType.toLowerCase();
+    const calendarId = event.color || event.sourceType.toLowerCase();
 
     if (event.recurrenceRule) {
       const rule = RRule.fromString(event.recurrenceRule);
