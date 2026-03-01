@@ -45,7 +45,12 @@ export default function CalendarPageClient() {
         );
         if (res.ok) {
           const data: CalendarEventData[] = await res.json();
-          eventsService.set(data);
+          eventsService.set(
+            data.map((e) => ({
+              ...e,
+              description: e.description ?? undefined,
+            }))
+          );
         }
       } catch {
         // Silently fail; user can retry by navigating
