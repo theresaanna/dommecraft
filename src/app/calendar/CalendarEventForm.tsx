@@ -43,6 +43,7 @@ export default function CalendarEventForm({
   const router = useRouter();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [isAllDay, setIsAllDay] = useState(event?.isAllDay ?? false);
 
   const isEditing = !!event;
 
@@ -188,7 +189,8 @@ export default function CalendarEventForm({
             type="checkbox"
             id="isAllDay"
             name="isAllDay"
-            defaultChecked={event?.isAllDay ?? false}
+            checked={isAllDay}
+            onChange={(e) => setIsAllDay(e.target.checked)}
             className="rounded border-zinc-300 dark:border-zinc-600"
           />
           <label
@@ -203,50 +205,57 @@ export default function CalendarEventForm({
           {/* Start */}
           <div>
             <label
-              htmlFor="startAt"
+              htmlFor={isAllDay ? "startDate" : "startAt"}
               className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               Start *
             </label>
-            <input
-              type="datetime-local"
-              id="startAt"
-              name="startAt"
-              defaultValue={defaultStart}
-              required
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
-            <input
-              type="date"
-              id="startDate"
-              name="startDate"
-              defaultValue={defaultStart.split("T")[0]}
-              className="mt-1 hidden w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
+            {isAllDay ? (
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                defaultValue={defaultStart.split("T")[0]}
+                required
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              />
+            ) : (
+              <input
+                type="datetime-local"
+                id="startAt"
+                name="startAt"
+                defaultValue={defaultStart}
+                required
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              />
+            )}
           </div>
 
           {/* End */}
           <div>
             <label
-              htmlFor="endAt"
+              htmlFor={isAllDay ? "endDate" : "endAt"}
               className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               End
             </label>
-            <input
-              type="datetime-local"
-              id="endAt"
-              name="endAt"
-              defaultValue={defaultEnd}
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
-            <input
-              type="date"
-              id="endDate"
-              name="endDate"
-              defaultValue={defaultEnd.split("T")[0]}
-              className="mt-1 hidden w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
+            {isAllDay ? (
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                defaultValue={defaultEnd.split("T")[0]}
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              />
+            ) : (
+              <input
+                type="datetime-local"
+                id="endAt"
+                name="endAt"
+                defaultValue={defaultEnd}
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              />
+            )}
           </div>
         </div>
 
