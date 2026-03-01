@@ -13,6 +13,10 @@ export default async function SubDetailPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const sub = await prisma.subProfile.findUnique({

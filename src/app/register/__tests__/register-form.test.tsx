@@ -230,4 +230,118 @@ describe("RegisterForm", () => {
       ).toBeInTheDocument();
     });
   });
+
+  it("shows invite code field when Sub role is selected", async () => {
+    render(<RegisterForm />);
+
+    // Not visible by default (Domme role)
+    expect(screen.queryByLabelText("Invite Code")).not.toBeInTheDocument();
+
+    // Click Sub
+    await user.click(screen.getByRole("button", { name: "Sub" }));
+
+    expect(screen.getByLabelText("Invite Code")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Enter code from your Domme")
+    ).toBeInTheDocument();
+  });
+
+  it("hides invite code field when switching back to Domme", async () => {
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("button", { name: "Sub" }));
+    expect(screen.getByLabelText("Invite Code")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Domme" }));
+    expect(screen.queryByLabelText("Invite Code")).not.toBeInTheDocument();
+  });
+
+  it("links invite code after SUB registration", async () => {
+    // First call: register, second call: link
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ id: "new-user" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ id: "sub-profile-1" }),
+      });
+    mockSignIn.mockResolvedValue({ error: null });
+
+    // Mock window.location.href
+    const locationSpy = vi.spyOn(window, "location", "get").mockReturnValue({
+      ...window.location,
+      href: "",
+    } as Location);
+    const hrefSetter = vi.fn();
+    Object.defineProperty(window.location, "href", {
+      set: hrefSetter,
+      configurable: true,
+    });
+
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("button", { name: "Sub" }));
+    await user.type(screen.getByLabelText("Email"), "sub@example.com");
+    await user.type(screen.getByLabelText("Password"), "password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "password123");
+    await user.type(screen.getByLabelText("Invite Code"), "abc12345");
+    await user.click(
+      screen.getByRole("button", { name: /create account/i })
+    );
+
+    await waitFor(() => {
+      // Should sign in with redirect: false
+      expect(mockSignIn).toHaveBeenCalledWith("credentials", {
+        email: "sub@example.com",
+        password: "password123",
+        redirect: false,
+      });
+    });
+
+    await waitFor(() => {
+      // Should call /api/link with invite code
+      expect(mockFetch).toHaveBeenCalledWith("/api/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inviteCode: "abc12345" }),
+      });
+    });
+
+    locationSpy.mockRestore();
+  });
+
+  it("registers SUB without invite code using normal flow", async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id: "new-user" }),
+    });
+    mockSignIn.mockResolvedValue(undefined);
+    render(<RegisterForm />);
+
+    await user.click(screen.getByRole("button", { name: "Sub" }));
+    await user.type(screen.getByLabelText("Email"), "sub@example.com");
+    await user.type(screen.getByLabelText("Password"), "password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "password123");
+    // Leave invite code empty
+    await user.click(
+      screen.getByRole("button", { name: /create account/i })
+    );
+
+    await waitFor(() => {
+      // Should use normal signIn with callbackUrl (no invite code to link)
+      expect(mockSignIn).toHaveBeenCalledWith("credentials", {
+        email: "sub@example.com",
+        password: "password123",
+        callbackUrl: "/settings",
+      });
+    });
+
+    // Should NOT call /api/link
+    expect(mockFetch).not.toHaveBeenCalledWith(
+      "/api/link",
+      expect.anything()
+    );
+  });
 });

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import TasksFilters from "./TasksFilters";
 import TasksList from "./TasksList";
-import TaskForm from "./TaskForm";
 
 type AvailableSub = {
   id: string;
@@ -56,7 +55,6 @@ export default function TasksPageClient({
   currentParams: FilterParams;
 }) {
   const router = useRouter();
-  const [showForm, setShowForm] = useState(false);
   const [selectedTasks, setSelectedTasks] = useState<Set<string>>(new Set());
 
   function handleToggleSelect(id: string) {
@@ -110,11 +108,6 @@ export default function TasksPageClient({
     }
   }
 
-  function handleFormClose() {
-    setShowForm(false);
-    router.refresh();
-  }
-
   return (
     <>
       <div className="flex items-center justify-between">
@@ -132,23 +125,13 @@ export default function TasksPageClient({
             Assign and track tasks for your subs.
           </p>
         </div>
-        <button
-          onClick={() => setShowForm(!showForm)}
+        <Link
+          href="/tasks/new"
           className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          {showForm ? "Cancel" : "New Task"}
-        </button>
+          New Task
+        </Link>
       </div>
-
-      {showForm && (
-        <div className="mt-4">
-          <TaskForm
-            availableSubs={availableSubs}
-            availableProjects={availableProjects}
-            onClose={handleFormClose}
-          />
-        </div>
-      )}
 
       <TasksFilters
         currentParams={currentParams}

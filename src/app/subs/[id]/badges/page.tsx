@@ -12,6 +12,10 @@ export default async function BadgesPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const badges = await prisma.badge.findMany({
