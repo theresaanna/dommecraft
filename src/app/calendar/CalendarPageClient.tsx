@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ScheduleXCalendar, useNextCalendarApp } from "@schedule-x/react";
 import {
   createViewDay,
@@ -11,7 +12,6 @@ import { createEventsServicePlugin } from "@schedule-x/events-service";
 import "temporal-polyfill/global";
 import "@schedule-x/theme-default/dist/index.css";
 import Link from "next/link";
-import CalendarEventForm from "./CalendarEventForm";
 
 type CalendarEventData = {
   id: string;
@@ -25,23 +25,6 @@ type CalendarEventData = {
   sourceTaskId: string | null;
   originalEventId: string;
 };
-
-function temporalToString(
-  value: unknown,
-  isAllDay: boolean
-): string {
-  if (typeof value === "string") return value;
-  const t = value as {
-    year: number;
-    month: number;
-    day: number;
-    hour?: number;
-    minute?: number;
-  };
-  const date = `${t.year}-${String(t.month).padStart(2, "0")}-${String(t.day).padStart(2, "0")}`;
-  if (isAllDay) return date;
-  return `${date} ${String(t.hour ?? 0).padStart(2, "0")}:${String(t.minute ?? 0).padStart(2, "0")}`;
-}
 
 function toScheduleXEvent(e: CalendarEventData) {
   const T = globalThis.Temporal;
@@ -62,12 +45,8 @@ function toScheduleXEvent(e: CalendarEventData) {
 }
 
 export default function CalendarPageClient() {
-  const [showForm, setShowForm] = useState(false);
-  const [editingEvent, setEditingEvent] = useState<CalendarEventData | null>(
-    null
-  );
+  const router = useRouter();
   const currentRangeRef = useRef<{ start: string; end: string } | null>(null);
-  const formRef = useRef<HTMLDivElement>(null);
 
   const eventsService = useState(() => createEventsServicePlugin())[0];
 
@@ -185,24 +164,8 @@ export default function CalendarPageClient() {
       onEventClick(calendarEvent) {
         const raw = calendarEvent as unknown as Record<string, unknown>;
         if (raw.sourceType === "STANDALONE") {
-          const T = globalThis.Temporal;
-          const isAllDay = raw.start instanceof T.PlainDate;
-          setEditingEvent({
-            id: raw.id as string,
-            title: raw.title as string,
-            description: (raw.description as string) ?? null,
-            start: temporalToString(raw.start, isAllDay),
-            end: temporalToString(raw.end, isAllDay),
-            calendarId: raw.calendarId as string,
-            isAllDay,
-            sourceType: raw.sourceType as string,
-            sourceTaskId: null,
-            originalEventId: raw.originalEventId as string,
-          });
-          setShowForm(true);
-          setTimeout(() => {
-            formRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 0);
+          const originalEventId = raw.originalEventId as string;
+          router.push(`/calendar/${originalEventId}/edit`);
         }
       },
     },
@@ -229,39 +192,6 @@ export default function CalendarPageClient() {
     }
   }, [calendar, fetchEvents]);
 
-  function refetchCurrentRange() {
-    if (currentRangeRef.current) {
-      fetchEvents(currentRangeRef.current.start, currentRangeRef.current.end);
-    } else {
-      // Fallback: fetch current month
-      const now = new Date();
-      const start = new Date(now.getFullYear(), now.getMonth(), 1);
-      const end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-      fetchEvents(start.toISOString(), end.toISOString());
-    }
-  }
-
-  function handleFormClose() {
-    setShowForm(false);
-    setEditingEvent(null);
-    refetchCurrentRange();
-  }
-
-  async function handleDeleteEvent() {
-    if (!editingEvent) return;
-    try {
-      const res = await fetch(
-        `/api/calendar/events/${editingEvent.originalEventId}`,
-        { method: "DELETE" }
-      );
-      if (res.ok) {
-        handleFormClose();
-      }
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
-  }
-
   return (
     <>
       <div className="flex items-center justify-between">
@@ -276,30 +206,13 @@ export default function CalendarPageClient() {
             Calendar
           </h1>
         </div>
-        <button
-          onClick={() => {
-            setEditingEvent(null);
-            setShowForm(!showForm);
-          }}
+        <Link
+          href="/calendar/new"
           className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          {showForm ? "Cancel" : "New Event"}
-        </button>
+          New Event
+        </Link>
       </div>
-
-      {showForm && (
-        <div ref={formRef} className="mt-4">
-          <CalendarEventForm event={editingEvent} onClose={handleFormClose} />
-          {editingEvent && (
-            <button
-              onClick={handleDeleteEvent}
-              className="mt-2 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-            >
-              Delete this event
-            </button>
-          )}
-        </div>
-      )}
 
       <div className="sx-react-calendar mt-6">
         <ScheduleXCalendar calendarApp={calendar} />

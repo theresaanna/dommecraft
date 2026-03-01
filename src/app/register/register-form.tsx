@@ -18,6 +18,7 @@ export function RegisterForm() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
+    const inviteCode = formData.get("inviteCode") as string;
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -39,12 +40,44 @@ export function RegisterForm() {
         return;
       }
 
-      // Auto sign-in after registration
-      await signIn("credentials", {
-        email,
-        password,
-        callbackUrl: "/settings",
-      });
+      if (role === "SUB" && inviteCode?.trim()) {
+        // Sign in without redirect so we can link the invite code first
+        const signInResult = await signIn("credentials", {
+          email,
+          password,
+          redirect: false,
+        });
+
+        if (signInResult?.error) {
+          setError(
+            "Account created but sign-in failed. Please log in and link your code from the dashboard."
+          );
+          setIsLoading(false);
+          return;
+        }
+
+        const linkRes = await fetch("/api/link", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ inviteCode: inviteCode.trim() }),
+        });
+
+        if (!linkRes.ok) {
+          const data = await linkRes.json();
+          setError(
+            data.error ||
+              "Account created but invite code could not be linked"
+          );
+        }
+
+        window.location.href = "/my-tasks";
+      } else {
+        await signIn("credentials", {
+          email,
+          password,
+          callbackUrl: "/settings",
+        });
+      }
     } catch {
       setError("An unexpected error occurred");
       setIsLoading(false);
@@ -150,6 +183,27 @@ export function RegisterForm() {
             </button>
           </div>
         </fieldset>
+
+        {role === "SUB" && (
+          <div>
+            <label
+              htmlFor="inviteCode"
+              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Invite Code
+            </label>
+            <input
+              id="inviteCode"
+              name="inviteCode"
+              type="text"
+              placeholder="Enter code from your Domme"
+              className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            />
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              Optional. You can also link your account later from the dashboard.
+            </p>
+          </div>
+        )}
 
         <button
           type="submit"

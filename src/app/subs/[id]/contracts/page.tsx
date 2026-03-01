@@ -12,6 +12,10 @@ export default async function ContractsPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const contracts = await prisma.contract.findMany({

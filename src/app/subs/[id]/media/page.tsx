@@ -12,6 +12,10 @@ export default async function MediaPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const mediaItems = await prisma.mediaItem.findMany({

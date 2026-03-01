@@ -34,7 +34,7 @@ type Suggestions = {
 
 export default function NewSubPage() {
   const router = useRouter();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<Suggestions>({
@@ -57,6 +57,11 @@ export default function NewSubPage() {
 
   if (status === "unauthenticated") {
     router.push("/login");
+    return null;
+  }
+
+  if (status === "authenticated" && session?.user?.role !== "DOMME") {
+    router.push("/dashboard");
     return null;
   }
 

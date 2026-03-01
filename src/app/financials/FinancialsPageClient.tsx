@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 import FinancialsFilters from "./FinancialsFilters";
 import FinancialsSummary from "./FinancialsSummary";
 import FinancialsList from "./FinancialsList";
-import FinancialEntryForm from "./FinancialEntryForm";
 
 type AvailableSub = {
   id: string;
@@ -64,30 +63,19 @@ export default function FinancialsPageClient({
   availableSubs: AvailableSub[];
   currentParams: FilterParams;
 }) {
-  const [showForm, setShowForm] = useState(false);
-
   return (
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
           Financial Tracking
         </h1>
-        <button
-          onClick={() => setShowForm(!showForm)}
+        <Link
+          href="/financials/new"
           className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          {showForm ? "Cancel" : "Add Entry"}
-        </button>
+          Add Entry
+        </Link>
       </div>
-
-      {showForm && (
-        <div className="mt-4">
-          <FinancialEntryForm
-            subs={availableSubs}
-            onClose={() => setShowForm(false)}
-          />
-        </div>
-      )}
 
       <FinancialsFilters
         currentParams={currentParams}

@@ -12,6 +12,10 @@ export default async function RatingsPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const ratings = await prisma.rating.findMany({

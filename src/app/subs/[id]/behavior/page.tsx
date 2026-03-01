@@ -12,6 +12,10 @@ export default async function BehaviorPage({
     redirect("/login");
   }
 
+  if (session.user.role !== "DOMME") {
+    redirect("/dashboard");
+  }
+
   const { id } = await params;
 
   const scores = await prisma.behaviorScore.findMany({
