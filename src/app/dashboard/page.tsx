@@ -258,15 +258,18 @@ export default async function DashboardPage() {
         <p className="text-zinc-600 dark:text-zinc-400">
           Welcome, {session.user.name || session.user.email || "User"}
         </p>
-        {unreadNotifications > 0 && (
-          <Link
-            href="/notifications"
-            className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-          >
-            {unreadNotifications} new{" "}
-            {unreadNotifications === 1 ? "notification" : "notifications"}
-          </Link>
-        )}
+        <Link
+          href="/notifications"
+          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+            unreadNotifications > 0
+              ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
+              : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+          }`}
+        >
+          {unreadNotifications > 0
+            ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
+            : "Notifications"}
+        </Link>
       </div>
 
       {isDomme && (
