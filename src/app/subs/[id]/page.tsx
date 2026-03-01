@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import InviteCodeButton from "./InviteCodeButton";
 
 export default async function SubDetailPage({
@@ -160,7 +161,9 @@ export default async function SubDetailPage({
           <CountCard label="Ratings" count={sub._count.ratings} />
           <CountCard label="Behavior Scores" count={sub._count.behaviorScores} />
           <CountCard label="Contracts" count={sub._count.contracts} />
-          <CountCard label="Tasks" count={sub._count.tasks} />
+          <Link href={`/subs/${id}/tasks`}>
+            <CountCard label="Tasks" count={sub._count.tasks} />
+          </Link>
         </dl>
       </section>
     </div>

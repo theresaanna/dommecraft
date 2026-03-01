@@ -17,6 +17,7 @@ vi.mock("@/lib/prisma", () => ({
     contract: { findMany: vi.fn().mockResolvedValue([]) },
     mediaItem: { findMany: vi.fn().mockResolvedValue([]) },
     rating: { findMany: vi.fn().mockResolvedValue([]) },
+    task: { findMany: vi.fn().mockResolvedValue([]) },
   },
 }));
 
@@ -33,6 +34,7 @@ import BehaviorPage from "../[id]/behavior/page";
 import ContractsPage from "../[id]/contracts/page";
 import MediaPage from "../[id]/media/page";
 import RatingsPage from "../[id]/ratings/page";
+import SubTasksPage from "../[id]/tasks/page";
 
 const subSession = {
   user: { id: "sub-user-1", name: "Sub", email: "sub@test.com", role: "SUB" },
@@ -73,6 +75,11 @@ describe("Sub page role guards", () => {
 
   it("RatingsPage redirects SUB users to /dashboard", async () => {
     await expect(RatingsPage({ params })).rejects.toThrow();
+    expect(redirect).toHaveBeenCalledWith("/dashboard");
+  });
+
+  it("SubTasksPage redirects SUB users to /dashboard", async () => {
+    await expect(SubTasksPage({ params })).rejects.toThrow();
     expect(redirect).toHaveBeenCalledWith("/dashboard");
   });
 });
