@@ -70,7 +70,7 @@ describe("expandEvents", () => {
     expect(result).toHaveLength(0);
   });
 
-  it("uses sourceType as calendarId regardless of color", () => {
+  it("uses color as calendarId when color is set", () => {
     const events = [
       {
         id: "evt-1",
@@ -80,6 +80,26 @@ describe("expandEvents", () => {
         endAt: new Date("2024-06-10T11:00:00Z"),
         isAllDay: false,
         color: "#ff0000",
+        recurrenceRule: null,
+        sourceType: "STANDALONE",
+        sourceTaskId: null,
+      },
+    ];
+
+    const result = expandEvents(events, rangeStart, rangeEnd);
+    expect(result[0].calendarId).toBe("#ff0000");
+  });
+
+  it("falls back to sourceType as calendarId when no color", () => {
+    const events = [
+      {
+        id: "evt-1",
+        title: "Default Event",
+        description: null,
+        startAt: new Date("2024-06-10T10:00:00Z"),
+        endAt: new Date("2024-06-10T11:00:00Z"),
+        isAllDay: false,
+        color: null,
         recurrenceRule: null,
         sourceType: "STANDALONE",
         sourceTaskId: null,
