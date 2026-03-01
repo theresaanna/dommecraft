@@ -109,8 +109,10 @@ export default function CalendarPageClient() {
     },
     callbacks: {
       onRangeUpdate(range) {
-        setCurrentRange(range);
-        fetchEvents(range.start, range.end);
+        const start = new Date(range.start.epochMilliseconds).toISOString();
+        const end = new Date(range.end.epochMilliseconds).toISOString();
+        setCurrentRange({ start, end });
+        fetchEvents(start, end);
       },
       onEventClick(calendarEvent) {
         const eventData = calendarEvent as unknown as CalendarEventData;
