@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { ScheduleXCalendar, useNextCalendarApp } from "@schedule-x/react";
 import {
   createViewDay,
@@ -26,15 +26,29 @@ type CalendarEventData = {
   originalEventId: string;
 };
 
+function toScheduleXEvent(e: CalendarEventData) {
+  return {
+    id: e.id,
+    title: e.title,
+    description: e.description ?? undefined,
+    calendarId: e.calendarId,
+    start: e.isAllDay
+      ? Temporal.PlainDate.from(e.start)
+      : Temporal.ZonedDateTime.from(e.start.replace(" ", "T") + ":00[UTC]"),
+    end: e.isAllDay
+      ? Temporal.PlainDate.from(e.end)
+      : Temporal.ZonedDateTime.from(e.end.replace(" ", "T") + ":00[UTC]"),
+    sourceType: e.sourceType,
+    originalEventId: e.originalEventId,
+  };
+}
+
 export default function CalendarPageClient() {
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEventData | null>(
     null
   );
-  const [currentRange, setCurrentRange] = useState<{
-    start: string;
-    end: string;
-  } | null>(null);
+  const currentRangeRef = useRef<{ start: string; end: string } | null>(null);
 
   const eventsService = useState(() => createEventsServicePlugin())[0];
 
@@ -44,32 +58,15 @@ export default function CalendarPageClient() {
         const res = await fetch(
           `/api/calendar/events?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`
         );
-        if (res.ok) {
-          const data: CalendarEventData[] = await res.json();
-          eventsService.set(
-            data.map((e) => ({
-              id: e.id,
-              title: e.title,
-              description: e.description ?? undefined,
-              calendarId: e.calendarId,
-              start: e.isAllDay
-                ? Temporal.PlainDate.from(e.start)
-                : Temporal.ZonedDateTime.from(
-                    e.start.replace(" ", "T") + ":00[UTC]"
-                  ),
-              end: e.isAllDay
-                ? Temporal.PlainDate.from(e.end)
-                : Temporal.ZonedDateTime.from(
-                    e.end.replace(" ", "T") + ":00[UTC]"
-                  ),
-              // Preserve for event click handler
-              sourceType: e.sourceType,
-              originalEventId: e.originalEventId,
-            }))
-          );
+        if (!res.ok) {
+          const data = await res.json();
+          console.error("Calendar API error:", data.error);
+          return;
         }
-      } catch {
-        // Silently fail; user can retry by navigating
+        const data: CalendarEventData[] = await res.json();
+        eventsService.set(data.map(toScheduleXEvent));
+      } catch (err) {
+        console.error("Calendar fetch error:", err);
       }
     },
     [eventsService]
@@ -127,7 +124,7 @@ export default function CalendarPageClient() {
       onRangeUpdate(range) {
         const start = new Date(range.start.epochMilliseconds).toISOString();
         const end = new Date(range.end.epochMilliseconds).toISOString();
-        setCurrentRange({ start, end });
+        currentRangeRef.current = { start, end };
         fetchEvents(start, end);
       },
       onEventClick(calendarEvent) {
@@ -140,20 +137,22 @@ export default function CalendarPageClient() {
     },
   });
 
-  // Fetch initial events on mount
-  useEffect(() => {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    fetchEvents(start.toISOString(), end.toISOString());
-  }, [fetchEvents]);
+  function refetchCurrentRange() {
+    if (currentRangeRef.current) {
+      fetchEvents(currentRangeRef.current.start, currentRangeRef.current.end);
+    } else {
+      // Fallback: fetch current month
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const end = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+      fetchEvents(start.toISOString(), end.toISOString());
+    }
+  }
 
   function handleFormClose() {
     setShowForm(false);
     setEditingEvent(null);
-    if (currentRange) {
-      fetchEvents(currentRange.start, currentRange.end);
-    }
+    refetchCurrentRange();
   }
 
   async function handleDeleteEvent() {
@@ -166,8 +165,8 @@ export default function CalendarPageClient() {
       if (res.ok) {
         handleFormClose();
       }
-    } catch {
-      // Silently fail
+    } catch (err) {
+      console.error("Delete error:", err);
     }
   }
 
