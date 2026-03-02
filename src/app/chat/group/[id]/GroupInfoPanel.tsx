@@ -8,6 +8,7 @@ type GroupMemberInfo = {
   name: string | null;
   avatarUrl: string | null;
   role: "ADMIN" | "MEMBER";
+  userRole: "DOMME" | "SUB";
 };
 
 type Props = {
