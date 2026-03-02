@@ -102,11 +102,20 @@ const propsWithReactions = {
   ],
 };
 
+vi.mock("next/image", () => ({
+  default: (props: Record<string, unknown>) => {
+    const { fill, ...rest } = props;
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    return <img {...rest} />;
+  },
+}));
+
 describe("ChatClient reactions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     reactionSubscribeCallback = null;
     global.fetch = vi.fn();
+    localStorage.clear();
   });
 
   it("displays reaction counts on messages with reactions", () => {
@@ -319,6 +328,147 @@ describe("ChatClient reactions", () => {
     expect(mockUnsubscribe).toHaveBeenCalledWith(
       "reaction",
       expect.any(Function)
+    );
+  });
+
+  it("shows quick reactions bar with emoji menu button when add reaction is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
+    await user.click(addReactionButton);
+
+    // Quick reactions bar should show
+    expect(screen.getByTestId("quick-reactions")).toBeInTheDocument();
+
+    // Should include the "open emoji menu" button
+    expect(screen.getByRole("button", { name: /open emoji menu/i })).toBeInTheDocument();
+  });
+
+  it("opens the full emoji picker when emoji menu button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
+    await user.click(addReactionButton);
+
+    const emojiMenuButton = screen.getByRole("button", { name: /open emoji menu/i });
+    await user.click(emojiMenuButton);
+
+    // Full emoji picker should be visible
+    expect(screen.getByTestId("emoji-picker")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Search emoji...")).toBeInTheDocument();
+
+    // Quick reactions bar should be closed
+    expect(screen.queryByTestId("quick-reactions")).toBeNull();
+  });
+
+  it("sends a POST request when selecting emoji from the full picker", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "reaction-1",
+          messageId: "msg-1",
+          userId: "user-1",
+          emoji: "😀",
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Open quick reactions, then full picker
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
+    await user.click(addReactionButton);
+
+    const emojiMenuButton = screen.getByRole("button", { name: /open emoji menu/i });
+    await user.click(emojiMenuButton);
+
+    // Select an emoji from the full picker
+    const picker = screen.getByTestId("emoji-picker");
+    const smileysSection = within(picker).getByTestId("category-smileys");
+    const firstEmoji = within(smileysSection).getAllByRole("option")[0];
+    await user.click(firstEmoji);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages/msg-1/reactions",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ emoji: "😀" }),
+      })
+    );
+  });
+
+  it("closes the full emoji picker after selecting an emoji", async () => {
+    const user = userEvent.setup();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id: "r-1", messageId: "msg-1", userId: "user-1", emoji: "😀" }),
+    });
+
+    render(<ChatClient {...defaultProps} />);
+
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
+    await user.click(addReactionButton);
+
+    const emojiMenuButton = screen.getByRole("button", { name: /open emoji menu/i });
+    await user.click(emojiMenuButton);
+
+    expect(screen.getByTestId("emoji-picker")).toBeInTheDocument();
+
+    const picker = screen.getByTestId("emoji-picker");
+    const smileysSection = within(picker).getByTestId("category-smileys");
+    const firstEmoji = within(smileysSection).getAllByRole("option")[0];
+    await user.click(firstEmoji);
+
+    // Picker should close after selection
+    expect(screen.queryByTestId("emoji-picker")).toBeNull();
+  });
+
+  it("can search for emoji in the full picker and react with the result", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "reaction-1",
+          messageId: "msg-1",
+          userId: "user-1",
+          emoji: "🔥",
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Open quick reactions, then full picker
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
+    await user.click(addReactionButton);
+
+    const emojiMenuButton = screen.getByRole("button", { name: /open emoji menu/i });
+    await user.click(emojiMenuButton);
+
+    // Search for "fire"
+    const searchInput = screen.getByPlaceholderText("Search emoji...");
+    await user.type(searchInput, "fire");
+
+    // Click the fire emoji from search results
+    const fireEmoji = screen.getByRole("option", { name: "🔥" });
+    await user.click(fireEmoji);
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages/msg-1/reactions",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ emoji: "🔥" }),
+      })
     );
   });
 });

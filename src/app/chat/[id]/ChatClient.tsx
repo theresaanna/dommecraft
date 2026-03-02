@@ -6,6 +6,7 @@ import Image from "next/image";
 import type Ably from "ably";
 import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
+import EmojiPicker from "@/components/EmojiPicker";
 
 type Reaction = {
   emoji: string;
@@ -79,6 +80,7 @@ export default function ChatClient({
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [pickerOpenFor, setPickerOpenFor] = useState<string | null>(null);
+  const [fullPickerOpenFor, setFullPickerOpenFor] = useState<string | null>(null);
   const [otherLastReadAt, setOtherLastReadAt] = useState<string | null>(
     initialOtherLastReadAt
   );
@@ -286,6 +288,7 @@ export default function ChatClient({
     );
 
     setPickerOpenFor(null);
+    setFullPickerOpenFor(null);
 
     try {
       const res = await fetch(
@@ -595,7 +598,10 @@ export default function ChatClient({
                       </button>
                     )}
                     {pickerOpenFor === msg.id && (
-                      <div className="absolute bottom-full left-0 z-10 mb-1 flex gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800">
+                      <div
+                        data-testid="quick-reactions"
+                        className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800"
+                      >
                         {EMOJI_OPTIONS.map((emoji) => (
                           <button
                             key={emoji}
@@ -606,6 +612,28 @@ export default function ChatClient({
                             {emoji}
                           </button>
                         ))}
+                        <div className="mx-0.5 h-5 w-px bg-zinc-200 dark:bg-zinc-600" />
+                        <button
+                          onClick={() => {
+                            setPickerOpenFor(null);
+                            setFullPickerOpenFor(msg.id);
+                          }}
+                          aria-label="open emoji menu"
+                          title="Browse all emoji"
+                          className="rounded p-1 text-sm text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.536-4.464a.75.75 0 10-1.06-1.06 3.5 3.5 0 01-4.95 0 .75.75 0 00-1.06 1.06 5 5 0 007.07 0zM9 8.5c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S7.448 7 8 7s1 .672 1 1.5zm3 1.5c.552 0 1-.672 1-1.5S12.552 7 12 7s-1 .672-1 1.5.448 1.5 1 1.5z" clipRule="evenodd" />
+                          </svg>
+                        </button>
+                      </div>
+                    )}
+                    {fullPickerOpenFor === msg.id && (
+                      <div className="absolute bottom-full left-0 z-20 mb-1">
+                        <EmojiPicker
+                          onSelect={(emoji) => handleReaction(msg.id, emoji)}
+                          onClose={() => setFullPickerOpenFor(null)}
+                        />
                       </div>
                     )}
                   </div>
