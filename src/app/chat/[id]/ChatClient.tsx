@@ -497,7 +497,7 @@ export default function ChatClient({
                           data-testid="edit-input"
                           value={editInput}
                           onChange={(e) => setEditInput(e.target.value)}
-                          className="rounded border border-zinc-300 px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+                          className="rounded border border-zinc-400 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
                           autoFocus
                           onKeyDown={(e) => {
                             if (e.key === "Escape") handleEditCancel();
