@@ -275,6 +275,8 @@ export async function POST(
       select: { userId: true },
     });
 
+    const rest = getAblyRest();
+
     for (const member of otherMembers) {
       const existing = await prisma.notification.findFirst({
         where: {
@@ -300,6 +302,18 @@ export async function POST(
             linkUrl: chatLinkUrl,
           },
         });
+      }
+
+      // Push real-time notification so members' notification providers poll immediately
+      try {
+        const notifyChannel = rest.channels.get(
+          `user-notifications:${member.userId}`
+        );
+        await notifyChannel.publish("notify", {
+          type: "GROUP_CHAT_MESSAGE",
+        });
+      } catch {
+        // Non-fatal per member
       }
     }
   } catch {

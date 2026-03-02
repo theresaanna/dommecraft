@@ -75,4 +75,5 @@ const TYPE_LABELS: Record<string, string> = {
   FRIEND_REQUEST: "Friend Request",
   FRIEND_ACCEPTED: "Friend Accepted",
   CHAT_MESSAGE: "New Message",
+  GROUP_CHAT_MESSAGE: "Group Message",
 };

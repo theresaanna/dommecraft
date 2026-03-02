@@ -9,6 +9,7 @@ declare module "next-auth" {
       avatarUrl?: string | null;
       theme: Theme;
       showOnlineStatus: boolean;
+      notificationSound: boolean;
     } & DefaultSession["user"];
   }
 }
