@@ -53,9 +53,15 @@ export async function scanFile(
       classification === "csam" ||
       classification === "harmful-abusive-material"
     ) {
+      console.log(
+        `[Arachnid Shield] MATCH — file: ${file.name}, type: ${file.type}, classification: ${classification}`
+      );
       return { safe: false };
     }
 
+    console.log(
+      `[Arachnid Shield] CLEAR — file: ${file.name}, type: ${file.type}, classification: ${classification ?? "no-known-match"}`
+    );
     return { safe: true };
   } catch (error) {
     console.error("Arachnid Shield scan failed:", error);
