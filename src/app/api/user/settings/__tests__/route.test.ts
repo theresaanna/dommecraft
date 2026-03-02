@@ -81,6 +81,7 @@ describe("GET /api/user/settings", () => {
       calendarDefaultView: "MONTH",
       slug: "test-user-a1b2",
       showOnlineStatus: true,
+      showReadReceipts: true,
     } as never);
 
     const res = await GET();
@@ -95,6 +96,7 @@ describe("GET /api/user/settings", () => {
       calendarDefaultView: "MONTH",
       slug: "test-user-a1b2",
       showOnlineStatus: true,
+      showReadReceipts: true,
     });
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { id: "user-1" },
@@ -106,6 +108,7 @@ describe("GET /api/user/settings", () => {
         calendarDefaultView: true,
         slug: true,
         showOnlineStatus: true,
+        showReadReceipts: true,
       },
     });
   });
@@ -154,6 +157,7 @@ describe("PATCH /api/user/settings", () => {
         calendarDefaultView: true,
         slug: true,
         showOnlineStatus: true,
+        showReadReceipts: true,
       },
     });
   });
@@ -355,6 +359,28 @@ describe("PATCH /api/user/settings", () => {
 
     expect(res.status).toBe(200);
     expect(data.showOnlineStatus).toBe(false);
+  });
+
+  it("updates showReadReceipts", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockUpdate.mockResolvedValue({
+      name: "Test",
+      email: "test@test.com",
+      avatarUrl: null,
+      theme: "SYSTEM",
+      calendarDefaultView: "MONTH",
+      slug: "test-user",
+      showOnlineStatus: true,
+      showReadReceipts: false,
+    } as never);
+
+    const res = await PATCH(createRequest({ showReadReceipts: false }));
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.showReadReceipts).toBe(false);
   });
 
   it("returns 500 on internal error", async () => {

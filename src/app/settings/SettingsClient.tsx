@@ -12,6 +12,7 @@ type SettingsData = {
   calendarDefaultView: "MONTH" | "WEEK" | "DAY";
   slug: string;
   showOnlineStatus: boolean;
+  showReadReceipts: boolean;
 };
 
 export default function SettingsClient({
@@ -349,6 +350,28 @@ export default function SettingsClient({
           </label>
           <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
             When disabled, you will always appear offline to others.
+          </p>
+        </div>
+        <div className="mt-3">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={settings.showReadReceipts}
+              onChange={(e) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  showReadReceipts: e.target.checked,
+                }))
+              }
+              className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
+            />
+            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+              Show read receipts
+            </span>
+          </label>
+          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+            When disabled, you won&apos;t send read receipts and won&apos;t see
+            when others read your messages.
           </p>
         </div>
       </div>
