@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { put } from "@vercel/blob";
+import { scanFile } from "@/lib/arachnid-shield";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -24,6 +25,14 @@ export async function POST(request: Request) {
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
         { error: "File size exceeds 10MB limit" },
+        { status: 400 }
+      );
+    }
+
+    const { safe } = await scanFile(file);
+    if (!safe) {
+      return NextResponse.json(
+        { error: "File rejected" },
         { status: 400 }
       );
     }
