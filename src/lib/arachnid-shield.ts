@@ -11,8 +11,8 @@ export async function scanFile(
   const password = process.env.ARACHNID_SHIELD_PASSWORD;
 
   if (!username || !password) {
-    console.warn("Arachnid Shield credentials not configured, skipping scan");
-    return { safe: true };
+    console.error("Arachnid Shield credentials not configured, blocking upload");
+    return { safe: false };
   }
 
   // Only scan image and video files
@@ -42,8 +42,7 @@ export async function scanFile(
       console.error(
         `Arachnid Shield API error: ${response.status} ${response.statusText}`
       );
-      // Allow upload on API error to avoid blocking all uploads
-      return { safe: true };
+      return { safe: false };
     }
 
     const data = await response.json();
@@ -60,7 +59,6 @@ export async function scanFile(
     return { safe: true };
   } catch (error) {
     console.error("Arachnid Shield scan failed:", error);
-    // Allow upload on network/unexpected errors
-    return { safe: true };
+    return { safe: false };
   }
 }
