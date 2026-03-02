@@ -14,6 +14,11 @@ vi.mock("@/lib/prisma", () => ({
       findMany: vi.fn(),
       create: vi.fn(),
     },
+    notification: {
+      findFirst: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+    },
     $transaction: vi.fn(),
   },
 }));
@@ -40,6 +45,9 @@ const mockFindUnique = vi.mocked(prisma.conversation.findUnique);
 const mockFindMany = vi.mocked(prisma.chatMessage.findMany);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockTransaction = vi.mocked(prisma.$transaction) as any;
+const mockNotificationFindFirst = vi.mocked(prisma.notification.findFirst);
+const mockNotificationCreate = vi.mocked(prisma.notification.create);
+const mockNotificationUpdate = vi.mocked(prisma.notification.update);
 
 const params = Promise.resolve({ id: "conv-1" });
 
@@ -157,6 +165,9 @@ describe("GET /api/chat/[id]/messages", () => {
 describe("POST /api/chat/[id]/messages", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNotificationFindFirst.mockResolvedValue(null);
+    mockNotificationCreate.mockResolvedValue({} as never);
+    mockNotificationUpdate.mockResolvedValue({} as never);
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -342,5 +353,131 @@ describe("POST /api/chat/[id]/messages", () => {
     const data = await res.json();
 
     expect(data.content).toBe("trimmed");
+  });
+
+  it("creates a notification for the recipient when no unread exists", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Alice" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockTransaction.mockResolvedValue([
+      { id: "msg-1", senderId: "user-1", content: "Hi", createdAt: new Date("2025-01-01T12:00:00Z") },
+      {},
+    ]);
+    mockNotificationFindFirst.mockResolvedValue(null);
+
+    await POST(createPostRequest({ content: "Hi" }), { params });
+
+    expect(mockNotificationFindFirst).toHaveBeenCalledWith({
+      where: {
+        userId: "user-2",
+        type: "CHAT_MESSAGE",
+        isRead: false,
+        linkUrl: "/chat/conv-1",
+      },
+      select: { id: true },
+    });
+    expect(mockNotificationCreate).toHaveBeenCalledWith({
+      data: {
+        userId: "user-2",
+        type: "CHAT_MESSAGE",
+        message: "Received messages from Alice",
+        linkUrl: "/chat/conv-1",
+      },
+    });
+  });
+
+  it("updates existing unread notification instead of creating a new one", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Alice" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockTransaction.mockResolvedValue([
+      { id: "msg-1", senderId: "user-1", content: "Hi again", createdAt: new Date("2025-01-01T12:00:00Z") },
+      {},
+    ]);
+    mockNotificationFindFirst.mockResolvedValue({ id: "notif-existing" } as never);
+
+    await POST(createPostRequest({ content: "Hi again" }), { params });
+
+    expect(mockNotificationUpdate).toHaveBeenCalledWith({
+      where: { id: "notif-existing" },
+      data: { createdAt: expect.any(Date) },
+    });
+    expect(mockNotificationCreate).not.toHaveBeenCalled();
+  });
+
+  it("sends notification to participant1 when sender is participant2", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-2", name: "Bob" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockTransaction.mockResolvedValue([
+      { id: "msg-1", senderId: "user-2", content: "Hey", createdAt: new Date("2025-01-01T12:00:00Z") },
+      {},
+    ]);
+
+    await POST(createPostRequest({ content: "Hey" }), { params });
+
+    expect(mockNotificationFindFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({ userId: "user-1" }),
+      })
+    );
+  });
+
+  it("uses 'Someone' as sender name when session name is missing", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockTransaction.mockResolvedValue([
+      { id: "msg-1", senderId: "user-1", content: "Hi", createdAt: new Date("2025-01-01T12:00:00Z") },
+      {},
+    ]);
+
+    await POST(createPostRequest({ content: "Hi" }), { params });
+
+    expect(mockNotificationCreate).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        message: "Received messages from Someone",
+      }),
+    });
+  });
+
+  it("still returns 201 if notification creation fails", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Alice" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockTransaction.mockResolvedValue([
+      { id: "msg-1", senderId: "user-1", content: "Hi", createdAt: new Date("2025-01-01T12:00:00Z") },
+      {},
+    ]);
+    mockNotificationFindFirst.mockRejectedValueOnce(new Error("DB error"));
+
+    const res = await POST(createPostRequest({ content: "Hi" }), { params });
+
+    expect(res.status).toBe(201);
   });
 });

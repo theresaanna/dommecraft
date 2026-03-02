@@ -46,6 +46,11 @@ const TYPE_STYLES: Record<string, { label: string; className: string }> = {
     className:
       "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
   },
+  CHAT_MESSAGE: {
+    label: "Message",
+    className:
+      "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300",
+  },
 };
 
 function timeAgo(dateString: string): string {

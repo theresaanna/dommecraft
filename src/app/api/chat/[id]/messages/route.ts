@@ -134,5 +134,44 @@ export async function POST(
     // Non-fatal: message is persisted, real-time delivery failed
   }
 
+  // Create or update a chat notification for the recipient.
+  // Only one unread notification per sender conversation is kept.
+  const recipientId =
+    conversation.participant1Id === userId
+      ? conversation.participant2Id
+      : conversation.participant1Id;
+  const senderName = session.user.name || "Someone";
+  const chatLinkUrl = `/chat/${conversationId}`;
+
+  try {
+    const existing = await prisma.notification.findFirst({
+      where: {
+        userId: recipientId,
+        type: "CHAT_MESSAGE",
+        isRead: false,
+        linkUrl: chatLinkUrl,
+      },
+      select: { id: true },
+    });
+
+    if (existing) {
+      await prisma.notification.update({
+        where: { id: existing.id },
+        data: { createdAt: new Date() },
+      });
+    } else {
+      await prisma.notification.create({
+        data: {
+          userId: recipientId,
+          type: "CHAT_MESSAGE",
+          message: `Received messages from ${senderName}`,
+          linkUrl: chatLinkUrl,
+        },
+      });
+    }
+  } catch {
+    // Non-fatal: message is persisted, notification creation failed
+  }
+
   return NextResponse.json(messageData, { status: 201 });
 }
