@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteBlob } from "@/lib/blob-helpers";
+import { validateSlug } from "@/lib/slug-utils";
 
 export async function GET() {
   try {
@@ -18,6 +19,7 @@ export async function GET() {
         avatarUrl: true,
         theme: true,
         calendarDefaultView: true,
+        slug: true,
       },
     });
 
@@ -44,6 +46,24 @@ export async function PATCH(request: Request) {
 
     const body = await request.json();
 
+    // Validate and check slug uniqueness
+    if (body.slug !== undefined) {
+      const { valid, error } = validateSlug(body.slug);
+      if (!valid) {
+        return NextResponse.json({ error }, { status: 400 });
+      }
+      const existingSlug = await prisma.user.findUnique({
+        where: { slug: body.slug },
+        select: { id: true },
+      });
+      if (existingSlug && existingSlug.id !== session.user.id) {
+        return NextResponse.json(
+          { error: "This profile URL is already taken" },
+          { status: 409 }
+        );
+      }
+    }
+
     // If avatarUrl is being changed, delete the old blob
     if (body.avatarUrl !== undefined) {
       const currentUser = await prisma.user.findUnique({
@@ -65,6 +85,7 @@ export async function PATCH(request: Request) {
         ...(body.calendarDefaultView !== undefined && {
           calendarDefaultView: body.calendarDefaultView,
         }),
+        ...(body.slug !== undefined && { slug: body.slug }),
       },
       select: {
         name: true,
@@ -72,6 +93,7 @@ export async function PATCH(request: Request) {
         avatarUrl: true,
         theme: true,
         calendarDefaultView: true,
+        slug: true,
       },
     });
 

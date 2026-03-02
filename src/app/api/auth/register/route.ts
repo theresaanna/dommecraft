@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { generateUniqueSlug } from "@/lib/slug-utils";
 
 export async function POST(request: Request) {
   try {
@@ -37,18 +38,22 @@ export async function POST(request: Request) {
 
     const passwordHash = await bcrypt.hash(password, 12);
 
+    const slug = await generateUniqueSlug(name || email.split("@")[0]);
+
     const user = await prisma.user.create({
       data: {
         email,
         passwordHash,
         name: name || null,
         role: userRole,
+        slug,
       },
       select: {
         id: true,
         email: true,
         name: true,
         role: true,
+        slug: true,
         createdAt: true,
       },
     });

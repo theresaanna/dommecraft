@@ -11,7 +11,7 @@ vi.mock("@/auth", () => ({
 
 vi.mock("@/lib/prisma", () => ({
   prisma: {
-    user: { findUnique: vi.fn().mockResolvedValue({ avatarUrl: null }) },
+    user: { findUnique: vi.fn().mockResolvedValue({ avatarUrl: null, slug: "test-a1b2" }) },
     subProfile: { findMany: vi.fn().mockResolvedValue([]) },
     financialEntry: {
       aggregate: vi.fn().mockResolvedValue({ _sum: { amount: null }, _count: 0 }),
@@ -79,6 +79,14 @@ describe("DashboardPage quick action links", () => {
 
     const links = screen.getAllByRole("link", { name: /add sub/i });
     expect(links[0]).toHaveAttribute("href", "/subs/new");
+  });
+
+  it("renders 'My Profile' link with slug URL", async () => {
+    const page = await DashboardPage();
+    render(page);
+
+    const link = screen.getByRole("link", { name: /my profile/i });
+    expect(link).toHaveAttribute("href", "/u/test-a1b2");
   });
 });
 

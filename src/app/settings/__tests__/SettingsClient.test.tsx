@@ -30,6 +30,7 @@ const defaultSettings = {
   avatarUrl: null as string | null,
   theme: "SYSTEM" as const,
   calendarDefaultView: "MONTH" as const,
+  slug: "test-user-a1b2",
 };
 
 describe("SettingsClient", () => {
@@ -62,6 +63,7 @@ describe("SettingsClient", () => {
 
     expect(screen.getByText("Avatar")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
+    expect(screen.getByText("Profile URL")).toBeInTheDocument();
     expect(screen.getByText("Appearance")).toBeInTheDocument();
     expect(screen.getByText("Calendar")).toBeInTheDocument();
   });
@@ -352,5 +354,48 @@ describe("SettingsClient", () => {
     const values = Array.from(options).map((o) => o.value);
 
     expect(values).toEqual(["MONTH", "WEEK", "DAY"]);
+  });
+
+  it("renders slug input with initial value", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(screen.getByLabelText("Custom URL")).toHaveValue("test-user-a1b2");
+  });
+
+  it("shows /u/ prefix next to slug input", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(screen.getByText("/u/")).toBeInTheDocument();
+  });
+
+  it("updates slug field on input", async () => {
+    const user = userEvent.setup();
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const input = screen.getByLabelText("Custom URL");
+    await user.clear(input);
+    await user.type(input, "my-slug");
+
+    expect(input).toHaveValue("my-slug");
+  });
+
+  it("strips invalid characters from slug input", async () => {
+    const user = userEvent.setup();
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const input = screen.getByLabelText("Custom URL");
+    await user.clear(input);
+    await user.type(input, "My_Slug!");
+
+    // Uppercase converted to lowercase, underscores and special chars stripped
+    expect(input).toHaveValue("myslug");
+  });
+
+  it("shows slug format help text", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(
+      screen.getByText(/3-30 characters.*lowercase letters, numbers, and hyphens/i)
+    ).toBeInTheDocument();
   });
 });

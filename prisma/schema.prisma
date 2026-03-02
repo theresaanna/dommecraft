@@ -19,6 +19,7 @@ model User {
   passwordHash  String?   @map("password_hash")
   name          String?
   image         String?
+  slug          String?   @unique
   role          UserRole  @default(DOMME)
   timezone      String    @default("UTC")
   avatarUrl            String?              @map("avatar_url")

@@ -17,15 +17,21 @@ vi.mock("@/lib/blob-helpers", () => ({
   deleteBlob: vi.fn(),
 }));
 
+vi.mock("@/lib/slug-utils", () => ({
+  validateSlug: vi.fn().mockReturnValue({ valid: true }),
+}));
+
 import { GET, PATCH } from "../route";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { deleteBlob } from "@/lib/blob-helpers";
+import { validateSlug } from "@/lib/slug-utils";
 
 const mockAuth = vi.mocked(auth) as unknown as ReturnType<typeof vi.fn>;
 const mockFindUnique = vi.mocked(prisma.user.findUnique);
 const mockUpdate = vi.mocked(prisma.user.update);
 const mockDeleteBlob = vi.mocked(deleteBlob);
+const mockValidateSlug = vi.mocked(validateSlug);
 
 function createRequest(body: Record<string, unknown>) {
   return new Request("http://localhost:3000/api/user/settings", {
@@ -73,6 +79,7 @@ describe("GET /api/user/settings", () => {
       avatarUrl: "https://blob.test/avatar.png",
       theme: "SYSTEM",
       calendarDefaultView: "MONTH",
+      slug: "test-user-a1b2",
     } as never);
 
     const res = await GET();
@@ -85,6 +92,7 @@ describe("GET /api/user/settings", () => {
       avatarUrl: "https://blob.test/avatar.png",
       theme: "SYSTEM",
       calendarDefaultView: "MONTH",
+      slug: "test-user-a1b2",
     });
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { id: "user-1" },
@@ -94,6 +102,7 @@ describe("GET /api/user/settings", () => {
         avatarUrl: true,
         theme: true,
         calendarDefaultView: true,
+        slug: true,
       },
     });
   });
@@ -140,6 +149,7 @@ describe("PATCH /api/user/settings", () => {
         avatarUrl: true,
         theme: true,
         calendarDefaultView: true,
+        slug: true,
       },
     });
   });
@@ -247,6 +257,79 @@ describe("PATCH /api/user/settings", () => {
     await PATCH(createRequest({ avatarUrl: url }));
 
     expect(mockDeleteBlob).not.toHaveBeenCalled();
+  });
+
+  it("updates slug successfully", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockValidateSlug.mockReturnValue({ valid: true });
+    mockFindUnique.mockResolvedValue(null); // no existing user with this slug
+    mockUpdate.mockResolvedValue({
+      name: "Test",
+      email: "test@test.com",
+      avatarUrl: null,
+      theme: "SYSTEM",
+      calendarDefaultView: "MONTH",
+      slug: "my-custom-slug",
+    } as never);
+
+    const res = await PATCH(createRequest({ slug: "my-custom-slug" }));
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.slug).toBe("my-custom-slug");
+    expect(mockValidateSlug).toHaveBeenCalledWith("my-custom-slug");
+  });
+
+  it("returns 400 when slug format is invalid", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockValidateSlug.mockReturnValue({
+      valid: false,
+      error: "Slug must be at least 3 characters",
+    });
+
+    const res = await PATCH(createRequest({ slug: "ab" }));
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("Slug must be at least 3 characters");
+  });
+
+  it("returns 409 when slug is already taken by another user", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockValidateSlug.mockReturnValue({ valid: true });
+    mockFindUnique.mockResolvedValue({ id: "user-2" } as never); // different user has this slug
+
+    const res = await PATCH(createRequest({ slug: "taken-slug" }));
+    const data = await res.json();
+
+    expect(res.status).toBe(409);
+    expect(data.error).toBe("This profile URL is already taken");
+  });
+
+  it("allows updating slug to the same value (own slug)", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockValidateSlug.mockReturnValue({ valid: true });
+    mockFindUnique.mockResolvedValue({ id: "user-1" } as never); // same user owns slug
+    mockUpdate.mockResolvedValue({
+      name: "Test",
+      email: "test@test.com",
+      avatarUrl: null,
+      theme: "SYSTEM",
+      calendarDefaultView: "MONTH",
+      slug: "my-slug",
+    } as never);
+
+    const res = await PATCH(createRequest({ slug: "my-slug" }));
+
+    expect(res.status).toBe(200);
   });
 
   it("returns 500 on internal error", async () => {
