@@ -254,7 +254,7 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
+    <div className="mx-auto max-w-5xl px-4 pt-20 pb-16">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
         Dashboard
       </h1>
@@ -262,8 +262,10 @@ export default async function DashboardPage() {
         Welcome, {session.user.name || session.user.email || "User"}
       </p>
 
+      <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+
       {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
-        <div className="mt-8 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Recent Activity
@@ -344,7 +346,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               My Subs
@@ -406,7 +408,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && financialTotals && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Financials
@@ -493,7 +495,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Creation Hub
@@ -554,7 +556,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Task Summary
@@ -657,7 +659,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Calendar
@@ -732,7 +734,7 @@ export default async function DashboardPage() {
       )}
 
       {!isDomme && (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               My Tasks
@@ -811,6 +813,7 @@ export default async function DashboardPage() {
         </div>
       )}
 
+      </div>
     </div>
   );
 }
