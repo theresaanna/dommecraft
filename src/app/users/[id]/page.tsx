@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import UserProfileClient from "./UserProfileClient";
+import PhotoGallery from "./PhotoGallery";
 
 export default async function UserProfilePage({
   params,
@@ -31,6 +32,18 @@ export default async function UserProfilePage({
   }
 
   const isOwnProfile = session.user.id === id;
+
+  const galleryPhotos = await prisma.galleryPhoto.findMany({
+    where: { userId: id },
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      fileUrl: true,
+      mimeType: true,
+      fileSize: true,
+      createdAt: true,
+    },
+  });
 
   return (
     <div className="space-y-8">
@@ -66,6 +79,15 @@ export default async function UserProfilePage({
           targetUserName={user.name || "User"}
         />
       )}
+
+      <PhotoGallery
+        photos={galleryPhotos.map((p) => ({
+          ...p,
+          createdAt: p.createdAt.toISOString(),
+        }))}
+        userId={id}
+        isOwnProfile={isOwnProfile}
+      />
     </div>
   );
 }
