@@ -8,13 +8,19 @@ vi.mock("@vercel/blob", () => ({
   put: vi.fn(),
 }));
 
+vi.mock("@/lib/arachnid-shield", () => ({
+  scanFile: vi.fn(),
+}));
+
 import { POST } from "@/app/api/upload/route";
 import { auth } from "@/auth";
 import { put } from "@vercel/blob";
+import { scanFile } from "@/lib/arachnid-shield";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockAuth = vi.mocked(auth) as any;
 const mockPut = vi.mocked(put);
+const mockScanFile = vi.mocked(scanFile);
 
 function createFormDataRequest(
   file?: File | null,
@@ -36,6 +42,7 @@ function createFormDataRequest(
 describe("POST /api/upload", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockScanFile.mockResolvedValue({ safe: true } as never);
   });
 
   it("returns 401 when not authenticated", async () => {
@@ -107,7 +114,7 @@ describe("POST /api/upload", () => {
     expect(mockPut).toHaveBeenCalledWith(
       "avatars/user-1/photo.jpg",
       expect.any(File),
-      { access: "public" }
+      { access: "public", allowOverwrite: true }
     );
   });
 
@@ -131,7 +138,7 @@ describe("POST /api/upload", () => {
     expect(mockPut).toHaveBeenCalledWith(
       "uploads/user-1/file.txt",
       expect.any(File),
-      { access: "public" }
+      { access: "public", allowOverwrite: true }
     );
   });
 });

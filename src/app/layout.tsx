@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { NotificationProvider } from "@/components/providers/notification-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AblyProvider } from "@/components/providers/ably-provider";
 import BookmarkBanner from "@/components/BookmarkBanner";
 import "./globals.css";
 
@@ -39,10 +40,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <ThemeProvider>
-            <BookmarkBanner />
-            <NotificationProvider>{children}</NotificationProvider>
-          </ThemeProvider>
+          <AblyProvider>
+            <ThemeProvider>
+              <BookmarkBanner />
+              <NotificationProvider>{children}</NotificationProvider>
+            </ThemeProvider>
+          </AblyProvider>
         </SessionProvider>
       </body>
     </html>
