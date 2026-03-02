@@ -128,6 +128,22 @@ describe("POST /api/users/[id]/gallery", () => {
     expect(data.error).toBe("Forbidden");
   });
 
+  it("returns 403 when user is a SUB", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "SUB" },
+      expires: "",
+    } as never);
+
+    const res = await POST(
+      createPostRequest({ fileUrl: "https://blob.test/photo.jpg", mimeType: "image/jpeg" }),
+      { params: Promise.resolve({ id: "user-1" }) }
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(403);
+    expect(data.error).toBe("Subs cannot upload gallery photos");
+  });
+
   it("returns 400 when fileUrl is missing", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-1" },

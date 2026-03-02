@@ -14,10 +14,12 @@ export default function PhotoGallery({
   photos: initialPhotos,
   userId,
   isOwnProfile,
+  canUpload = isOwnProfile,
 }: {
   photos: GalleryPhoto[];
   userId: string;
   isOwnProfile: boolean;
+  canUpload?: boolean;
 }) {
   const [photos, setPhotos] = useState<GalleryPhoto[]>(initialPhotos);
   const [uploading, setUploading] = useState(false);
@@ -111,7 +113,7 @@ export default function PhotoGallery({
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Photos
         </h2>
-        {isOwnProfile && (
+        {canUpload && (
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -121,7 +123,7 @@ export default function PhotoGallery({
             {uploading ? "Uploading..." : "Upload Photo"}
           </button>
         )}
-        {isOwnProfile && (
+        {canUpload && (
           <input
             ref={fileInputRef}
             type="file"
