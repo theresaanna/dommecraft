@@ -56,9 +56,10 @@ model User {
   externalCalendars ExternalCalendar[]
 
   // Chat
-  conversationsAs1 Conversation[] @relation("ConversationParticipant1")
-  conversationsAs2 Conversation[] @relation("ConversationParticipant2")
-  chatMessages     ChatMessage[]
+  conversationsAs1  Conversation[]     @relation("ConversationParticipant1")
+  conversationsAs2  Conversation[]     @relation("ConversationParticipant2")
+  chatMessages      ChatMessage[]
+  messageReactions  MessageReaction[]
 
   // Friends
   sentFriendRequests     Friendship[] @relation("FriendshipRequester")
@@ -645,9 +646,25 @@ model ChatMessage {
   content        String
   createdAt      DateTime @default(now()) @map("created_at")
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User              @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  reactions    MessageReaction[]
 
   @@index([conversationId, createdAt])
   @@map("chat_messages")
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String   @map("message_id")
+  userId    String   @map("user_id")
+  emoji     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  message ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@index([messageId])
+  @@map("message_reactions")
 }

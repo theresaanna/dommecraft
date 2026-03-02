@@ -59,12 +59,14 @@ const defaultProps = {
       senderId: "user-2",
       content: "Hey there!",
       createdAt: "2025-01-01T12:00:00.000Z",
+      reactions: [],
     },
     {
       id: "msg-2",
       senderId: "user-1",
       content: "Hi Alice!",
       createdAt: "2025-01-01T12:01:00.000Z",
+      reactions: [],
     },
   ],
 };

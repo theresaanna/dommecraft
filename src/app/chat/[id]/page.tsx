@@ -40,7 +40,13 @@ export default async function ChatConversationPage({
     where: { conversationId },
     orderBy: { createdAt: "asc" },
     take: 50,
-    select: { id: true, senderId: true, content: true, createdAt: true },
+    select: {
+      id: true,
+      senderId: true,
+      content: true,
+      createdAt: true,
+      reactions: { select: { emoji: true, userId: true } },
+    },
   });
 
   const serializedMessages = messages.map((m) => ({

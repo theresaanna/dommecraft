@@ -51,6 +51,7 @@ export async function GET(
       senderId: true,
       content: true,
       createdAt: true,
+      reactions: { select: { emoji: true, userId: true } },
     },
   });
 
