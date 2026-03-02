@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, act } from "@testing-library/react";
+import { render, screen, within, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ChatClient from "../ChatClient";
 
@@ -814,5 +814,328 @@ describe("ChatClient", () => {
     expect(mockFetch).not.toHaveBeenCalled();
     // Form should be closed
     expect(screen.queryByTestId("edit-form")).not.toBeInTheDocument();
+  });
+
+  // Reply tests
+  it("shows reply button on all messages", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    const replyButtons = screen.getAllByLabelText("reply to message");
+    // Both messages (own and other's) should have reply buttons
+    expect(replyButtons).toHaveLength(2);
+  });
+
+  it("displays reply preview in message bubble with sender name and content", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-2",
+            content: "Original message",
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+          {
+            id: "msg-2",
+            senderId: "user-1",
+            content: "This is a reply",
+            createdAt: "2025-01-01T12:01:00.000Z",
+            reactions: [],
+            replyTo: {
+              id: "msg-1",
+              content: "Original message",
+              senderName: "Alice",
+            },
+          },
+        ]}
+      />
+    );
+
+    const replyPreview = screen.getByTestId("reply-preview");
+    expect(replyPreview).toBeInTheDocument();
+    expect(replyPreview).toHaveTextContent("Alice");
+    expect(replyPreview).toHaveTextContent("Original message");
+  });
+
+  it("truncates long reply preview content at 100 characters", () => {
+    const longContent = "A".repeat(150);
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-1",
+            content: "Reply",
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+            replyTo: {
+              id: "msg-0",
+              content: longContent,
+              senderName: "Alice",
+            },
+          },
+        ]}
+      />
+    );
+
+    const replyPreview = screen.getByTestId("reply-preview");
+    expect(replyPreview).toHaveTextContent("A".repeat(100) + "...");
+    expect(replyPreview).not.toHaveTextContent("A".repeat(101));
+  });
+
+  it("shows [Media] in reply preview when original message has no content", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-1",
+            content: "Reply to image",
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+            replyTo: {
+              id: "msg-0",
+              content: "",
+              senderName: "Alice",
+            },
+          },
+        ]}
+      />
+    );
+
+    const replyPreview = screen.getByTestId("reply-preview");
+    expect(replyPreview).toHaveTextContent("[Media]");
+  });
+
+  it("does not show reply preview when replyTo is null", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    expect(screen.queryByTestId("reply-preview")).not.toBeInTheDocument();
+  });
+
+  it("shows reply compose bar when Reply button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    const composeBar = screen.getByTestId("reply-compose-bar");
+    expect(composeBar).toBeInTheDocument();
+    expect(composeBar).toHaveTextContent("Replying to");
+    expect(composeBar).toHaveTextContent("Alice");
+    expect(composeBar).toHaveTextContent("Hey there!");
+  });
+
+  it("shows 'yourself' in reply compose bar when replying to own message", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const msg2 = screen.getByText("Hi Alice!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg2).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    const composeBar = screen.getByTestId("reply-compose-bar");
+    expect(composeBar).toHaveTextContent("yourself");
+  });
+
+  it("cancels reply when cancel button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    expect(screen.getByTestId("reply-compose-bar")).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText("Cancel reply"));
+
+    expect(screen.queryByTestId("reply-compose-bar")).not.toBeInTheDocument();
+  });
+
+  it("sends replyToId in fetch body when replying", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "msg-3",
+          senderId: "user-1",
+          content: "My reply",
+          createdAt: "2025-01-01T12:02:00.000Z",
+          reactions: [],
+          replyTo: {
+            id: "msg-1",
+            content: "Hey there!",
+            senderName: "Alice",
+          },
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Click reply on the first message
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    // Type and send
+    const input = screen.getByPlaceholderText("Type a message...");
+    await user.type(input, "My reply");
+    await user.click(screen.getByText("Send"));
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({ content: "My reply", replyToId: "msg-1" }),
+      })
+    );
+  });
+
+  it("clears reply compose bar after sending", async () => {
+    const user = userEvent.setup();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "msg-3",
+          senderId: "user-1",
+          content: "My reply",
+          createdAt: "2025-01-01T12:02:00.000Z",
+          reactions: [],
+        }),
+    });
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Click reply
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    expect(screen.getByTestId("reply-compose-bar")).toBeInTheDocument();
+
+    // Send message
+    const input = screen.getByPlaceholderText("Type a message...");
+    await user.type(input, "My reply");
+    await user.click(screen.getByText("Send"));
+
+    // Compose bar should be cleared
+    expect(screen.queryByTestId("reply-compose-bar")).not.toBeInTheDocument();
+  });
+
+  it("truncates reply compose bar content at 80 characters", async () => {
+    const user = userEvent.setup();
+    const longContent = "B".repeat(120);
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-2",
+            content: longContent,
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+        ]}
+      />
+    );
+
+    const msg1 = screen.getByText(longContent).closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    const composeBar = screen.getByTestId("reply-compose-bar");
+    expect(composeBar).toHaveTextContent("B".repeat(80) + "...");
+  });
+
+  it("includes replyTo data from Ably message events", () => {
+    global.fetch = vi.fn().mockResolvedValue({ ok: true });
+
+    render(<ChatClient {...defaultProps} />);
+
+    const messageCallback = mockSubscribe.mock.calls.find(
+      (call: unknown[]) => call[0] === "message"
+    )?.[1];
+
+    act(() => {
+      messageCallback({
+        data: {
+          id: "msg-3",
+          senderId: "user-2",
+          content: "A reply via Ably",
+          createdAt: "2025-01-01T12:02:00.000Z",
+          reactions: [],
+          replyTo: {
+            id: "msg-1",
+            content: "Hey there!",
+            senderName: "Alice",
+          },
+        },
+      });
+    });
+
+    const replyPreview = screen.getByTestId("reply-preview");
+    expect(replyPreview).toHaveTextContent("Alice");
+    expect(replyPreview).toHaveTextContent("Hey there!");
+  });
+
+  it("sends replyToId in FormData when replying with a file", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "msg-3",
+          senderId: "user-1",
+          content: "",
+          mediaUrl: "https://blob.example.com/photo.jpg",
+          mediaMimeType: "image/jpeg",
+          mediaFileSize: 1024,
+          createdAt: "2025-01-01T12:02:00.000Z",
+          reactions: [],
+          replyTo: {
+            id: "msg-1",
+            content: "Hey there!",
+            senderName: "Alice",
+          },
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Click reply on msg-1
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const replyButton = within(msg1).getByLabelText("reply to message");
+    await user.click(replyButton);
+
+    // Select a file and send
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await user.upload(fileInput, file);
+    await user.click(screen.getByText("Send"));
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.any(FormData),
+      })
+    );
+
+    // Check that FormData includes replyToId
+    const callBody = mockFetch.mock.calls[0][1].body as FormData;
+    expect(callBody.get("replyToId")).toBe("msg-1");
+    expect(callBody.get("file")).toBeTruthy();
   });
 });

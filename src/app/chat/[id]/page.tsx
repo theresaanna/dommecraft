@@ -55,14 +55,31 @@ export default async function ChatConversationPage({
       mediaUrl: true,
       mediaMimeType: true,
       mediaFileSize: true,
+      editedAt: true,
       createdAt: true,
       reactions: { select: { emoji: true, userId: true } },
+      replyTo: {
+        select: {
+          id: true,
+          content: true,
+          senderId: true,
+          sender: { select: { name: true } },
+        },
+      },
     },
   });
 
   const serializedMessages = messages.map((m) => ({
     ...m,
+    editedAt: m.editedAt?.toISOString() ?? null,
     createdAt: m.createdAt.toISOString(),
+    replyTo: m.replyTo
+      ? {
+          id: m.replyTo.id,
+          content: m.replyTo.content,
+          senderName: m.replyTo.sender.name,
+        }
+      : null,
   }));
 
   // Determine read receipt data

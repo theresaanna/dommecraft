@@ -653,12 +653,16 @@ model ChatMessage {
   mediaFileSize  Int?      @map("media_file_size")
   editedAt       DateTime? @map("edited_at")
   createdAt      DateTime  @default(now()) @map("created_at")
+  replyToId      String?   @map("reply_to_id")
 
   conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   sender       User              @relation(fields: [senderId], references: [id], onDelete: Cascade)
   reactions    MessageReaction[]
+  replyTo      ChatMessage?      @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies      ChatMessage[]     @relation("MessageReplies")
 
   @@index([conversationId, createdAt])
+  @@index([replyToId])
   @@map("chat_messages")
 }
 
