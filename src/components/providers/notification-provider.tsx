@@ -80,7 +80,7 @@ export function NotificationProvider({
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
-  const seenIds = useRef<Set<string>>(new Set());
+  const seenIds = useRef<Map<string, string>>(new Map());
   const initialLoadDone = useRef(false);
   const pollRef = useRef<(() => void) | null>(null);
   const { play: playNotificationSound } = useNotificationSound(
@@ -117,6 +117,7 @@ export function NotificationProvider({
           message: string;
           linkUrl: string | null;
           type: string;
+          createdAt: string;
         }> = await res.json();
 
         // Track unread notification counts
@@ -128,13 +129,18 @@ export function NotificationProvider({
 
         // On first load, seed seenIds without showing toasts
         if (!initialLoadDone.current) {
-          notifications.forEach((n) => seenIds.current.add(n.id));
+          notifications.forEach((n) => seenIds.current.set(n.id, n.createdAt));
           initialLoadDone.current = true;
           return;
         }
 
+        // Treat a notification as new if we haven't seen its ID before,
+        // or if its createdAt changed (server reuses the same notification
+        // record for repeated chat messages, updating createdAt each time).
         const newNotifications = notifications.filter(
-          (n) => !seenIds.current.has(n.id)
+          (n) =>
+            !seenIds.current.has(n.id) ||
+            seenIds.current.get(n.id) !== n.createdAt
         );
 
         if (newNotifications.length > 0) {
@@ -143,7 +149,7 @@ export function NotificationProvider({
           );
 
           newNotifications.forEach((n) => {
-            seenIds.current.add(n.id);
+            seenIds.current.set(n.id, n.createdAt);
 
             setToasts((prev) => [
               ...prev,

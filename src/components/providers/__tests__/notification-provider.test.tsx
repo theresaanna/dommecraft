@@ -457,6 +457,60 @@ describe("NotificationProvider", () => {
       );
     });
 
+    it("plays notification sound again when same notification is updated (createdAt changes)", async () => {
+      mockUseSession.mockReturnValue({
+        data: { user: { id: "user-1", notificationSound: true } },
+      });
+
+      let callCount = 0;
+      (global.fetch as ReturnType<typeof vi.fn>).mockImplementation(() => {
+        callCount++;
+        if (callCount === 1) {
+          // Initial load: seed with existing notification
+          return Promise.resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve([
+                {
+                  id: "chat-notif-1",
+                  message: "New message from Alice",
+                  linkUrl: "/chat/conv-1",
+                  type: "CHAT_MESSAGE",
+                  createdAt: "2026-03-01T10:00:00.000Z",
+                },
+              ]),
+          });
+        }
+        // Subsequent polls: same ID but updated createdAt (new message in same convo)
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve([
+              {
+                id: "chat-notif-1",
+                message: "New message from Alice",
+                linkUrl: "/chat/conv-1",
+                type: "CHAT_MESSAGE",
+                createdAt: "2026-03-01T10:05:00.000Z",
+              },
+            ]),
+        });
+      });
+
+      render(
+        <NotificationProvider pollInterval={TEST_POLL_INTERVAL}>
+          <div>child</div>
+        </NotificationProvider>
+      );
+
+      await waitFor(
+        () => {
+          expect(mockPlay).toHaveBeenCalled();
+        },
+        { timeout: 3000 }
+      );
+    });
+
     it("does not play notification sound for non-chat notifications", async () => {
       mockUseSession.mockReturnValue({
         data: { user: { id: "user-1", notificationSound: true } },
