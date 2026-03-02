@@ -197,6 +197,43 @@ describe("PATCH /api/notifications", () => {
     });
   });
 
+  it("marks notifications as read by linkUrl", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockUpdateMany.mockResolvedValue({ count: 1 } as never);
+
+    const res = await PATCH(
+      createPatchRequest({ linkUrl: "/chat/conv-1" })
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.updated).toBe(1);
+    expect(mockUpdateMany).toHaveBeenCalledWith({
+      where: {
+        userId: "user-1",
+        linkUrl: "/chat/conv-1",
+        isRead: false,
+      },
+      data: { isRead: true },
+    });
+  });
+
+  it("ignores empty linkUrl and falls through to ids validation", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+
+    const res = await PATCH(createPatchRequest({ linkUrl: "" }));
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("ids array is required");
+  });
+
   it("scopes markAll to the authenticated user", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-2" },

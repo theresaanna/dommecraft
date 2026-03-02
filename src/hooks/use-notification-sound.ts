@@ -14,6 +14,7 @@ export function useNotificationSound(enabled: boolean) {
 
     // Reset to start so rapid plays don't overlap silently
     audioRef.current.currentTime = 0;
+    audioRef.current.playbackRate = 1.5;
     try {
       const result = audioRef.current.play();
       if (result && typeof result.catch === "function") {

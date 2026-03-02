@@ -8,6 +8,7 @@ import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
 import { useTyping } from "@/hooks/use-typing";
 import { useNotificationSound } from "@/hooks/use-notification-sound";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 import EmojiPicker from "@/components/EmojiPicker";
 import RoleBadge from "@/components/RoleBadge";
 
@@ -119,6 +120,18 @@ export default function ChatClient({
   useEffect(() => {
     scrollToBottom();
   }, [messages.length, scrollToBottom]);
+
+  // Mark chat notification as read when the user opens the conversation
+  useEffect(() => {
+    const chatLinkUrl = `/chat/${conversationId}`;
+    fetch("/api/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ linkUrl: chatLinkUrl }),
+    })
+      .then(() => triggerNotificationRefresh())
+      .catch(() => {});
+  }, [conversationId]);
 
   // Mark conversation as read when receiving messages from the other user
   const markAsRead = useCallback(() => {

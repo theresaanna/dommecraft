@@ -56,6 +56,12 @@ vi.mock("@/hooks/use-presence", () => ({
   }),
 }));
 
+const mockTriggerNotificationRefresh = vi.fn();
+vi.mock("@/components/providers/notification-provider", () => ({
+  triggerNotificationRefresh: (...args: unknown[]) =>
+    mockTriggerNotificationRefresh(...args),
+}));
+
 const defaultProps = {
   conversationId: "conv-1",
   currentUserId: "user-1",
@@ -84,7 +90,7 @@ const defaultProps = {
 describe("ChatClient", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    global.fetch = vi.fn();
+    global.fetch = vi.fn().mockResolvedValue({ ok: true });
   });
 
   it("renders the other participant name", () => {
@@ -150,6 +156,30 @@ describe("ChatClient", () => {
       "message",
       expect.any(Function)
     );
+  });
+
+  it("marks chat notification as read on mount via PATCH /api/notifications", async () => {
+    const mockFetch = vi.fn().mockResolvedValue({ ok: true });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    expect(mockFetch).toHaveBeenCalledWith("/api/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ linkUrl: "/chat/conv-1" }),
+    });
+  });
+
+  it("triggers notification refresh after marking notification as read", async () => {
+    global.fetch = vi.fn().mockResolvedValue({ ok: true });
+
+    render(<ChatClient {...defaultProps} />);
+
+    // Wait for the .then() to resolve
+    await vi.waitFor(() => {
+      expect(mockTriggerNotificationRefresh).toHaveBeenCalled();
+    });
   });
 
   it("sends a message on form submit", async () => {
@@ -824,7 +854,7 @@ describe("ChatClient", () => {
 
   it("does not show edit form when content is unchanged and Save is clicked", async () => {
     const user = userEvent.setup();
-    const mockFetch = vi.fn();
+    const mockFetch = vi.fn().mockResolvedValue({ ok: true });
     global.fetch = mockFetch;
 
     render(<ChatClient {...defaultProps} />);
@@ -833,8 +863,12 @@ describe("ChatClient", () => {
     // Don't change the content, just click Save
     await user.click(screen.getByText("Save"));
 
-    // Should not call the API since content hasn't changed
-    expect(mockFetch).not.toHaveBeenCalled();
+    // Should not call the edit API since content hasn't changed
+    // (the only fetch call should be the mount-time notification clearing)
+    expect(mockFetch).not.toHaveBeenCalledWith(
+      expect.stringContaining("/api/chat/conv-1/messages/"),
+      expect.anything()
+    );
     // Form should be closed
     expect(screen.queryByTestId("edit-form")).not.toBeInTheDocument();
   });
@@ -1157,7 +1191,12 @@ describe("ChatClient", () => {
     );
 
     // Check that FormData includes replyToId
-    const callBody = mockFetch.mock.calls[0][1].body as FormData;
+    // Find the call that sent FormData (not the mount-time notification PATCH)
+    const formDataCall = mockFetch.mock.calls.find(
+      (call) => call[1]?.body instanceof FormData
+    );
+    expect(formDataCall).toBeTruthy();
+    const callBody = formDataCall![1].body as FormData;
     expect(callBody.get("replyToId")).toBe("msg-1");
     expect(callBody.get("file")).toBeTruthy();
   });
