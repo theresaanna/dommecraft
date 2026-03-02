@@ -26,6 +26,7 @@ model User {
   theme                Theme                @default(SYSTEM)
   calendarDefaultView  CalendarDefaultView  @default(MONTH) @map("calendar_default_view")
   showOnlineStatus     Boolean              @default(true) @map("show_online_status")
+  showReadReceipts     Boolean              @default(true) @map("show_read_receipts")
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt @map("updated_at")
 
@@ -628,6 +629,9 @@ model Conversation {
   participant2Id String   @map("participant2_id")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
+
+  participant1LastReadAt DateTime? @map("participant1_last_read_at")
+  participant2LastReadAt DateTime? @map("participant2_last_read_at")
 
   participant1 User          @relation("ConversationParticipant1", fields: [participant1Id], references: [id], onDelete: Cascade)
   participant2 User          @relation("ConversationParticipant2", fields: [participant2Id], references: [id], onDelete: Cascade)

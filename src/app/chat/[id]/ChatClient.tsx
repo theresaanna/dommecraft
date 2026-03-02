@@ -32,6 +32,11 @@ type ReactionEvent = {
   action: "add" | "remove";
 };
 
+type ReadEvent = {
+  userId: string;
+  readAt: string;
+};
+
 const EMOJI_OPTIONS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
 function groupReactions(reactions: Reaction[]) {
@@ -49,16 +54,23 @@ export default function ChatClient({
   currentUserId,
   other,
   initialMessages,
+  initialOtherLastReadAt,
+  showReadReceipts,
 }: {
   conversationId: string;
   currentUserId: string;
   other: OtherUser;
   initialMessages: Message[];
+  initialOtherLastReadAt: string | null;
+  showReadReceipts: boolean;
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [pickerOpenFor, setPickerOpenFor] = useState<string | null>(null);
+  const [otherLastReadAt, setOtherLastReadAt] = useState<string | null>(
+    initialOtherLastReadAt
+  );
   const bottomRef = useRef<HTMLDivElement>(null);
   const { client: ablyClient } = useAbly();
   const { isOnline } = usePresence();
@@ -71,7 +83,15 @@ export default function ChatClient({
     scrollToBottom();
   }, [messages.length, scrollToBottom]);
 
-  // Subscribe to Ably channel for real-time messages and reactions
+  // Mark conversation as read when receiving messages from the other user
+  const markAsRead = useCallback(() => {
+    if (!showReadReceipts) return;
+    fetch(`/api/chat/${conversationId}/read`, { method: "POST" }).catch(
+      () => {}
+    );
+  }, [conversationId, showReadReceipts]);
+
+  // Subscribe to Ably channel for real-time messages, reactions, and read receipts
   useEffect(() => {
     if (!ablyClient) return;
 
@@ -83,6 +103,10 @@ export default function ChatClient({
         if (prev.some((m) => m.id === data.id)) return prev;
         return [...prev, { ...data, reactions: data.reactions || [] }];
       });
+      // Auto-mark as read when we receive a message from the other user
+      if (data.senderId !== currentUserId) {
+        markAsRead();
+      }
     };
 
     const onReaction = (msg: Ably.InboundMessage) => {
@@ -111,14 +135,35 @@ export default function ChatClient({
       );
     };
 
+    const onRead = (msg: Ably.InboundMessage) => {
+      const data = msg.data as ReadEvent;
+      if (data.userId !== currentUserId && showReadReceipts) {
+        setOtherLastReadAt(data.readAt);
+      }
+    };
+
     channel.subscribe("message", onMessage);
     channel.subscribe("reaction", onReaction);
+    channel.subscribe("read", onRead);
 
     return () => {
       channel.unsubscribe("message", onMessage);
       channel.unsubscribe("reaction", onReaction);
+      channel.unsubscribe("read", onRead);
     };
-  }, [ablyClient, conversationId]);
+  }, [ablyClient, conversationId, currentUserId, showReadReceipts, markAsRead]);
+
+  // Find the last sent message that was read by the other user
+  const lastReadMessageId = (() => {
+    if (!showReadReceipts || !otherLastReadAt) return null;
+    const sentMessages = messages.filter((m) => m.senderId === currentUserId);
+    for (let i = sentMessages.length - 1; i >= 0; i--) {
+      if (sentMessages[i].createdAt <= otherLastReadAt) {
+        return sentMessages[i].id;
+      }
+    }
+    return null;
+  })();
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -268,6 +313,7 @@ export default function ChatClient({
             const isMine = msg.senderId === currentUserId;
             const grouped = groupReactions(msg.reactions);
             const hasReactions = grouped.size > 0;
+            const isLastRead = msg.id === lastReadMessageId;
             return (
               <div
                 key={msg.id}
@@ -292,6 +338,16 @@ export default function ChatClient({
                       })}
                     </time>
                   </div>
+
+                  {/* Read receipt */}
+                  {isLastRead && (
+                    <p
+                      data-testid="read-receipt"
+                      className="mt-0.5 text-right text-xs text-zinc-400 dark:text-zinc-500"
+                    >
+                      Read
+                    </p>
+                  )}
 
                   {/* Reactions display */}
                   {hasReactions && (

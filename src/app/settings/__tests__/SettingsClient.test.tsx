@@ -32,6 +32,7 @@ const defaultSettings = {
   calendarDefaultView: "MONTH" as const,
   slug: "test-user-a1b2",
   showOnlineStatus: true,
+  showReadReceipts: true,
 };
 
 describe("SettingsClient", () => {
@@ -475,5 +476,80 @@ describe("SettingsClient", () => {
     // Verify the body contains showOnlineStatus: false
     const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
     expect(callBody.showOnlineStatus).toBe(false);
+  });
+
+  it("renders show read receipts checkbox checked when true", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show read receipts/i,
+    });
+    expect(checkbox).toBeChecked();
+  });
+
+  it("renders show read receipts checkbox unchecked when false", () => {
+    render(
+      <SettingsClient
+        initialSettings={{ ...defaultSettings, showReadReceipts: false }}
+        userRole="DOMME"
+      />
+    );
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show read receipts/i,
+    });
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("toggles show read receipts checkbox", async () => {
+    const user = userEvent.setup();
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show read receipts/i,
+    });
+    expect(checkbox).toBeChecked();
+
+    await user.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("shows read receipts description text", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(
+      screen.getByText(/won't send read receipts/i)
+    ).toBeInTheDocument();
+  });
+
+  it("includes showReadReceipts in save payload", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    // Uncheck the checkbox first
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show read receipts/i,
+    });
+    await user.click(checkbox);
+
+    await user.click(screen.getByText("Save Settings"));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith("/api/user/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: expect.any(String),
+      });
+    });
+
+    const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(callBody.showReadReceipts).toBe(false);
   });
 });
