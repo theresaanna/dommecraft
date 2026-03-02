@@ -22,6 +22,7 @@ export async function GET() {
         slug: true,
         showOnlineStatus: true,
         showReadReceipts: true,
+        notificationSound: true,
       },
     });
 
@@ -94,6 +95,9 @@ export async function PATCH(request: Request) {
         ...(body.showReadReceipts !== undefined && {
           showReadReceipts: body.showReadReceipts,
         }),
+        ...(body.notificationSound !== undefined && {
+          notificationSound: body.notificationSound,
+        }),
       },
       select: {
         name: true,
@@ -104,6 +108,7 @@ export async function PATCH(request: Request) {
         slug: true,
         showOnlineStatus: true,
         showReadReceipts: true,
+        notificationSound: true,
       },
     });
 

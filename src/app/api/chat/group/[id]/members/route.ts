@@ -79,7 +79,7 @@ export async function POST(
       userId: { in: newUserIds },
     },
     include: {
-      user: { select: { id: true, name: true, avatarUrl: true } },
+      user: { select: { id: true, name: true, avatarUrl: true, role: true } },
     },
   });
 
@@ -88,6 +88,7 @@ export async function POST(
     name: m.user.name,
     avatarUrl: m.user.avatarUrl,
     role: m.role,
+    userRole: m.user.role,
   }));
 
   try {

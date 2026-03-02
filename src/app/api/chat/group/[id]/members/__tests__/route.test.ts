@@ -161,11 +161,11 @@ describe("POST /api/chat/group/[id]/members", () => {
     mockFindMany.mockResolvedValueOnce([
       {
         role: "MEMBER",
-        user: { id: "user-2", name: "Bob", avatarUrl: null },
+        user: { id: "user-2", name: "Bob", avatarUrl: null, role: "SUB" },
       },
       {
         role: "MEMBER",
-        user: { id: "user-3", name: "Carol", avatarUrl: "/carol.jpg" },
+        user: { id: "user-3", name: "Carol", avatarUrl: "/carol.jpg", role: "DOMME" },
       },
     ] as never);
 
@@ -182,12 +182,14 @@ describe("POST /api/chat/group/[id]/members", () => {
       name: "Bob",
       avatarUrl: null,
       role: "MEMBER",
+      userRole: "SUB",
     });
     expect(data.added[1]).toEqual({
       id: "user-3",
       name: "Carol",
       avatarUrl: "/carol.jpg",
       role: "MEMBER",
+      userRole: "DOMME",
     });
     expect(mockCreateMany).toHaveBeenCalledWith({
       data: [
@@ -209,7 +211,7 @@ describe("POST /api/chat/group/[id]/members", () => {
     mockFindMany.mockResolvedValueOnce([
       {
         role: "MEMBER",
-        user: { id: "user-2", name: "Bob", avatarUrl: null },
+        user: { id: "user-2", name: "Bob", avatarUrl: null, role: "SUB" },
       },
     ] as never);
 
@@ -220,7 +222,7 @@ describe("POST /api/chat/group/[id]/members", () => {
     expect(mockChannelsGet).toHaveBeenCalledWith("group:group-1");
     expect(mockPublish).toHaveBeenCalledWith("member-added", {
       members: [
-        { id: "user-2", name: "Bob", avatarUrl: null, role: "MEMBER" },
+        { id: "user-2", name: "Bob", avatarUrl: null, role: "MEMBER", userRole: "SUB" },
       ],
     });
   });

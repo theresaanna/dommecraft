@@ -59,7 +59,7 @@ vi.mock("@/hooks/use-presence", () => ({
 const defaultProps = {
   conversationId: "conv-1",
   currentUserId: "user-1",
-  other: { id: "user-2", name: "Alice", avatarUrl: null },
+  other: { id: "user-2", name: "Alice", avatarUrl: null, role: "SUB" as const },
   initialMessages: [
     {
       id: "msg-1",
@@ -78,6 +78,7 @@ const defaultProps = {
   ],
   initialOtherLastReadAt: null as string | null,
   showReadReceipts: true,
+  notificationSound: true,
 };
 
 describe("ChatClient", () => {
@@ -90,6 +91,25 @@ describe("ChatClient", () => {
     render(<ChatClient {...defaultProps} />);
 
     expect(screen.getByText("Alice")).toBeInTheDocument();
+  });
+
+  it("renders role badge for the other user in the header", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    const badge = screen.getByTestId("role-badge");
+    expect(badge).toHaveTextContent("sub");
+  });
+
+  it("renders Domme badge when other user is DOMME", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        other={{ ...defaultProps.other, role: "DOMME" }}
+      />
+    );
+
+    const badge = screen.getByTestId("role-badge");
+    expect(badge).toHaveTextContent("Domme");
   });
 
   it("renders a back link to /chat", () => {

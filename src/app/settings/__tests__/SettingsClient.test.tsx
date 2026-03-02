@@ -33,6 +33,7 @@ const defaultSettings = {
   slug: "test-user-a1b2",
   showOnlineStatus: true,
   showReadReceipts: true,
+  notificationSound: true,
 };
 
 describe("SettingsClient", () => {
@@ -69,6 +70,7 @@ describe("SettingsClient", () => {
     expect(screen.getByText("Appearance")).toBeInTheDocument();
     expect(screen.getByText("Calendar")).toBeInTheDocument();
     expect(screen.getByText("Privacy")).toBeInTheDocument();
+    expect(screen.getByText("Notifications")).toBeInTheDocument();
   });
 
   it("displays initial name and email values", () => {
@@ -551,5 +553,86 @@ describe("SettingsClient", () => {
 
     const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
     expect(callBody.showReadReceipts).toBe(false);
+  });
+
+  it("renders Notifications section heading", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(screen.getByText("Notifications")).toBeInTheDocument();
+  });
+
+  it("renders notification sound checkbox checked when true", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /message notification sound/i,
+    });
+    expect(checkbox).toBeChecked();
+  });
+
+  it("renders notification sound checkbox unchecked when false", () => {
+    render(
+      <SettingsClient
+        initialSettings={{ ...defaultSettings, notificationSound: false }}
+        userRole="DOMME"
+      />
+    );
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /message notification sound/i,
+    });
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("toggles notification sound checkbox", async () => {
+    const user = userEvent.setup();
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /message notification sound/i,
+    });
+    expect(checkbox).toBeChecked();
+
+    await user.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("shows notification sound description text", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(
+      screen.getByText(/play a sound when you receive a new chat message/i)
+    ).toBeInTheDocument();
+  });
+
+  it("includes notificationSound in save payload", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    // Uncheck the checkbox first
+    const checkbox = screen.getByRole("checkbox", {
+      name: /message notification sound/i,
+    });
+    await user.click(checkbox);
+
+    await user.click(screen.getByText("Save Settings"));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith("/api/user/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: expect.any(String),
+      });
+    });
+
+    const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(callBody.notificationSound).toBe(false);
   });
 });

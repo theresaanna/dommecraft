@@ -85,6 +85,7 @@ describe("POST /api/auth/register", () => {
       calendarDefaultView: "MONTH",
       showOnlineStatus: true,
       showReadReceipts: true,
+      notificationSound: true,
       emailVerified: null,
       createdAt: new Date(),
       updatedAt: new Date(),

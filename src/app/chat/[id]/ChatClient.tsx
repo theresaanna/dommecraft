@@ -7,7 +7,9 @@ import type Ably from "ably";
 import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
 import { useTyping } from "@/hooks/use-typing";
+import { useNotificationSound } from "@/hooks/use-notification-sound";
 import EmojiPicker from "@/components/EmojiPicker";
+import RoleBadge from "@/components/RoleBadge";
 
 type Reaction = {
   emoji: string;
@@ -37,6 +39,7 @@ type OtherUser = {
   id: string;
   name: string | null;
   avatarUrl: string | null;
+  role: "DOMME" | "SUB";
 };
 
 type ReactionEvent = {
@@ -76,6 +79,7 @@ export default function ChatClient({
   initialMessages,
   initialOtherLastReadAt,
   showReadReceipts,
+  notificationSound,
 }: {
   conversationId: string;
   currentUserId: string;
@@ -83,6 +87,7 @@ export default function ChatClient({
   initialMessages: Message[];
   initialOtherLastReadAt: string | null;
   showReadReceipts: boolean;
+  notificationSound: boolean;
 }) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
@@ -105,6 +110,7 @@ export default function ChatClient({
     conversationId,
     currentUserId
   );
+  const { play: playNotificationSound } = useNotificationSound(notificationSound);
 
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -134,9 +140,10 @@ export default function ChatClient({
         if (prev.some((m) => m.id === data.id)) return prev;
         return [...prev, { ...data, reactions: data.reactions || [] }];
       });
-      // Auto-mark as read when we receive a message from the other user
+      // Auto-mark as read and play notification sound when we receive a message from the other user
       if (data.senderId !== currentUserId) {
         markAsRead();
+        playNotificationSound();
       }
     };
 
@@ -195,7 +202,7 @@ export default function ChatClient({
       channel.unsubscribe("edit", onEdit);
       channel.unsubscribe("read", onRead);
     };
-  }, [ablyClient, conversationId, currentUserId, showReadReceipts, markAsRead]);
+  }, [ablyClient, conversationId, currentUserId, showReadReceipts, markAsRead, playNotificationSound]);
 
   // Find the last sent message that was read by the other user
   const lastReadMessageId = (() => {
@@ -447,6 +454,7 @@ export default function ChatClient({
         </Link>
         <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
           {other.name || "Unknown"}
+          <RoleBadge role={other.role} />
           <span
             data-testid="presence-indicator"
             className={`inline-block h-2 w-2 rounded-full ${
