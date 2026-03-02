@@ -74,6 +74,8 @@ const defaultProps = {
       reactions: [],
     },
   ],
+  initialOtherLastReadAt: null as string | null,
+  showReadReceipts: true,
 };
 
 const propsWithReactions = {
