@@ -36,6 +36,7 @@ type ConversationSummary = {
     content: string;
     createdAt: string;
     senderId: string;
+    mediaMimeType?: string | null;
   } | null;
   updatedAt: string;
 };
@@ -354,5 +355,65 @@ describe("ChatDrawer", () => {
 
     const drawer = screen.getByRole("dialog");
     expect(drawer).toHaveAttribute("aria-label", "Chat list");
+  });
+
+  it("shows 'Picture message' in italics for image-only messages", async () => {
+    const imageOnly: ConversationSummary = {
+      ...baseConversation,
+      lastMessage: {
+        content: "",
+        createdAt: new Date().toISOString(),
+        senderId: "user-2",
+        mediaMimeType: "image/jpeg",
+      },
+    };
+    mockFetchSuccess([imageOnly]);
+    render(<ChatDrawer open={true} onClose={onClose} />);
+
+    await waitFor(() => {
+      const preview = screen.getByText("Picture message");
+      expect(preview).toBeInTheDocument();
+      expect(preview.tagName).toBe("P");
+      expect(preview.className).toContain("italic");
+    });
+  });
+
+  it("shows 'Video message' in italics for video-only messages", async () => {
+    const videoOnly: ConversationSummary = {
+      ...baseConversation,
+      lastMessage: {
+        content: "",
+        createdAt: new Date().toISOString(),
+        senderId: "user-2",
+        mediaMimeType: "video/mp4",
+      },
+    };
+    mockFetchSuccess([videoOnly]);
+    render(<ChatDrawer open={true} onClose={onClose} />);
+
+    await waitFor(() => {
+      const preview = screen.getByText("Video message");
+      expect(preview).toBeInTheDocument();
+      expect(preview.className).toContain("italic");
+    });
+  });
+
+  it("shows text content when message has both text and media", async () => {
+    const textAndMedia: ConversationSummary = {
+      ...baseConversation,
+      lastMessage: {
+        content: "Check this out",
+        createdAt: new Date().toISOString(),
+        senderId: "user-2",
+        mediaMimeType: "image/png",
+      },
+    };
+    mockFetchSuccess([textAndMedia]);
+    render(<ChatDrawer open={true} onClose={onClose} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Check this out")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("Picture message")).not.toBeInTheDocument();
   });
 });
