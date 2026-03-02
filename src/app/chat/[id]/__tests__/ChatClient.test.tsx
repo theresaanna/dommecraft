@@ -620,4 +620,199 @@ describe("ChatClient", () => {
     const img = media.querySelector("img");
     expect(img).toHaveAttribute("src", "https://blob.example.com/photo.png");
   });
+
+  // Message editing tests
+  it("shows edit button on hover for own messages", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    const editButtons = screen.getAllByLabelText("edit message");
+    // Only own messages (msg-2 from user-1) should have edit button
+    expect(editButtons).toHaveLength(1);
+  });
+
+  it("does not show edit button for other user's messages", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-2",
+            content: "Their message",
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+        ]}
+      />
+    );
+
+    expect(screen.queryByLabelText("edit message")).not.toBeInTheDocument();
+  });
+
+  it("shows edit form when edit button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    await user.click(screen.getByLabelText("edit message"));
+
+    expect(screen.getByTestId("edit-form")).toBeInTheDocument();
+    const editInput = screen.getByTestId("edit-input") as HTMLInputElement;
+    expect(editInput.value).toBe("Hi Alice!");
+  });
+
+  it("cancels edit when Cancel button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    await user.click(screen.getByLabelText("edit message"));
+    expect(screen.getByTestId("edit-form")).toBeInTheDocument();
+
+    await user.click(screen.getByText("Cancel"));
+    expect(screen.queryByTestId("edit-form")).not.toBeInTheDocument();
+    expect(screen.getByText("Hi Alice!")).toBeInTheDocument();
+  });
+
+  it("saves edit and updates message content optimistically", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "msg-2",
+          senderId: "user-1",
+          content: "Edited message",
+          editedAt: "2025-01-01T12:05:00.000Z",
+          createdAt: "2025-01-01T12:01:00.000Z",
+          reactions: [],
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    await user.click(screen.getByLabelText("edit message"));
+    const editInput = screen.getByTestId("edit-input");
+    await user.clear(editInput);
+    await user.type(editInput, "Edited message");
+    await user.click(screen.getByText("Save"));
+
+    // Optimistic update: message should be updated immediately
+    expect(screen.getByText("Edited message")).toBeInTheDocument();
+    expect(screen.queryByText("Hi Alice!")).not.toBeInTheDocument();
+
+    // Should call PUT endpoint
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages/msg-2",
+      expect.objectContaining({
+        method: "PUT",
+        body: JSON.stringify({ content: "Edited message" }),
+      })
+    );
+  });
+
+  it("reverts edit when API returns error", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      json: () => Promise.resolve({ error: "Forbidden" }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    await user.click(screen.getByLabelText("edit message"));
+    const editInput = screen.getByTestId("edit-input");
+    await user.clear(editInput);
+    await user.type(editInput, "Bad edit");
+    await user.click(screen.getByText("Save"));
+
+    // Wait for revert
+    expect(await screen.findByText("Hi Alice!")).toBeInTheDocument();
+  });
+
+  it("displays (edited) indicator when message has editedAt", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-1",
+            content: "Edited message",
+            editedAt: "2025-01-01T12:05:00.000Z",
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+        ]}
+      />
+    );
+
+    expect(screen.getByTestId("edited-indicator")).toBeInTheDocument();
+    expect(screen.getByText("(edited)")).toBeInTheDocument();
+  });
+
+  it("does not display (edited) indicator when editedAt is null", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    expect(screen.queryByTestId("edited-indicator")).not.toBeInTheDocument();
+  });
+
+  it("subscribes to edit events on mount", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    expect(mockSubscribe).toHaveBeenCalledWith("edit", expect.any(Function));
+  });
+
+  it("unsubscribes from edit events on unmount", () => {
+    const { unmount } = render(<ChatClient {...defaultProps} />);
+
+    unmount();
+
+    expect(mockUnsubscribe).toHaveBeenCalledWith(
+      "edit",
+      expect.any(Function)
+    );
+  });
+
+  it("updates message when edit event arrives via Ably", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    const editCallback = mockSubscribe.mock.calls.find(
+      (call: unknown[]) => call[0] === "edit"
+    )?.[1];
+
+    act(() => {
+      editCallback({
+        data: {
+          id: "msg-1",
+          senderId: "user-2",
+          content: "Edited by other user",
+          editedAt: "2025-01-01T12:05:00.000Z",
+          createdAt: "2025-01-01T12:00:00.000Z",
+          reactions: [],
+        },
+      });
+    });
+
+    expect(screen.getByText("Edited by other user")).toBeInTheDocument();
+    expect(screen.queryByText("Hey there!")).not.toBeInTheDocument();
+    expect(screen.getByTestId("edited-indicator")).toBeInTheDocument();
+  });
+
+  it("does not show edit form when content is unchanged and Save is clicked", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn();
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    await user.click(screen.getByLabelText("edit message"));
+    // Don't change the content, just click Save
+    await user.click(screen.getByText("Save"));
+
+    // Should not call the API since content hasn't changed
+    expect(mockFetch).not.toHaveBeenCalled();
+    // Form should be closed
+    expect(screen.queryByTestId("edit-form")).not.toBeInTheDocument();
+  });
 });

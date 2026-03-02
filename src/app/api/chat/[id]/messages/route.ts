@@ -65,6 +65,7 @@ export async function GET(
       mediaUrl: true,
       mediaMimeType: true,
       mediaFileSize: true,
+      editedAt: true,
       createdAt: true,
       reactions: { select: { emoji: true, userId: true } },
     },
@@ -73,6 +74,7 @@ export async function GET(
   return NextResponse.json(
     messages.map((m) => ({
       ...m,
+      editedAt: m.editedAt?.toISOString() ?? null,
       createdAt: m.createdAt.toISOString(),
     }))
   );
@@ -188,6 +190,7 @@ export async function POST(
         mediaUrl: true,
         mediaMimeType: true,
         mediaFileSize: true,
+        editedAt: true,
         createdAt: true,
       },
     }),
@@ -197,7 +200,11 @@ export async function POST(
     }),
   ]);
 
-  const messageData = { ...message, createdAt: message.createdAt.toISOString() };
+  const messageData = {
+    ...message,
+    editedAt: message.editedAt?.toISOString() ?? null,
+    createdAt: message.createdAt.toISOString(),
+  };
 
   // Publish to Ably so the other participant gets the message in real-time
   try {

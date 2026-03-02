@@ -321,6 +321,7 @@ describe("POST /api/chat/[id]/messages", () => {
       id: "msg-1",
       senderId: "user-1",
       content: "Hello!",
+      editedAt: null,
       createdAt: "2025-01-01T12:00:00.000Z",
     });
   });

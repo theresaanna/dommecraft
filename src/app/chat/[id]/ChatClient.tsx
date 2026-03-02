@@ -19,6 +19,7 @@ type Message = {
   mediaUrl?: string | null;
   mediaMimeType?: string | null;
   mediaFileSize?: number | null;
+  editedAt?: string | null;
   createdAt: string;
   reactions: Reaction[];
 };
@@ -83,6 +84,8 @@ export default function ChatClient({
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editInput, setEditInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { client: ablyClient } = useAbly();
@@ -148,6 +151,17 @@ export default function ChatClient({
       );
     };
 
+    const onEdit = (msg: Ably.InboundMessage) => {
+      const data = msg.data as Message;
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === data.id
+            ? { ...m, content: data.content, editedAt: data.editedAt }
+            : m
+        )
+      );
+    };
+
     const onRead = (msg: Ably.InboundMessage) => {
       const data = msg.data as ReadEvent;
       if (data.userId !== currentUserId && showReadReceipts) {
@@ -157,11 +171,13 @@ export default function ChatClient({
 
     channel.subscribe("message", onMessage);
     channel.subscribe("reaction", onReaction);
+    channel.subscribe("edit", onEdit);
     channel.subscribe("read", onRead);
 
     return () => {
       channel.unsubscribe("message", onMessage);
       channel.unsubscribe("reaction", onReaction);
+      channel.unsubscribe("edit", onEdit);
       channel.unsubscribe("read", onRead);
     };
   }, [ablyClient, conversationId, currentUserId, showReadReceipts, markAsRead]);
@@ -325,6 +341,69 @@ export default function ChatClient({
     }
   }
 
+  function handleEditStart(msg: Message) {
+    setEditingMessageId(msg.id);
+    setEditInput(msg.content);
+  }
+
+  function handleEditCancel() {
+    setEditingMessageId(null);
+    setEditInput("");
+  }
+
+  async function handleEditSave(messageId: string) {
+    const text = editInput.trim();
+    if (!text) return;
+
+    const originalMessage = messages.find((m) => m.id === messageId);
+    if (!originalMessage || originalMessage.content === text) {
+      handleEditCancel();
+      return;
+    }
+
+    // Optimistic update
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === messageId
+          ? { ...m, content: text, editedAt: new Date().toISOString() }
+          : m
+      )
+    );
+    setEditingMessageId(null);
+    setEditInput("");
+
+    try {
+      const res = await fetch(
+        `/api/chat/${conversationId}/messages/${messageId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content: text }),
+        }
+      );
+
+      if (!res.ok) {
+        // Revert optimistic update
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === messageId
+              ? { ...m, content: originalMessage.content, editedAt: originalMessage.editedAt }
+              : m
+          )
+        );
+      }
+    } catch {
+      // Revert on network error
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === messageId
+            ? { ...m, content: originalMessage.content, editedAt: originalMessage.editedAt }
+            : m
+        )
+      );
+    }
+  }
+
   return (
     <div className="flex h-dvh flex-col">
       {/* Header */}
@@ -404,17 +483,62 @@ export default function ChatClient({
                       </div>
                     )}
 
-                    {msg.content && (
-                      <p className="whitespace-pre-wrap break-words">
-                        {msg.content}
-                      </p>
+                    {editingMessageId === msg.id ? (
+                      <form
+                        data-testid="edit-form"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          handleEditSave(msg.id);
+                        }}
+                        className="flex flex-col gap-1"
+                      >
+                        <input
+                          type="text"
+                          data-testid="edit-input"
+                          value={editInput}
+                          onChange={(e) => setEditInput(e.target.value)}
+                          className="rounded border border-zinc-300 px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+                          autoFocus
+                          onKeyDown={(e) => {
+                            if (e.key === "Escape") handleEditCancel();
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <button
+                            type="submit"
+                            className="text-xs text-blue-500 hover:text-blue-700 dark:text-blue-400"
+                          >
+                            Save
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleEditCancel}
+                            className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        {msg.content && (
+                          <p className="whitespace-pre-wrap break-words">
+                            {msg.content}
+                          </p>
+                        )}
+                        <span className="mt-1 flex items-center gap-1 text-xs opacity-60">
+                          <time>
+                            {new Date(msg.createdAt).toLocaleTimeString([], {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
+                          </time>
+                          {msg.editedAt && (
+                            <span data-testid="edited-indicator">(edited)</span>
+                          )}
+                        </span>
+                      </>
                     )}
-                    <time className="mt-1 block text-xs opacity-60">
-                      {new Date(msg.createdAt).toLocaleTimeString([], {
-                        hour: "numeric",
-                        minute: "2-digit",
-                      })}
-                    </time>
                   </div>
 
                   {/* Read receipt */}
@@ -450,8 +574,8 @@ export default function ChatClient({
                     </div>
                   )}
 
-                  {/* Emoji picker */}
-                  <div className="relative">
+                  {/* Emoji picker & edit */}
+                  <div className="relative flex items-center gap-2">
                     <button
                       onClick={() =>
                         setPickerOpenFor(pickerOpenFor === msg.id ? null : msg.id)
@@ -461,6 +585,15 @@ export default function ChatClient({
                     >
                       +
                     </button>
+                    {isMine && !editingMessageId && (
+                      <button
+                        onClick={() => handleEditStart(msg)}
+                        aria-label="edit message"
+                        className="mt-1 text-xs text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
+                      >
+                        Edit
+                      </button>
+                    )}
                     {pickerOpenFor === msg.id && (
                       <div className="absolute bottom-full left-0 z-10 mb-1 flex gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800">
                         {EMOJI_OPTIONS.map((emoji) => (
