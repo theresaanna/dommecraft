@@ -21,7 +21,7 @@ export async function GET() {
       messages: {
         orderBy: { createdAt: "desc" },
         take: 1,
-        select: { content: true, createdAt: true, senderId: true },
+        select: { content: true, createdAt: true, senderId: true, mediaMimeType: true },
       },
     },
     orderBy: { updatedAt: "desc" },
@@ -39,6 +39,7 @@ export async function GET() {
             content: lastMessage.content,
             createdAt: lastMessage.createdAt.toISOString(),
             senderId: lastMessage.senderId,
+            mediaMimeType: lastMessage.mediaMimeType,
           }
         : null,
       updatedAt: conv.updatedAt.toISOString(),

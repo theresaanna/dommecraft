@@ -11,6 +11,7 @@ type ConversationSummary = {
     content: string;
     createdAt: string;
     senderId: string;
+    mediaMimeType?: string | null;
   } | null;
   updatedAt: string;
 };
@@ -208,9 +209,23 @@ export default function ChatDrawer({
                         )}
                       </div>
                       {conv.lastMessage ? (
-                        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
-                          {conv.lastMessage.content}
-                        </p>
+                        conv.lastMessage.content ? (
+                          <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+                            {conv.lastMessage.content}
+                          </p>
+                        ) : conv.lastMessage.mediaMimeType?.startsWith("video/") ? (
+                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+                            Video message
+                          </p>
+                        ) : conv.lastMessage.mediaMimeType?.startsWith("image/") ? (
+                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+                            Picture message
+                          </p>
+                        ) : (
+                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+                            Media message
+                          </p>
+                        )
                       ) : (
                         <p className="text-sm italic text-zinc-400 dark:text-zinc-500">
                           No messages yet

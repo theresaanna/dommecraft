@@ -69,6 +69,7 @@ describe("GET /api/chat", () => {
             content: "Hello!",
             createdAt: new Date("2025-01-01T12:00:00Z"),
             senderId: "user-2",
+            mediaMimeType: null,
           },
         ],
         updatedAt: new Date("2025-01-01T12:00:00Z"),
