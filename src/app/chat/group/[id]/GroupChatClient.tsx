@@ -8,6 +8,7 @@ import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
 import { useGroupTyping } from "@/hooks/use-typing";
 import { useNotificationSound } from "@/hooks/use-notification-sound";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 import EmojiPicker from "@/components/EmojiPicker";
 import RoleBadge from "@/components/RoleBadge";
 import GroupInfoPanel from "./GroupInfoPanel";
@@ -144,6 +145,18 @@ export default function GroupChatClient({
   useEffect(() => {
     scrollToBottom();
   }, [messages.length, scrollToBottom]);
+
+  // Mark group chat notification as read when the user opens the conversation
+  useEffect(() => {
+    const chatLinkUrl = `/chat/group/${groupConversationId}`;
+    fetch("/api/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ linkUrl: chatLinkUrl }),
+    })
+      .then(() => triggerNotificationRefresh())
+      .catch(() => {});
+  }, [groupConversationId]);
 
   // Mark group conversation as read when receiving messages from other users
   const markAsRead = useCallback(() => {

@@ -54,6 +54,10 @@ vi.mock("@/hooks/use-presence", () => ({
   }),
 }));
 
+vi.mock("@/components/providers/notification-provider", () => ({
+  triggerNotificationRefresh: vi.fn(),
+}));
+
 const defaultProps = {
   conversationId: "conv-1",
   currentUserId: "user-1",
@@ -115,7 +119,7 @@ describe("ChatClient reactions", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     reactionSubscribeCallback = null;
-    global.fetch = vi.fn();
+    global.fetch = vi.fn().mockResolvedValue({ ok: true });
     localStorage.clear();
   });
 

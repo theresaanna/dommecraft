@@ -19,7 +19,11 @@ export default function ChatDrawerToggle() {
         data-testid="chat-drawer-toggle"
         onClick={() => setOpen(true)}
         aria-label="Open chat list"
-        className="fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-md text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+        className={`fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-md ${
+          unreadChatCount > 0
+            ? "text-amber-500 hover:bg-amber-50 hover:text-amber-600 dark:text-amber-400 dark:hover:bg-amber-900/30 dark:hover:text-amber-300"
+            : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+        }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +40,7 @@ export default function ChatDrawerToggle() {
         {unreadChatCount > 0 && (
           <span
             data-testid="unread-chat-badge"
-            className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white"
+            className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white"
           >
             {unreadChatCount > 9 ? "9+" : unreadChatCount}
           </span>

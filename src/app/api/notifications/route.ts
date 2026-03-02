@@ -53,6 +53,18 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ updated: result.count });
     }
 
+    if (typeof body.linkUrl === "string" && body.linkUrl.length > 0) {
+      const result = await prisma.notification.updateMany({
+        where: {
+          userId: session.user.id,
+          linkUrl: body.linkUrl,
+          isRead: false,
+        },
+        data: { isRead: true },
+      });
+      return NextResponse.json({ updated: result.count });
+    }
+
     if (!Array.isArray(body.ids) || body.ids.length === 0) {
       return NextResponse.json(
         { error: "ids array is required" },

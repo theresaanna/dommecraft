@@ -201,6 +201,33 @@ describe("ChatDrawerToggle", () => {
       expect(badge).toHaveTextContent("9+");
     });
 
+    it("uses amber styling on button when there are unread chats", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 2,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      const button = screen.getByTestId("chat-drawer-toggle");
+      expect(button.className).toContain("text-amber-500");
+    });
+
+    it("uses gray styling on button when there are no unread chats", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 0,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      const button = screen.getByTestId("chat-drawer-toggle");
+      expect(button.className).toContain("text-zinc-600");
+      expect(button.className).not.toContain("text-amber");
+    });
+
     it("does not show badge when user is not authenticated", () => {
       mockUseSession.mockReturnValue({
         data: null,
