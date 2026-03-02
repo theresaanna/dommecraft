@@ -35,9 +35,19 @@ vi.mock("@/lib/ably", () => ({
   }),
 }));
 
+vi.mock("@vercel/blob", () => ({
+  put: vi.fn(),
+}));
+
+vi.mock("@/lib/arachnid-shield", () => ({
+  scanFile: vi.fn(),
+}));
+
 import { GET, POST } from "@/app/api/chat/[id]/messages/route";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { put } from "@vercel/blob";
+import { scanFile } from "@/lib/arachnid-shield";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockAuth = vi.mocked(auth) as any;
@@ -48,6 +58,8 @@ const mockTransaction = vi.mocked(prisma.$transaction) as any;
 const mockNotificationFindFirst = vi.mocked(prisma.notification.findFirst);
 const mockNotificationCreate = vi.mocked(prisma.notification.create);
 const mockNotificationUpdate = vi.mocked(prisma.notification.update);
+const mockPut = vi.mocked(put);
+const mockScanFile = vi.mocked(scanFile);
 
 const params = Promise.resolve({ id: "conv-1" });
 
@@ -62,6 +74,16 @@ function createPostRequest(body: Record<string, unknown>) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+  });
+}
+
+function createFormDataRequest(file?: File | null, content?: string) {
+  const formData = new FormData();
+  if (file) formData.append("file", file);
+  if (content) formData.append("content", content);
+  return new Request("http://localhost:3000/api/chat/conv-1/messages", {
+    method: "POST",
+    body: formData,
   });
 }
 
@@ -479,5 +501,223 @@ describe("POST /api/chat/[id]/messages", () => {
     const res = await POST(createPostRequest({ content: "Hi" }), { params });
 
     expect(res.status).toBe(201);
+  });
+});
+
+describe("POST /api/chat/[id]/messages (media upload)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockScanFile.mockResolvedValue({ safe: true } as never);
+    mockPut.mockResolvedValue({
+      url: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      pathname: "chat/conv-1/user-1/photo.jpg",
+      downloadUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      contentType: "image/jpeg",
+      contentDisposition: "inline",
+    } as never);
+    mockNotificationFindFirst.mockResolvedValue(null);
+    mockNotificationCreate.mockResolvedValue({} as never);
+    mockNotificationUpdate.mockResolvedValue({} as never);
+  });
+
+  function setupAuth() {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Alice" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+  }
+
+  it("returns 400 when file type is not allowed", async () => {
+    setupAuth();
+
+    const file = new File(["data"], "doc.pdf", { type: "application/pdf" });
+    const res = await POST(createFormDataRequest(file), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toContain("File type not allowed");
+  });
+
+  it("returns 400 when file exceeds size limit", async () => {
+    setupAuth();
+
+    const largeContent = new Uint8Array(11 * 1024 * 1024);
+    const file = new File([largeContent], "big.jpg", { type: "image/jpeg" });
+    const res = await POST(createFormDataRequest(file), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("File size exceeds 10MB limit");
+  });
+
+  it("returns 400 when file fails CSAM scan", async () => {
+    setupAuth();
+    mockScanFile.mockResolvedValue({ safe: false } as never);
+
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    const res = await POST(createFormDataRequest(file), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("File rejected by content safety scan");
+    expect(mockPut).not.toHaveBeenCalled();
+  });
+
+  it("scans file with Arachnid Shield before uploading", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "",
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      mediaMimeType: "image/jpeg",
+      mediaFileSize: 1024,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await POST(createFormDataRequest(file), { params });
+
+    expect(mockScanFile).toHaveBeenCalledWith(expect.any(File));
+    expect(mockPut).toHaveBeenCalled();
+  });
+
+  it("creates message with media fields on successful upload", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "Check this out",
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      mediaMimeType: "image/jpeg",
+      mediaFileSize: 10,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    const res = await POST(createFormDataRequest(file, "Check this out"), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.mediaUrl).toBe("https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg");
+    expect(data.mediaMimeType).toBe("image/jpeg");
+  });
+
+  it("uploads file to correct blob path", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "",
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      mediaMimeType: "image/jpeg",
+      mediaFileSize: 10,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await POST(createFormDataRequest(file), { params });
+
+    expect(mockPut).toHaveBeenCalledWith(
+      "chat/conv-1/user-1/photo.jpg",
+      expect.any(File),
+      { access: "public", allowOverwrite: true }
+    );
+  });
+
+  it("returns 400 when FormData has no file and no content", async () => {
+    setupAuth();
+
+    const res = await POST(createFormDataRequest(), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("Message must include text or a file");
+  });
+
+  it("allows sending text-only messages via FormData", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "Just text",
+      mediaUrl: null,
+      mediaMimeType: null,
+      mediaFileSize: null,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const res = await POST(createFormDataRequest(null, "Just text"), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.content).toBe("Just text");
+    expect(data.mediaUrl).toBeNull();
+    expect(mockScanFile).not.toHaveBeenCalled();
+    expect(mockPut).not.toHaveBeenCalled();
+  });
+
+  it("allows video file uploads", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "",
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/clip.mp4",
+      mediaMimeType: "video/mp4",
+      mediaFileSize: 5000,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+    mockPut.mockResolvedValue({
+      url: "https://blob.vercel-storage.com/chat/conv-1/user-1/clip.mp4",
+      pathname: "chat/conv-1/user-1/clip.mp4",
+      downloadUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/clip.mp4",
+      contentType: "video/mp4",
+      contentDisposition: "inline",
+    } as never);
+
+    const file = new File(["video data"], "clip.mp4", { type: "video/mp4" });
+    const res = await POST(createFormDataRequest(file), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.mediaMimeType).toBe("video/mp4");
+  });
+
+  it("publishes media message to Ably", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "",
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      mediaMimeType: "image/jpeg",
+      mediaFileSize: 10,
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await POST(createFormDataRequest(file), { params });
+
+    expect(mockPublish).toHaveBeenCalledWith("message", expect.objectContaining({
+      mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
+      mediaMimeType: "image/jpeg",
+    }));
   });
 });

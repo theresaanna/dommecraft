@@ -2,8 +2,20 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getAblyRest } from "@/lib/ably";
+import { put } from "@vercel/blob";
+import { scanFile } from "@/lib/arachnid-shield";
 
 const PAGE_SIZE = 50;
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_MEDIA_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
+];
 
 export async function GET(
   request: Request,
@@ -50,6 +62,9 @@ export async function GET(
       id: true,
       senderId: true,
       content: true,
+      mediaUrl: true,
+      mediaMimeType: true,
+      mediaFileSize: true,
       createdAt: true,
       reactions: { select: { emoji: true, userId: true } },
     },
@@ -94,14 +109,68 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const body = await request.json();
-  const { content } = body;
+  // Determine if the request is a file upload (FormData) or text-only (JSON)
+  const contentType = request.headers.get("content-type") || "";
+  let content = "";
+  let mediaUrl: string | null = null;
+  let mediaMimeType: string | null = null;
+  let mediaFileSize: number | null = null;
 
-  if (!content || typeof content !== "string" || content.trim().length === 0) {
-    return NextResponse.json(
-      { error: "Message content is required" },
-      { status: 400 }
-    );
+  if (contentType.includes("multipart/form-data")) {
+    const formData = await request.formData();
+    content = ((formData.get("content") as string) || "").trim();
+    const file = formData.get("file") as File | null;
+
+    if (!file && !content) {
+      return NextResponse.json(
+        { error: "Message must include text or a file" },
+        { status: 400 }
+      );
+    }
+
+    if (file) {
+      if (!ALLOWED_MEDIA_TYPES.includes(file.type)) {
+        return NextResponse.json(
+          { error: "File type not allowed. Supported: images (JPEG, PNG, GIF, WebP) and videos (MP4, WebM, MOV)" },
+          { status: 400 }
+        );
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json(
+          { error: "File size exceeds 10MB limit" },
+          { status: 400 }
+        );
+      }
+
+      // CSAM scan via Project Arachnid Shield
+      const { safe } = await scanFile(file);
+      if (!safe) {
+        return NextResponse.json(
+          { error: "File rejected by content safety scan" },
+          { status: 400 }
+        );
+      }
+
+      // Upload to Vercel Blob
+      const pathname = `chat/${conversationId}/${userId}/${file.name}`;
+      const blob = await put(pathname, file, { access: "public", allowOverwrite: true });
+      mediaUrl = blob.url;
+      mediaMimeType = file.type;
+      mediaFileSize = file.size;
+    }
+  } else {
+    const body = await request.json();
+    const rawContent = body.content;
+
+    if (!rawContent || typeof rawContent !== "string" || rawContent.trim().length === 0) {
+      return NextResponse.json(
+        { error: "Message content is required" },
+        { status: 400 }
+      );
+    }
+
+    content = rawContent.trim();
   }
 
   const [message] = await prisma.$transaction([
@@ -109,12 +178,16 @@ export async function POST(
       data: {
         conversationId,
         senderId: userId,
-        content: content.trim(),
+        content,
+        ...(mediaUrl ? { mediaUrl, mediaMimeType, mediaFileSize } : {}),
       },
       select: {
         id: true,
         senderId: true,
         content: true,
+        mediaUrl: true,
+        mediaMimeType: true,
+        mediaFileSize: true,
         createdAt: true,
       },
     }),
