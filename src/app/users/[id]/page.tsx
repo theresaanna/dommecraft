@@ -87,6 +87,7 @@ export default async function UserProfilePage({
         }))}
         userId={id}
         isOwnProfile={isOwnProfile}
+        canUpload={isOwnProfile && user.role !== "SUB"}
       />
     </div>
   );

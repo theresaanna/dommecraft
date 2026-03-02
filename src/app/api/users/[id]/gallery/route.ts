@@ -45,6 +45,13 @@ export async function POST(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    if (session.user.role === "SUB") {
+      return NextResponse.json(
+        { error: "Subs cannot upload gallery photos" },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     if (!body.fileUrl || typeof body.fileUrl !== "string") {
