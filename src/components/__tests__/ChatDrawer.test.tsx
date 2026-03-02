@@ -29,7 +29,18 @@ vi.mock("@/hooks/use-presence", () => ({
   }),
 }));
 
-const baseConversation = {
+type ConversationSummary = {
+  id: string;
+  other: { id: string; name: string | null; avatarUrl: string | null };
+  lastMessage: {
+    content: string;
+    createdAt: string;
+    senderId: string;
+  } | null;
+  updatedAt: string;
+};
+
+const baseConversation: ConversationSummary = {
   id: "conv-1",
   other: { id: "user-2", name: "Bob", avatarUrl: null },
   lastMessage: {

@@ -59,7 +59,7 @@ describe("ChatDrawerToggle", () => {
   it("renders toggle button when user is authenticated", () => {
     mockUseSession.mockReturnValue({
       data: {
-        user: { id: "user-1", name: "Test" },
+        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
         expires: "2099-01-01",
       },
       status: "authenticated",
@@ -74,7 +74,7 @@ describe("ChatDrawerToggle", () => {
   it("has accessible label on toggle button", () => {
     mockUseSession.mockReturnValue({
       data: {
-        user: { id: "user-1", name: "Test" },
+        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
         expires: "2099-01-01",
       },
       status: "authenticated",
@@ -89,7 +89,7 @@ describe("ChatDrawerToggle", () => {
   it("opens drawer when toggle button is clicked", async () => {
     mockUseSession.mockReturnValue({
       data: {
-        user: { id: "user-1", name: "Test" },
+        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
         expires: "2099-01-01",
       },
       status: "authenticated",
@@ -115,7 +115,7 @@ describe("ChatDrawerToggle", () => {
   it("closes drawer when close button is clicked", async () => {
     mockUseSession.mockReturnValue({
       data: {
-        user: { id: "user-1", name: "Test" },
+        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
         expires: "2099-01-01",
       },
       status: "authenticated",
