@@ -82,7 +82,7 @@ describe("AblyProvider", () => {
     expect(screen.getByTestId("connected").textContent).toBe("false");
   });
 
-  it("creates a client when session exists and exposes it after connection", () => {
+  it("creates and exposes a client immediately when session exists", () => {
     mockUseSession.mockReturnValue({
       data: { user: { id: "user-1" }, expires: "" } as never,
       status: "authenticated",
@@ -95,16 +95,10 @@ describe("AblyProvider", () => {
       </AblyProvider>
     );
 
-    // Client ref is set in useEffect but context value updates on re-render.
-    // Simulate the connected event which triggers a state change + re-render.
-    act(() => {
-      connectionHandlers["connected"]?.forEach((handler) =>
-        handler({ current: "connected" })
-      );
-    });
-
+    // Client is available via state immediately after useEffect runs,
+    // before the "connected" event fires (Ably queues subscriptions)
     expect(screen.getByTestId("has-client").textContent).toBe("true");
-    expect(screen.getByTestId("connected").textContent).toBe("true");
+    expect(screen.getByTestId("connected").textContent).toBe("false");
   });
 
   it("sets isConnected to true on connected event", () => {
