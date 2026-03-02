@@ -12,6 +12,7 @@ vi.mock("@/lib/prisma", () => ({
     },
     chatMessage: {
       findMany: vi.fn(),
+      findUnique: vi.fn(),
       create: vi.fn(),
     },
     notification: {
@@ -58,6 +59,7 @@ const mockTransaction = vi.mocked(prisma.$transaction) as any;
 const mockNotificationFindFirst = vi.mocked(prisma.notification.findFirst);
 const mockNotificationCreate = vi.mocked(prisma.notification.create);
 const mockNotificationUpdate = vi.mocked(prisma.notification.update);
+const mockMessageFindUnique = vi.mocked(prisma.chatMessage.findUnique);
 const mockPut = vi.mocked(put);
 const mockScanFile = vi.mocked(scanFile);
 
@@ -323,6 +325,7 @@ describe("POST /api/chat/[id]/messages", () => {
       content: "Hello!",
       editedAt: null,
       createdAt: "2025-01-01T12:00:00.000Z",
+      replyTo: null,
     });
   });
 
@@ -720,5 +723,242 @@ describe("POST /api/chat/[id]/messages (media upload)", () => {
       mediaUrl: "https://blob.vercel-storage.com/chat/conv-1/user-1/photo.jpg",
       mediaMimeType: "image/jpeg",
     }));
+  });
+});
+
+describe("POST /api/chat/[id]/messages (replies)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockNotificationFindFirst.mockResolvedValue(null);
+    mockNotificationCreate.mockResolvedValue({} as never);
+    mockNotificationUpdate.mockResolvedValue({} as never);
+  });
+
+  function setupAuth() {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", name: "Alice" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+  }
+
+  it("creates a reply message with replyToId", async () => {
+    setupAuth();
+    mockMessageFindUnique.mockResolvedValue({
+      conversationId: "conv-1",
+    } as never);
+
+    const createdMessage = {
+      id: "msg-2",
+      senderId: "user-1",
+      content: "This is a reply",
+      createdAt: new Date("2025-01-01T12:01:00Z"),
+      replyTo: {
+        id: "msg-1",
+        content: "Original message",
+        senderId: "user-2",
+        sender: { name: "Bob" },
+      },
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const res = await POST(
+      createPostRequest({ content: "This is a reply", replyToId: "msg-1" }),
+      { params }
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.replyTo).toEqual({
+      id: "msg-1",
+      content: "Original message",
+      senderName: "Bob",
+    });
+  });
+
+  it("creates a message without replyTo when replyToId is not provided", async () => {
+    setupAuth();
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "No reply",
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+      replyTo: null,
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    const res = await POST(createPostRequest({ content: "No reply" }), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.replyTo).toBeNull();
+  });
+
+  it("returns 400 when replyToId references a message in a different conversation", async () => {
+    setupAuth();
+    mockMessageFindUnique.mockResolvedValue({
+      conversationId: "conv-other",
+    } as never);
+
+    const res = await POST(
+      createPostRequest({ content: "Reply", replyToId: "msg-from-other-conv" }),
+      { params }
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("Reply target message not found in this conversation");
+  });
+
+  it("returns 400 when replyToId references a non-existent message", async () => {
+    setupAuth();
+    mockMessageFindUnique.mockResolvedValue(null);
+
+    const res = await POST(
+      createPostRequest({ content: "Reply", replyToId: "nonexistent" }),
+      { params }
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(400);
+    expect(data.error).toBe("Reply target message not found in this conversation");
+  });
+
+  it("includes replyTo in Ably publish payload", async () => {
+    setupAuth();
+    mockMessageFindUnique.mockResolvedValue({
+      conversationId: "conv-1",
+    } as never);
+
+    const createdMessage = {
+      id: "msg-2",
+      senderId: "user-1",
+      content: "Reply!",
+      createdAt: new Date("2025-01-01T12:01:00Z"),
+      replyTo: {
+        id: "msg-1",
+        content: "Original",
+        senderId: "user-2",
+        sender: { name: "Bob" },
+      },
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    await POST(
+      createPostRequest({ content: "Reply!", replyToId: "msg-1" }),
+      { params }
+    );
+
+    expect(mockPublish).toHaveBeenCalledWith(
+      "message",
+      expect.objectContaining({
+        replyTo: {
+          id: "msg-1",
+          content: "Original",
+          senderName: "Bob",
+        },
+      })
+    );
+  });
+
+  it("includes replyToId in chatMessage.create call", async () => {
+    setupAuth();
+    mockMessageFindUnique.mockResolvedValue({
+      conversationId: "conv-1",
+    } as never);
+
+    const createdMessage = {
+      id: "msg-2",
+      senderId: "user-1",
+      content: "Reply",
+      createdAt: new Date("2025-01-01T12:01:00Z"),
+      replyTo: null,
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    await POST(
+      createPostRequest({ content: "Reply", replyToId: "msg-1" }),
+      { params }
+    );
+
+    const mockCreate = vi.mocked(prisma.chatMessage.create);
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          replyToId: "msg-1",
+        }),
+      })
+    );
+  });
+});
+
+describe("GET /api/chat/[id]/messages (replies)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("includes replyTo data in message response", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockFindMany.mockResolvedValue([
+      {
+        id: "msg-2",
+        senderId: "user-1",
+        content: "Reply",
+        createdAt: new Date("2025-01-01T12:01:00Z"),
+        replyTo: {
+          id: "msg-1",
+          content: "Original",
+          senderId: "user-2",
+          sender: { name: "Bob" },
+        },
+      },
+    ] as never);
+
+    const res = await GET(createGetRequest(), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data[0].replyTo).toEqual({
+      id: "msg-1",
+      content: "Original",
+      senderName: "Bob",
+    });
+  });
+
+  it("returns null replyTo for messages without replies", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+    mockFindMany.mockResolvedValue([
+      {
+        id: "msg-1",
+        senderId: "user-2",
+        content: "Hi",
+        createdAt: new Date("2025-01-01T12:00:00Z"),
+        replyTo: null,
+      },
+    ] as never);
+
+    const res = await GET(createGetRequest(), { params });
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data[0].replyTo).toBeNull();
   });
 });

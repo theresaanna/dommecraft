@@ -68,6 +68,14 @@ export async function GET(
       editedAt: true,
       createdAt: true,
       reactions: { select: { emoji: true, userId: true } },
+      replyTo: {
+        select: {
+          id: true,
+          content: true,
+          senderId: true,
+          sender: { select: { name: true } },
+        },
+      },
     },
   });
 
@@ -76,6 +84,13 @@ export async function GET(
       ...m,
       editedAt: m.editedAt?.toISOString() ?? null,
       createdAt: m.createdAt.toISOString(),
+      replyTo: m.replyTo
+        ? {
+            id: m.replyTo.id,
+            content: m.replyTo.content,
+            senderName: m.replyTo.sender.name,
+          }
+        : null,
     }))
   );
 }
@@ -117,10 +132,12 @@ export async function POST(
   let mediaUrl: string | null = null;
   let mediaMimeType: string | null = null;
   let mediaFileSize: number | null = null;
+  let replyToId: string | null = null;
 
   if (contentType.includes("multipart/form-data")) {
     const formData = await request.formData();
     content = ((formData.get("content") as string) || "").trim();
+    replyToId = ((formData.get("replyToId") as string) || "").trim() || null;
     const file = formData.get("file") as File | null;
 
     if (!file && !content) {
@@ -164,6 +181,7 @@ export async function POST(
   } else {
     const body = await request.json();
     const rawContent = body.content;
+    replyToId = body.replyToId || null;
 
     if (!rawContent || typeof rawContent !== "string" || rawContent.trim().length === 0) {
       return NextResponse.json(
@@ -175,6 +193,20 @@ export async function POST(
     content = rawContent.trim();
   }
 
+  // Validate replyToId if provided
+  if (replyToId) {
+    const replyTarget = await prisma.chatMessage.findUnique({
+      where: { id: replyToId },
+      select: { conversationId: true },
+    });
+    if (!replyTarget || replyTarget.conversationId !== conversationId) {
+      return NextResponse.json(
+        { error: "Reply target message not found in this conversation" },
+        { status: 400 }
+      );
+    }
+  }
+
   const [message] = await prisma.$transaction([
     prisma.chatMessage.create({
       data: {
@@ -182,6 +214,7 @@ export async function POST(
         senderId: userId,
         content,
         ...(mediaUrl ? { mediaUrl, mediaMimeType, mediaFileSize } : {}),
+        ...(replyToId ? { replyToId } : {}),
       },
       select: {
         id: true,
@@ -192,6 +225,14 @@ export async function POST(
         mediaFileSize: true,
         editedAt: true,
         createdAt: true,
+        replyTo: {
+          select: {
+            id: true,
+            content: true,
+            senderId: true,
+            sender: { select: { name: true } },
+          },
+        },
       },
     }),
     prisma.conversation.update({
@@ -204,6 +245,13 @@ export async function POST(
     ...message,
     editedAt: message.editedAt?.toISOString() ?? null,
     createdAt: message.createdAt.toISOString(),
+    replyTo: message.replyTo
+      ? {
+          id: message.replyTo.id,
+          content: message.replyTo.content,
+          senderName: message.replyTo.sender.name,
+        }
+      : null,
   };
 
   // Publish to Ably so the other participant gets the message in real-time
