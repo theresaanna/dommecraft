@@ -6,6 +6,7 @@ import Image from "next/image";
 import type Ably from "ably";
 import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
+import { useTyping } from "@/hooks/use-typing";
 import EmojiPicker from "@/components/EmojiPicker";
 
 type Reaction = {
@@ -100,6 +101,10 @@ export default function ChatClient({
   const bottomRef = useRef<HTMLDivElement>(null);
   const { client: ablyClient } = useAbly();
   const { isOnline } = usePresence();
+  const { isOtherTyping, onKeyStroke, onMessageSent } = useTyping(
+    conversationId,
+    currentUserId
+  );
 
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -226,6 +231,7 @@ export default function ChatClient({
     setSending(true);
     setInput("");
     setUploadError(null);
+    onMessageSent();
     const fileToSend = selectedFile;
     const replyTo = replyingToMessage;
     setSelectedFile(null);
@@ -701,6 +707,21 @@ export default function ChatClient({
         </div>
       </div>
 
+      {/* Typing indicator */}
+      {isOtherTyping && (
+        <div
+          data-testid="typing-indicator"
+          className="px-4 py-1"
+        >
+          <p className="mx-auto max-w-2xl text-xs text-zinc-400 dark:text-zinc-500">
+            {other.name || "Someone"} is typing
+            <span className="inline-flex w-6 justify-start">
+              <span className="animate-pulse">...</span>
+            </span>
+          </p>
+        </div>
+      )}
+
       {/* File preview */}
       {selectedFile && (
         <div
@@ -800,7 +821,10 @@ export default function ChatClient({
           <input
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              onKeyStroke();
+            }}
             placeholder="Type a message..."
             className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
