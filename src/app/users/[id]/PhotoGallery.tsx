@@ -15,11 +15,13 @@ export default function PhotoGallery({
   userId,
   isOwnProfile,
   canUpload = isOwnProfile,
+  canDelete = isOwnProfile,
 }: {
   photos: GalleryPhoto[];
   userId: string;
   isOwnProfile: boolean;
   canUpload?: boolean;
+  canDelete?: boolean;
 }) {
   const [photos, setPhotos] = useState<GalleryPhoto[]>(initialPhotos);
   const [uploading, setUploading] = useState(false);
@@ -155,7 +157,7 @@ export default function PhotoGallery({
                 alt="Gallery photo"
                 className="aspect-square w-full object-cover"
               />
-              {isOwnProfile && (
+              {canDelete && (
                 <button
                   type="button"
                   onClick={() => handleDelete(photo.id)}

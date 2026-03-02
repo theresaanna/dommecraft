@@ -33,6 +33,17 @@ export default async function UserProfilePage({
 
   const isOwnProfile = session.user.id === id;
 
+  // Check if viewer is a linked DOMME for this profile user
+  const isLinkedDomme = !isOwnProfile
+    ? !!(await prisma.subProfile.findFirst({
+        where: { userId: session.user.id, linkedUserId: id },
+        select: { id: true },
+      }))
+    : false;
+
+  const canManageGallery =
+    (isOwnProfile && user.role !== "SUB") || isLinkedDomme;
+
   const galleryPhotos = await prisma.galleryPhoto.findMany({
     where: { userId: id },
     orderBy: { createdAt: "desc" },
@@ -87,7 +98,8 @@ export default async function UserProfilePage({
         }))}
         userId={id}
         isOwnProfile={isOwnProfile}
-        canUpload={isOwnProfile && user.role !== "SUB"}
+        canUpload={canManageGallery}
+        canDelete={canManageGallery}
       />
     </div>
   );

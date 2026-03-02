@@ -93,19 +93,35 @@ describe("PhotoGallery", () => {
     expect(screen.queryByText("Upload Photo")).not.toBeInTheDocument();
   });
 
-  it("still shows delete buttons for SUB own profile even when canUpload is false", () => {
+  it("hides both upload and delete for SUB own profile", () => {
     render(
       <PhotoGallery
         photos={mockPhotos}
         userId="user-1"
         isOwnProfile={true}
         canUpload={false}
+        canDelete={false}
       />
     );
 
+    expect(screen.queryByText("Upload Photo")).not.toBeInTheDocument();
+    expect(screen.queryByText("Delete")).not.toBeInTheDocument();
+  });
+
+  it("shows upload and delete when canUpload and canDelete are true (linked DOMME)", () => {
+    render(
+      <PhotoGallery
+        photos={mockPhotos}
+        userId="sub-1"
+        isOwnProfile={false}
+        canUpload={true}
+        canDelete={true}
+      />
+    );
+
+    expect(screen.getByText("Upload Photo")).toBeInTheDocument();
     const deleteButtons = screen.getAllByText("Delete");
     expect(deleteButtons).toHaveLength(2);
-    expect(screen.queryByText("Upload Photo")).not.toBeInTheDocument();
   });
 
   it("shows delete buttons only when isOwnProfile is true", () => {

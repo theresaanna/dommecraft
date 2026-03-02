@@ -15,8 +15,23 @@ export async function DELETE(
 
     const { id, photoId } = await params;
 
-    if (session.user.id !== id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    if (session.user.id === id) {
+      // Own profile — only DOMMEs can delete from their own gallery
+      if (session.user.role === "SUB") {
+        return NextResponse.json(
+          { error: "Subs cannot delete gallery photos" },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Another user's profile — only a linked DOMME can delete from their SUB's gallery
+      const linked = await prisma.subProfile.findFirst({
+        where: { userId: session.user.id, linkedUserId: id },
+        select: { id: true },
+      });
+      if (!linked) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     const photo = await prisma.galleryPhoto.findUnique({

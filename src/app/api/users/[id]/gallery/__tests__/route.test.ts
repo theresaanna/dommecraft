@@ -10,6 +10,9 @@ vi.mock("@/lib/prisma", () => ({
       findMany: vi.fn(),
       create: vi.fn(),
     },
+    subProfile: {
+      findFirst: vi.fn(),
+    },
   },
 }));
 
@@ -21,6 +24,7 @@ import { prisma } from "@/lib/prisma";
 const mockAuth = vi.mocked(auth) as any;
 const mockFindMany = vi.mocked(prisma.galleryPhoto.findMany);
 const mockCreate = vi.mocked(prisma.galleryPhoto.create);
+const mockSubProfileFindFirst = vi.mocked(prisma.subProfile.findFirst);
 
 function createPostRequest(body: Record<string, unknown>) {
   return new Request("http://localhost:3000/api/users/user-1/gallery", {
@@ -112,11 +116,12 @@ describe("POST /api/users/[id]/gallery", () => {
     expect(data.error).toBe("Unauthorized");
   });
 
-  it("returns 403 when user is not the profile owner", async () => {
+  it("returns 403 when user is not the profile owner and not linked", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-2" },
       expires: "",
     } as never);
+    mockSubProfileFindFirst.mockResolvedValue(null);
 
     const res = await POST(
       createPostRequest({ fileUrl: "https://blob.test/photo.jpg", mimeType: "image/jpeg" }),
@@ -228,6 +233,39 @@ describe("POST /api/users/[id]/gallery", () => {
         mimeType: "image/jpeg",
         fileSize: 2048,
       },
+    });
+  });
+
+  it("allows linked DOMME to upload to SUB gallery", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "domme-1", role: "DOMME" },
+      expires: "",
+    } as never);
+    mockSubProfileFindFirst.mockResolvedValue({ id: "sub-profile-1" } as never);
+    mockCreate.mockResolvedValue({
+      id: "photo-1",
+      userId: "sub-1",
+      fileUrl: "https://blob.test/photo.jpg",
+      mimeType: "image/jpeg",
+      fileSize: 1024,
+      createdAt: new Date("2025-06-01"),
+    } as never);
+
+    const res = await POST(
+      createPostRequest({
+        fileUrl: "https://blob.test/photo.jpg",
+        mimeType: "image/jpeg",
+        fileSize: 1024,
+      }),
+      { params: Promise.resolve({ id: "sub-1" }) }
+    );
+    const data = await res.json();
+
+    expect(res.status).toBe(201);
+    expect(data.id).toBe("photo-1");
+    expect(mockSubProfileFindFirst).toHaveBeenCalledWith({
+      where: { userId: "domme-1", linkedUserId: "sub-1" },
+      select: { id: true },
     });
   });
 });
