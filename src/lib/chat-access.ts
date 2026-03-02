@@ -2,9 +2,9 @@ import { prisma } from "@/lib/prisma";
 
 /**
  * Check if two users can directly chat without a chat request.
- * Currently allows:
+ * Allows:
  * - Linked Domme <-> Sub (via SubProfile.userId / linkedUserId)
- * - Friends (TODO: implement when friend system is built)
+ * - Accepted friends (via Friendship)
  */
 export async function canDirectChat(
   userId: string,
@@ -25,9 +25,19 @@ export async function canDirectChat(
 
   if (linkedSub) return true;
 
-  // TODO: Check friend relationship when friend system is built
-  // const areFriends = await checkFriendship(userId, recipientId);
-  // if (areFriends) return true;
+  // Check if they are friends (ACCEPTED friendship)
+  const friendship = await prisma.friendship.findFirst({
+    where: {
+      OR: [
+        { requesterId: userId, addresseeId: recipientId },
+        { requesterId: recipientId, addresseeId: userId },
+      ],
+      status: "ACCEPTED",
+    },
+    select: { id: true },
+  });
+
+  if (friendship) return true;
 
   return false;
 }

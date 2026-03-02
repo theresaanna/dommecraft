@@ -50,6 +50,16 @@ describe("Toast", () => {
     expect(screen.getByText("New Sub")).toBeInTheDocument();
   });
 
+  it("renders correct label for FRIEND_REQUEST type", () => {
+    render(<Toast {...defaultProps} type="FRIEND_REQUEST" />);
+    expect(screen.getByText("Friend Request")).toBeInTheDocument();
+  });
+
+  it("renders correct label for FRIEND_ACCEPTED type", () => {
+    render(<Toast {...defaultProps} type="FRIEND_ACCEPTED" />);
+    expect(screen.getByText("Friend Accepted")).toBeInTheDocument();
+  });
+
   it("calls onDismiss when dismiss button clicked", async () => {
     const user = userEvent.setup();
     render(<Toast {...defaultProps} />);

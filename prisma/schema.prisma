@@ -58,6 +58,10 @@ model User {
   conversationsAs2 Conversation[] @relation("ConversationParticipant2")
   chatMessages     ChatMessage[]
 
+  // Friends
+  sentFriendRequests     Friendship[] @relation("FriendshipRequester")
+  receivedFriendRequests Friendship[] @relation("FriendshipAddressee")
+
   @@map("users")
 }
 
@@ -485,6 +489,8 @@ enum NotificationType {
   TASK_COMPLETED
   CALENDAR_REMINDER
   SUB_JOINED
+  FRIEND_REQUEST
+  FRIEND_ACCEPTED
 }
 
 model Notification {
@@ -505,6 +511,32 @@ model Notification {
   @@index([userId])
   @@index([userId, isRead])
   @@map("notifications")
+}
+
+// ============================================================
+// FRIENDSHIPS
+// ============================================================
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Friendship {
+  id          String           @id @default(cuid())
+  requesterId String           @map("requester_id")
+  addresseeId String           @map("addressee_id")
+  status      FriendshipStatus @default(PENDING)
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  requester User @relation("FriendshipRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee User @relation("FriendshipAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId])
+  @@map("friendships")
 }
 
 // ============================================================
