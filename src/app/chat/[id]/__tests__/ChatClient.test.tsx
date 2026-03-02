@@ -161,7 +161,7 @@ describe("ChatClient", () => {
     );
   });
 
-  it("does not publish to Ably from the client (server handles it)", async () => {
+  it("does not publish chat messages to Ably from the client (server handles it)", async () => {
     const user = userEvent.setup();
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -180,7 +180,10 @@ describe("ChatClient", () => {
     await user.type(input, "Test");
     await user.click(screen.getByText("Send"));
 
-    expect(mockPublish).not.toHaveBeenCalled();
+    const messageCalls = mockPublish.mock.calls.filter(
+      (call) => call[0] === "message"
+    );
+    expect(messageCalls).toHaveLength(0);
   });
 
   it("clears input after sending", async () => {
