@@ -1,4 +1,4 @@
-const ARACHNID_SHIELD_BASE_URL = "https://shield.projectarachnid.ca";
+const ARACHNID_SHIELD_BASE_URL = "https://shield.projectarachnid.com";
 
 /**
  * Scan a file against Project Arachnid Shield to check for known CSAM
