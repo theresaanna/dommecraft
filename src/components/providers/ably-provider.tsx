@@ -4,7 +4,6 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -35,13 +34,13 @@ async function fetchTokenRequest(): Promise<Ably.TokenRequest> {
 
 export function AblyProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession();
+  const [client, setClient] = useState<Ably.Realtime | null>(null);
   const [isConnected, setIsConnected] = useState(false);
-  const clientRef = useRef<Ably.Realtime | null>(null);
 
   useEffect(() => {
     if (!session?.user?.id) return;
 
-    const client = new Ably.Realtime({
+    const ablyClient = new Ably.Realtime({
       authCallback: async (_params, callback) => {
         try {
           const tokenRequest = await fetchTokenRequest();
@@ -53,22 +52,24 @@ export function AblyProvider({ children }: { children: ReactNode }) {
       clientId: session.user.id,
     });
 
-    clientRef.current = client;
+    // Expose client immediately so consumers can subscribe
+    // (Ably queues subscriptions until connection is established)
+    setClient(ablyClient);
 
-    client.connection.on("connected", () => setIsConnected(true));
-    client.connection.on("disconnected", () => setIsConnected(false));
-    client.connection.on("closed", () => setIsConnected(false));
-    client.connection.on("failed", () => setIsConnected(false));
+    ablyClient.connection.on("connected", () => setIsConnected(true));
+    ablyClient.connection.on("disconnected", () => setIsConnected(false));
+    ablyClient.connection.on("closed", () => setIsConnected(false));
+    ablyClient.connection.on("failed", () => setIsConnected(false));
 
     return () => {
-      client.close();
-      clientRef.current = null;
+      ablyClient.close();
+      setClient(null);
       setIsConnected(false);
     };
   }, [session?.user?.id]);
 
   return (
-    <AblyContext.Provider value={{ client: clientRef.current, isConnected }}>
+    <AblyContext.Provider value={{ client, isConnected }}>
       {children}
     </AblyContext.Provider>
   );
