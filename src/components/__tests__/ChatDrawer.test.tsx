@@ -53,9 +53,18 @@ const baseConversation: ConversationSummary = {
 };
 
 function mockFetchSuccess(conversations = [baseConversation]) {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    json: () => Promise.resolve(conversations),
+  global.fetch = vi.fn().mockImplementation((url: string) => {
+    if (url === "/api/chat/group") {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve([]),
+      });
+    }
+    // /api/chat (DMs)
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve(conversations),
+    });
   });
 }
 
@@ -139,6 +148,7 @@ describe("ChatDrawer", () => {
     render(<ChatDrawer open={true} onClose={onClose} />);
 
     expect(global.fetch).toHaveBeenCalledWith("/api/chat");
+    expect(global.fetch).toHaveBeenCalledWith("/api/chat/group");
   });
 
   it("does not fetch conversations when closed", () => {
@@ -338,14 +348,14 @@ describe("ChatDrawer", () => {
       expect(screen.getByText("Bob")).toBeInTheDocument();
     });
 
-    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledTimes(2); // /api/chat + /api/chat/group
 
     // Close then reopen
     rerender(<ChatDrawer open={false} onClose={onClose} />);
     rerender(<ChatDrawer open={true} onClose={onClose} />);
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(global.fetch).toHaveBeenCalledTimes(4); // 2 per open
     });
   });
 

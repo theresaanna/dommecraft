@@ -61,6 +61,8 @@ model User {
   conversationsAs2  Conversation[]     @relation("ConversationParticipant2")
   chatMessages      ChatMessage[]
   messageReactions  MessageReaction[]
+  groupConversationsCreated GroupConversation[] @relation("GroupConversationCreator")
+  groupMemberships          GroupMember[]
 
   // Friends
   sentFriendRequests     Friendship[] @relation("FriendshipRequester")
@@ -499,6 +501,7 @@ enum NotificationType {
   FRIEND_REQUEST
   FRIEND_ACCEPTED
   CHAT_MESSAGE
+  GROUP_CHAT_MESSAGE
 }
 
 model Notification {
@@ -644,24 +647,27 @@ model Conversation {
 }
 
 model ChatMessage {
-  id             String    @id @default(cuid())
-  conversationId String    @map("conversation_id")
-  senderId       String    @map("sender_id")
-  content        String
-  mediaUrl       String?   @map("media_url")
-  mediaMimeType  String?   @map("media_mime_type")
-  mediaFileSize  Int?      @map("media_file_size")
-  editedAt       DateTime? @map("edited_at")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  replyToId      String?   @map("reply_to_id")
+  id                  String    @id @default(cuid())
+  conversationId      String?   @map("conversation_id")
+  groupConversationId String?   @map("group_conversation_id")
+  senderId            String    @map("sender_id")
+  content             String
+  mediaUrl            String?   @map("media_url")
+  mediaMimeType       String?   @map("media_mime_type")
+  mediaFileSize       Int?      @map("media_file_size")
+  editedAt            DateTime? @map("edited_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  replyToId           String?   @map("reply_to_id")
 
-  conversation Conversation      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  sender       User              @relation(fields: [senderId], references: [id], onDelete: Cascade)
-  reactions    MessageReaction[]
-  replyTo      ChatMessage?      @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
-  replies      ChatMessage[]     @relation("MessageReplies")
+  conversation      Conversation?      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  groupConversation GroupConversation?  @relation(fields: [groupConversationId], references: [id], onDelete: Cascade)
+  sender            User               @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  reactions         MessageReaction[]
+  replyTo           ChatMessage?       @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies           ChatMessage[]      @relation("MessageReplies")
 
   @@index([conversationId, createdAt])
+  @@index([groupConversationId, createdAt])
   @@index([replyToId])
   @@map("chat_messages")
 }
@@ -679,4 +685,41 @@ model MessageReaction {
   @@unique([messageId, userId, emoji])
   @@index([messageId])
   @@map("message_reactions")
+}
+
+enum GroupMemberRole {
+  ADMIN
+  MEMBER
+}
+
+model GroupConversation {
+  id          String   @id @default(cuid())
+  name        String
+  createdById String   @map("created_by_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  createdBy User           @relation("GroupConversationCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  members   GroupMember[]
+  messages  ChatMessage[]
+
+  @@index([createdById])
+  @@map("group_conversations")
+}
+
+model GroupMember {
+  id                  String          @id @default(cuid())
+  groupConversationId String          @map("group_conversation_id")
+  userId              String          @map("user_id")
+  role                GroupMemberRole @default(MEMBER)
+  joinedAt            DateTime        @default(now()) @map("joined_at")
+  lastReadAt          DateTime?       @map("last_read_at")
+
+  groupConversation GroupConversation @relation(fields: [groupConversationId], references: [id], onDelete: Cascade)
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupConversationId, userId])
+  @@index([groupConversationId])
+  @@index([userId])
+  @@map("group_members")
 }

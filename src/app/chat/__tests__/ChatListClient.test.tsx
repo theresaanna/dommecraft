@@ -35,6 +35,7 @@ vi.mock("@/hooks/use-presence", () => ({
 
 const baseConversation = {
   id: "conv-1",
+  type: "dm" as const,
   other: { id: "user-2", name: "Bob", avatarUrl: null },
   lastMessage: {
     content: "Hello!",
