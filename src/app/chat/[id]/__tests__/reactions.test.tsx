@@ -111,9 +111,9 @@ describe("ChatClient reactions", () => {
     render(<ChatClient {...propsWithReactions} />);
 
     // msg-1 has 2x 👍 and 1x ❤️
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
     expect(msg1).toBeTruthy();
-    const reactions = within(msg1!).getByTestId("reactions");
+    const reactions = within(msg1).getByTestId("reactions");
     expect(reactions).toBeInTheDocument();
     expect(within(reactions).getByText(/👍/)).toBeInTheDocument();
     expect(within(reactions).getByText(/2/)).toBeInTheDocument();
@@ -123,17 +123,17 @@ describe("ChatClient reactions", () => {
   it("does not display reactions area when message has no reactions", () => {
     render(<ChatClient {...propsWithReactions} />);
 
-    const msg2 = screen.getByText("Hi Alice!").closest("[data-message-id]");
+    const msg2 = screen.getByText("Hi Alice!").closest("[data-message-id]") as HTMLElement;
     expect(msg2).toBeTruthy();
-    const reactions = within(msg2!).queryByTestId("reactions");
+    const reactions = within(msg2).queryByTestId("reactions");
     expect(reactions).toBeNull();
   });
 
   it("highlights reactions that the current user has given", () => {
     render(<ChatClient {...propsWithReactions} />);
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
 
     // user-1 reacted with 👍, so that button should be highlighted
     const thumbsUpButton = within(reactions).getByRole("button", { name: /👍/ });
@@ -148,11 +148,11 @@ describe("ChatClient reactions", () => {
     const user = userEvent.setup();
     render(<ChatClient {...defaultProps} />);
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
     expect(msg1).toBeTruthy();
 
     // The add-reaction button should exist (may be hidden until hover, but present in DOM)
-    const addReactionButton = within(msg1!).getByRole("button", { name: /add reaction/i });
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
     expect(addReactionButton).toBeInTheDocument();
   });
 
@@ -172,8 +172,8 @@ describe("ChatClient reactions", () => {
 
     render(<ChatClient {...defaultProps} />);
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const addReactionButton = within(msg1!).getByRole("button", { name: /add reaction/i });
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const addReactionButton = within(msg1).getByRole("button", { name: /add reaction/i });
     await user.click(addReactionButton);
 
     // Select an emoji from the picker
@@ -200,8 +200,8 @@ describe("ChatClient reactions", () => {
     render(<ChatClient {...propsWithReactions} />);
 
     // user-1 already reacted with 👍 to msg-1, clicking it again should remove
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
     const thumbsUpButton = within(reactions).getByRole("button", { name: /👍/ });
     await user.click(thumbsUpButton);
 
@@ -227,8 +227,8 @@ describe("ChatClient reactions", () => {
 
     render(<ChatClient {...propsWithReactions} />);
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
 
     // user-1 has not reacted with ❤️ yet. Click it to add.
     const heartButton = within(reactions).getByRole("button", { name: /❤️/ });
@@ -250,8 +250,8 @@ describe("ChatClient reactions", () => {
 
     render(<ChatClient {...propsWithReactions} />);
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
 
     // user-1 has reacted with 👍. Click to remove.
     const thumbsUpButton = within(reactions).getByRole("button", { name: /👍/ });
@@ -282,8 +282,8 @@ describe("ChatClient reactions", () => {
       });
     });
 
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
     expect(within(reactions).getByText(/🎉/)).toBeInTheDocument();
   });
 
@@ -303,8 +303,8 @@ describe("ChatClient reactions", () => {
     });
 
     // 👍 count should drop from 2 to 1
-    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]");
-    const reactions = within(msg1!).getByTestId("reactions");
+    const msg1 = screen.getByText("Hey there!").closest("[data-message-id]") as HTMLElement;
+    const reactions = within(msg1).getByTestId("reactions");
     const thumbsUpButton = within(reactions).getByRole("button", { name: /👍/ });
     expect(thumbsUpButton).toHaveTextContent(/1/);
   });
