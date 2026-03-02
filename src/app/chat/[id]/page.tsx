@@ -19,10 +19,10 @@ export default async function ChatConversationPage({
     where: { id: conversationId },
     include: {
       participant1: {
-        select: { id: true, name: true, avatarUrl: true, showReadReceipts: true },
+        select: { id: true, name: true, avatarUrl: true, role: true, showReadReceipts: true, notificationSound: true },
       },
       participant2: {
-        select: { id: true, name: true, avatarUrl: true, showReadReceipts: true },
+        select: { id: true, name: true, avatarUrl: true, role: true, showReadReceipts: true, notificationSound: true },
       },
     },
   });
@@ -111,10 +111,11 @@ export default async function ChatConversationPage({
     <ChatClient
       conversationId={conversationId}
       currentUserId={userId}
-      other={{ id: other.id, name: other.name, avatarUrl: other.avatarUrl }}
+      other={{ id: other.id, name: other.name, avatarUrl: other.avatarUrl, role: other.role }}
       initialMessages={serializedMessages}
       initialOtherLastReadAt={otherLastReadAt?.toISOString() ?? null}
       showReadReceipts={currentParticipant.showReadReceipts}
+      notificationSound={currentParticipant.notificationSound}
     />
   );
 }

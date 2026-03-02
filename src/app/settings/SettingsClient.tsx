@@ -13,6 +13,7 @@ type SettingsData = {
   slug: string;
   showOnlineStatus: boolean;
   showReadReceipts: boolean;
+  notificationSound: boolean;
 };
 
 export default function SettingsClient({
@@ -372,6 +373,34 @@ export default function SettingsClient({
           <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
             When disabled, you won&apos;t send read receipts and won&apos;t see
             when others read your messages.
+          </p>
+        </div>
+      </div>
+
+      {/* Notifications Section */}
+      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          Notifications
+        </h2>
+        <div className="mt-3">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={settings.notificationSound}
+              onChange={(e) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  notificationSound: e.target.checked,
+                }))
+              }
+              className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
+            />
+            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+              Message notification sound
+            </span>
+          </label>
+          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+            Play a sound when you receive a new chat message.
           </p>
         </div>
       </div>

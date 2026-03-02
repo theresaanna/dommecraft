@@ -7,7 +7,9 @@ import type Ably from "ably";
 import { useAbly } from "@/components/providers/ably-provider";
 import { usePresence } from "@/hooks/use-presence";
 import { useGroupTyping } from "@/hooks/use-typing";
+import { useNotificationSound } from "@/hooks/use-notification-sound";
 import EmojiPicker from "@/components/EmojiPicker";
+import RoleBadge from "@/components/RoleBadge";
 import GroupInfoPanel from "./GroupInfoPanel";
 
 type Reaction = {
@@ -42,6 +44,7 @@ type GroupMemberInfo = {
   name: string | null;
   avatarUrl: string | null;
   role: "ADMIN" | "MEMBER";
+  userRole: "DOMME" | "SUB";
 };
 
 type ReactionEvent = {
@@ -65,6 +68,7 @@ type Props = {
   initialMessages: GroupMessage[];
   memberReadReceipts: Record<string, string | null>; // userId -> lastReadAt ISO
   showReadReceipts: boolean;
+  notificationSound: boolean;
   currentUserRole: "ADMIN" | "MEMBER";
 };
 
@@ -105,6 +109,7 @@ export default function GroupChatClient({
   initialMessages,
   memberReadReceipts: initialReadReceipts,
   showReadReceipts,
+  notificationSound,
   currentUserRole: initialRole,
 }: Props) {
   const [messages, setMessages] = useState<GroupMessage[]>(initialMessages);
@@ -130,6 +135,7 @@ export default function GroupChatClient({
   const { isOnline } = usePresence();
   const { typingDisplay, typingCount, onKeyStroke, onMessageSent } =
     useGroupTyping(groupConversationId, currentUserId, currentUserName);
+  const { play: playNotificationSound } = useNotificationSound(notificationSound);
 
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -159,9 +165,10 @@ export default function GroupChatClient({
         if (prev.some((m) => m.id === data.id)) return prev;
         return [...prev, { ...data, reactions: data.reactions || [] }];
       });
-      // Auto-mark as read when we receive a message from another user
+      // Auto-mark as read and play notification sound when we receive a message from another user
       if (data.senderId !== currentUserId) {
         markAsRead();
+        playNotificationSound();
       }
     };
 
@@ -270,6 +277,7 @@ export default function GroupChatClient({
     currentUserId,
     showReadReceipts,
     markAsRead,
+    playNotificationSound,
   ]);
 
   // Compute per-member read receipt positions: for each non-self member,
@@ -625,8 +633,11 @@ export default function GroupChatClient({
                     >
                       {/* Sender name for other users */}
                       {!isMine && (
-                        <p className="mb-0.5 text-xs font-bold text-zinc-600 dark:text-zinc-400">
+                        <p className="mb-0.5 flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400">
                           {msg.senderName || "Unknown"}
+                          {senderMember && (
+                            <RoleBadge role={senderMember.userRole} />
+                          )}
                         </p>
                       )}
 

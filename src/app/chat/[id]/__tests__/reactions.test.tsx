@@ -57,7 +57,7 @@ vi.mock("@/hooks/use-presence", () => ({
 const defaultProps = {
   conversationId: "conv-1",
   currentUserId: "user-1",
-  other: { id: "user-2", name: "Alice", avatarUrl: null },
+  other: { id: "user-2", name: "Alice", avatarUrl: null, role: "SUB" as const },
   initialMessages: [
     {
       id: "msg-1",
@@ -76,6 +76,7 @@ const defaultProps = {
   ],
   initialOtherLastReadAt: null as string | null,
   showReadReceipts: true,
+  notificationSound: true,
 };
 
 const propsWithReactions = {

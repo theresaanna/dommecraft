@@ -20,6 +20,7 @@ export default async function SettingsPage() {
       slug: true,
       showOnlineStatus: true,
       showReadReceipts: true,
+      notificationSound: true,
       role: true,
     },
   });
@@ -40,6 +41,7 @@ export default async function SettingsPage() {
           slug: user.slug ?? "",
           showOnlineStatus: user.showOnlineStatus,
           showReadReceipts: user.showReadReceipts,
+          notificationSound: user.notificationSound,
         }}
         userRole={user.role}
       />

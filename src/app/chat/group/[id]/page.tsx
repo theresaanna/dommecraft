@@ -25,7 +25,9 @@ export default async function GroupChatPage({
               id: true,
               name: true,
               avatarUrl: true,
+              role: true,
               showReadReceipts: true,
+              notificationSound: true,
             },
           },
         },
@@ -84,6 +86,7 @@ export default async function GroupChatPage({
     name: m.user.name,
     avatarUrl: m.user.avatarUrl,
     role: m.role,
+    userRole: m.user.role,
   }));
 
   // Build read receipts map
@@ -122,6 +125,7 @@ export default async function GroupChatPage({
       initialMessages={serializedMessages}
       memberReadReceipts={memberReadReceipts}
       showReadReceipts={currentUser.showReadReceipts}
+      notificationSound={currentUser.notificationSound}
       currentUserRole={currentMember.role}
     />
   );
