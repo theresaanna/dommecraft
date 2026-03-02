@@ -41,15 +41,23 @@ export async function POST(
 
     const { id } = await params;
 
-    if (session.user.id !== id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
-
-    if (session.user.role === "SUB") {
-      return NextResponse.json(
-        { error: "Subs cannot upload gallery photos" },
-        { status: 403 }
-      );
+    if (session.user.id === id) {
+      // Own profile — only DOMMEs can upload to their own gallery
+      if (session.user.role === "SUB") {
+        return NextResponse.json(
+          { error: "Subs cannot upload gallery photos" },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Another user's profile — only a linked DOMME can upload to their SUB's gallery
+      const linked = await prisma.subProfile.findFirst({
+        where: { userId: session.user.id, linkedUserId: id },
+        select: { id: true },
+      });
+      if (!linked) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     const body = await request.json();
