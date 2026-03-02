@@ -72,4 +72,6 @@ const TYPE_LABELS: Record<string, string> = {
   TASK_COMPLETED: "Task Completed",
   CALENDAR_REMINDER: "Calendar",
   SUB_JOINED: "New Sub",
+  FRIEND_REQUEST: "Friend Request",
+  FRIEND_ACCEPTED: "Friend Accepted",
 };

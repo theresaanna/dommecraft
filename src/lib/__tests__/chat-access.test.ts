@@ -5,6 +5,9 @@ vi.mock("@/lib/prisma", () => ({
     subProfile: {
       findFirst: vi.fn(),
     },
+    friendship: {
+      findFirst: vi.fn(),
+    },
   },
 }));
 
@@ -12,6 +15,7 @@ import { canDirectChat } from "@/lib/chat-access";
 import { prisma } from "@/lib/prisma";
 
 const mockFindFirst = vi.mocked(prisma.subProfile.findFirst);
+const mockFriendshipFindFirst = vi.mocked(prisma.friendship.findFirst);
 
 describe("canDirectChat", () => {
   beforeEach(() => {
@@ -47,8 +51,35 @@ describe("canDirectChat", () => {
     expect(result).toBe(true);
   });
 
-  it("returns false when users are not linked", async () => {
+  it("returns false when users are not linked and not friends", async () => {
     mockFindFirst.mockResolvedValue(null);
+    mockFriendshipFindFirst.mockResolvedValue(null);
+
+    const result = await canDirectChat("user-1", "user-3");
+    expect(result).toBe(false);
+  });
+
+  it("returns true when users are friends (ACCEPTED friendship)", async () => {
+    mockFindFirst.mockResolvedValue(null); // not linked via SubProfile
+    mockFriendshipFindFirst.mockResolvedValue({ id: "f-1" } as never);
+
+    const result = await canDirectChat("user-1", "user-3");
+    expect(result).toBe(true);
+    expect(mockFriendshipFindFirst).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { requesterId: "user-1", addresseeId: "user-3" },
+          { requesterId: "user-3", addresseeId: "user-1" },
+        ],
+        status: "ACCEPTED",
+      },
+      select: { id: true },
+    });
+  });
+
+  it("returns false when friendship is PENDING", async () => {
+    mockFindFirst.mockResolvedValue(null); // not linked via SubProfile
+    mockFriendshipFindFirst.mockResolvedValue(null); // PENDING won't match ACCEPTED filter
 
     const result = await canDirectChat("user-1", "user-3");
     expect(result).toBe(false);
