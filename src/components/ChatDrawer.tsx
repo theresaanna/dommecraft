@@ -4,8 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePresence } from "@/hooks/use-presence";
 
-type ConversationSummary = {
+type DMSummary = {
   id: string;
+  type: "dm";
   other: { id: string; name: string | null; avatarUrl: string | null };
   lastMessage: {
     content: string;
@@ -15,6 +16,23 @@ type ConversationSummary = {
   } | null;
   updatedAt: string;
 };
+
+type GroupSummary = {
+  id: string;
+  type: "group";
+  name: string;
+  memberCount: number;
+  lastMessage: {
+    content: string;
+    createdAt: string;
+    senderId: string;
+    senderName: string | null;
+    mediaMimeType?: string | null;
+  } | null;
+  updatedAt: string;
+};
+
+type ConversationItem = DMSummary | GroupSummary;
 
 function formatTime(iso: string) {
   const date = new Date(iso);
@@ -50,7 +68,7 @@ export default function ChatDrawer({
   onClose: () => void;
 }) {
   const { isOnline } = usePresence();
-  const [conversations, setConversations] = useState<ConversationSummary[]>([]);
+  const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -58,13 +76,35 @@ export default function ChatDrawer({
     setLoading(true);
     setError(false);
     try {
-      const res = await fetch("/api/chat");
-      if (!res.ok) {
+      const [dmRes, groupRes] = await Promise.all([
+        fetch("/api/chat"),
+        fetch("/api/chat/group"),
+      ]);
+      if (!dmRes.ok || !groupRes.ok) {
         setError(true);
         return;
       }
-      const data: ConversationSummary[] = await res.json();
-      setConversations(data);
+      const dms = await dmRes.json();
+      const groups = await groupRes.json();
+
+      const dmItems: ConversationItem[] = dms.map(
+        (dm: DMSummary["lastMessage"] extends null ? never : Record<string, unknown>) => ({
+          ...dm,
+          type: "dm" as const,
+        })
+      );
+      const groupItems: ConversationItem[] = groups.map(
+        (g: Record<string, unknown>) => ({
+          ...g,
+          type: "group" as const,
+        })
+      );
+
+      const merged = [...dmItems, ...groupItems].sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      );
+      setConversations(merged);
     } catch {
       setError(true);
     } finally {
@@ -87,6 +127,49 @@ export default function ChatDrawer({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, onClose]);
+
+  function renderLastMessage(conv: ConversationItem) {
+    if (!conv.lastMessage) {
+      return (
+        <p className="text-sm italic text-zinc-400 dark:text-zinc-500">
+          No messages yet
+        </p>
+      );
+    }
+
+    if (conv.lastMessage.content) {
+      const prefix =
+        conv.type === "group" && (conv as GroupSummary).lastMessage?.senderName
+          ? `${(conv as GroupSummary).lastMessage!.senderName}: `
+          : "";
+      return (
+        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+          {prefix}
+          {conv.lastMessage.content}
+        </p>
+      );
+    }
+
+    if (conv.lastMessage.mediaMimeType?.startsWith("video/")) {
+      return (
+        <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+          Video message
+        </p>
+      );
+    }
+    if (conv.lastMessage.mediaMimeType?.startsWith("image/")) {
+      return (
+        <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+          Picture message
+        </p>
+      );
+    }
+    return (
+      <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+        Media message
+      </p>
+    );
+  }
 
   return (
     <>
@@ -169,72 +252,67 @@ export default function ChatDrawer({
               data-testid="chat-drawer-list"
               className="divide-y divide-zinc-100 dark:divide-zinc-800/50"
             >
-              {conversations.map((conv) => (
-                <li key={conv.id}>
-                  <Link
-                    href={`/chat/${conv.id}`}
-                    onClick={onClose}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
-                  >
-                    <div className="relative shrink-0">
-                      {conv.other.avatarUrl ? (
-                        <img
-                          src={conv.other.avatarUrl}
-                          alt=""
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
-                          {getInitials(conv.other.name)}
-                        </span>
-                      )}
-                      <span
-                        data-testid={`drawer-presence-${conv.other.id}`}
-                        className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-zinc-950 ${
-                          isOnline(conv.other.id)
-                            ? "bg-green-500"
-                            : "bg-zinc-300 dark:bg-zinc-600"
-                        }`}
-                      />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-baseline justify-between gap-2">
-                        <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                          {conv.other.name || "Unknown"}
-                        </span>
-                        {conv.lastMessage && (
-                          <span className="shrink-0 text-xs text-zinc-400 dark:text-zinc-500">
-                            {formatTime(conv.lastMessage.createdAt)}
+              {conversations.map((conv) => {
+                const href =
+                  conv.type === "dm"
+                    ? `/chat/${conv.id}`
+                    : `/chat/group/${conv.id}`;
+
+                return (
+                  <li key={`${conv.type}-${conv.id}`}>
+                    <Link
+                      href={href}
+                      onClick={onClose}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    >
+                      <div className="relative shrink-0">
+                        {conv.type === "dm" ? (
+                          <>
+                            {conv.other.avatarUrl ? (
+                              <img
+                                src={conv.other.avatarUrl}
+                                alt=""
+                                className="h-10 w-10 rounded-full object-cover"
+                              />
+                            ) : (
+                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                                {getInitials(conv.other.name)}
+                              </span>
+                            )}
+                            <span
+                              data-testid={`drawer-presence-${conv.other.id}`}
+                              className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-zinc-950 ${
+                                isOnline(conv.other.id)
+                                  ? "bg-green-500"
+                                  : "bg-zinc-300 dark:bg-zinc-600"
+                              }`}
+                            />
+                          </>
+                        ) : (
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                            {getInitials(conv.name)}
                           </span>
                         )}
                       </div>
-                      {conv.lastMessage ? (
-                        conv.lastMessage.content ? (
-                          <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
-                            {conv.lastMessage.content}
-                          </p>
-                        ) : conv.lastMessage.mediaMimeType?.startsWith("video/") ? (
-                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
-                            Video message
-                          </p>
-                        ) : conv.lastMessage.mediaMimeType?.startsWith("image/") ? (
-                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
-                            Picture message
-                          </p>
-                        ) : (
-                          <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
-                            Media message
-                          </p>
-                        )
-                      ) : (
-                        <p className="text-sm italic text-zinc-400 dark:text-zinc-500">
-                          No messages yet
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                </li>
-              ))}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline justify-between gap-2">
+                          <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                            {conv.type === "dm"
+                              ? conv.other.name || "Unknown"
+                              : conv.name}
+                          </span>
+                          {conv.lastMessage && (
+                            <span className="shrink-0 text-xs text-zinc-400 dark:text-zinc-500">
+                              {formatTime(conv.lastMessage.createdAt)}
+                            </span>
+                          )}
+                        </div>
+                        {renderLastMessage(conv)}
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>
