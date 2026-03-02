@@ -63,6 +63,9 @@ model User {
   sentFriendRequests     Friendship[] @relation("FriendshipRequester")
   receivedFriendRequests Friendship[] @relation("FriendshipAddressee")
 
+  // Gallery
+  galleryPhotos GalleryPhoto[]
+
   @@map("users")
 }
 
@@ -538,6 +541,24 @@ model Friendship {
   @@unique([requesterId, addresseeId])
   @@index([addresseeId])
   @@map("friendships")
+}
+
+// ============================================================
+// USER GALLERY
+// ============================================================
+
+model GalleryPhoto {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  fileUrl   String   @map("file_url")
+  mimeType  String   @map("mime_type")
+  fileSize  Int?     @map("file_size")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("gallery_photos")
 }
 
 // ============================================================
