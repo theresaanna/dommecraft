@@ -74,4 +74,5 @@ const TYPE_LABELS: Record<string, string> = {
   SUB_JOINED: "New Sub",
   FRIEND_REQUEST: "Friend Request",
   FRIEND_ACCEPTED: "Friend Accepted",
+  CHAT_MESSAGE: "New Message",
 };
