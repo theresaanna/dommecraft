@@ -22,6 +22,13 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+vi.mock("next/image", () => ({
+  default: (props: Record<string, unknown>) => (
+    // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+    <img {...props} />
+  ),
+}));
+
 const mockSubscribe = vi.fn();
 const mockUnsubscribe = vi.fn();
 const mockPublish = vi.fn();
@@ -410,5 +417,207 @@ describe("ChatClient", () => {
       "/api/chat/conv-1/read",
       expect.anything()
     );
+  });
+
+  // Media / file upload tests
+  it("renders attach file button", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    expect(screen.getByLabelText("Attach file")).toBeInTheDocument();
+  });
+
+  it("renders hidden file input with correct accept types", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    expect(fileInput.type).toBe("file");
+    expect(fileInput.accept).toContain("image/jpeg");
+    expect(fileInput.accept).toContain("video/mp4");
+  });
+
+  it("shows file preview when file is selected", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+
+    await user.upload(fileInput, file);
+
+    expect(screen.getByTestId("file-preview")).toBeInTheDocument();
+    expect(screen.getByText(/photo\.jpg/)).toBeInTheDocument();
+  });
+
+  it("clears selected file when remove button is clicked", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+
+    await user.upload(fileInput, file);
+    expect(screen.getByTestId("file-preview")).toBeInTheDocument();
+
+    await user.click(screen.getByLabelText("Remove file"));
+    expect(screen.queryByTestId("file-preview")).not.toBeInTheDocument();
+  });
+
+  it("enables send button when file is selected even without text", async () => {
+    const user = userEvent.setup();
+    render(<ChatClient {...defaultProps} />);
+
+    const sendButton = screen.getByText("Send");
+    expect(sendButton).toBeDisabled();
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await user.upload(fileInput, file);
+
+    expect(sendButton).not.toBeDisabled();
+  });
+
+  it("sends file via FormData when file is selected", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          id: "msg-3",
+          senderId: "user-1",
+          content: "",
+          mediaUrl: "https://blob.example.com/photo.jpg",
+          mediaMimeType: "image/jpeg",
+          mediaFileSize: 1024,
+          createdAt: "2025-01-01T12:02:00.000Z",
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await user.upload(fileInput, file);
+    await user.click(screen.getByText("Send"));
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      "/api/chat/conv-1/messages",
+      expect.objectContaining({
+        method: "POST",
+        body: expect.any(FormData),
+      })
+    );
+  });
+
+  it("displays upload error when server returns an error", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: false,
+      json: () =>
+        Promise.resolve({
+          error: "File rejected by content safety scan",
+        }),
+    });
+    global.fetch = mockFetch;
+
+    render(<ChatClient {...defaultProps} />);
+
+    const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
+    const file = new File(["image data"], "photo.jpg", { type: "image/jpeg" });
+    await user.upload(fileInput, file);
+    await user.click(screen.getByText("Send"));
+
+    expect(screen.getByTestId("upload-error")).toBeInTheDocument();
+    expect(
+      screen.getByText("File rejected by content safety scan")
+    ).toBeInTheDocument();
+  });
+
+  it("renders image media in messages", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-2",
+            content: "Check this out",
+            mediaUrl: "https://blob.example.com/photo.jpg",
+            mediaMimeType: "image/jpeg",
+            mediaFileSize: 1024,
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+        ]}
+      />
+    );
+
+    const media = screen.getByTestId("chat-media");
+    expect(media).toBeInTheDocument();
+    const img = media.querySelector("img");
+    expect(img).toHaveAttribute("src", "https://blob.example.com/photo.jpg");
+    expect(screen.getByText("Check this out")).toBeInTheDocument();
+  });
+
+  it("renders video media in messages", () => {
+    render(
+      <ChatClient
+        {...defaultProps}
+        initialMessages={[
+          {
+            id: "msg-1",
+            senderId: "user-2",
+            content: "",
+            mediaUrl: "https://blob.example.com/clip.mp4",
+            mediaMimeType: "video/mp4",
+            mediaFileSize: 5000,
+            createdAt: "2025-01-01T12:00:00.000Z",
+            reactions: [],
+          },
+        ]}
+      />
+    );
+
+    const media = screen.getByTestId("chat-media");
+    expect(media).toBeInTheDocument();
+    const video = media.querySelector("video");
+    expect(video).toHaveAttribute("src", "https://blob.example.com/clip.mp4");
+    expect(video).toHaveAttribute("controls");
+  });
+
+  it("does not render media element for text-only messages", () => {
+    render(<ChatClient {...defaultProps} />);
+
+    expect(screen.queryByTestId("chat-media")).not.toBeInTheDocument();
+  });
+
+  it("renders media message received via Ably", () => {
+    global.fetch = vi.fn().mockResolvedValue({ ok: true });
+
+    render(<ChatClient {...defaultProps} />);
+
+    const messageCallback = mockSubscribe.mock.calls.find(
+      (call: unknown[]) => call[0] === "message"
+    )?.[1];
+
+    act(() => {
+      messageCallback({
+        data: {
+          id: "msg-3",
+          senderId: "user-2",
+          content: "",
+          mediaUrl: "https://blob.example.com/photo.png",
+          mediaMimeType: "image/png",
+          mediaFileSize: 2048,
+          createdAt: "2025-01-01T12:02:00.000Z",
+          reactions: [],
+        },
+      });
+    });
+
+    const media = screen.getByTestId("chat-media");
+    expect(media).toBeInTheDocument();
+    const img = media.querySelector("img");
+    expect(img).toHaveAttribute("src", "https://blob.example.com/photo.png");
   });
 });
