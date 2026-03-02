@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { usePresence } from "@/hooks/use-presence";
 
 type ConversationSummary = {
   id: string;
@@ -53,6 +54,7 @@ export default function ChatListClient({
   conversations: ConversationSummary[];
 }) {
   const router = useRouter();
+  const { isOnline } = usePresence();
   const [showContacts, setShowContacts] = useState(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loadingContacts, setLoadingContacts] = useState(false);
@@ -165,17 +167,27 @@ export default function ChatListClient({
                 href={`/chat/${conv.id}`}
                 className="flex items-center gap-3 px-2 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
               >
-                {conv.other.avatarUrl ? (
-                  <img
-                    src={conv.other.avatarUrl}
-                    alt=""
-                    className="h-10 w-10 rounded-full object-cover"
+                <div className="relative">
+                  {conv.other.avatarUrl ? (
+                    <img
+                      src={conv.other.avatarUrl}
+                      alt=""
+                      className="h-10 w-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                      {getInitials(conv.other.name)}
+                    </span>
+                  )}
+                  <span
+                    data-testid={`presence-${conv.other.id}`}
+                    className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white dark:border-zinc-950 ${
+                      isOnline(conv.other.id)
+                        ? "bg-green-500"
+                        : "bg-zinc-300 dark:bg-zinc-600"
+                    }`}
                   />
-                ) : (
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
-                    {getInitials(conv.other.name)}
-                  </span>
-                )}
+                </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-2">
                     <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">

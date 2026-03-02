@@ -80,6 +80,7 @@ describe("GET /api/user/settings", () => {
       theme: "SYSTEM",
       calendarDefaultView: "MONTH",
       slug: "test-user-a1b2",
+      showOnlineStatus: true,
     } as never);
 
     const res = await GET();
@@ -93,6 +94,7 @@ describe("GET /api/user/settings", () => {
       theme: "SYSTEM",
       calendarDefaultView: "MONTH",
       slug: "test-user-a1b2",
+      showOnlineStatus: true,
     });
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { id: "user-1" },
@@ -103,6 +105,7 @@ describe("GET /api/user/settings", () => {
         theme: true,
         calendarDefaultView: true,
         slug: true,
+        showOnlineStatus: true,
       },
     });
   });
@@ -150,6 +153,7 @@ describe("PATCH /api/user/settings", () => {
         theme: true,
         calendarDefaultView: true,
         slug: true,
+        showOnlineStatus: true,
       },
     });
   });
@@ -330,6 +334,27 @@ describe("PATCH /api/user/settings", () => {
     const res = await PATCH(createRequest({ slug: "my-slug" }));
 
     expect(res.status).toBe(200);
+  });
+
+  it("updates showOnlineStatus", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1", role: "DOMME" },
+    });
+    mockUpdate.mockResolvedValue({
+      name: "Test",
+      email: "test@test.com",
+      avatarUrl: null,
+      theme: "SYSTEM",
+      calendarDefaultView: "MONTH",
+      slug: "test-user",
+      showOnlineStatus: false,
+    } as never);
+
+    const res = await PATCH(createRequest({ showOnlineStatus: false }));
+    const data = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(data.showOnlineStatus).toBe(false);
   });
 
   it("returns 500 on internal error", async () => {

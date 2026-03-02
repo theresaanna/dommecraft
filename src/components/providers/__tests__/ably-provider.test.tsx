@@ -7,6 +7,14 @@ import { AblyProvider, useAbly } from "../ably-provider";
 type ConnectionHandler = (stateChange: { current: string }) => void;
 const connectionHandlers: Record<string, ConnectionHandler[]> = {};
 const mockClose = vi.fn();
+const mockPresenceEnter = vi.fn();
+const mockPresenceLeave = vi.fn();
+const mockChannelsGet = vi.fn().mockReturnValue({
+  presence: {
+    enter: mockPresenceEnter,
+    leave: mockPresenceLeave,
+  },
+});
 
 vi.mock("ably", () => ({
   default: {
@@ -20,6 +28,9 @@ vi.mock("ably", () => ({
             connectionHandlers[event].push(handler);
           }
         ),
+      },
+      channels: {
+        get: mockChannelsGet,
       },
       close: mockClose,
     })),
@@ -213,5 +224,88 @@ describe("AblyProvider", () => {
     );
 
     expect(screen.getByTestId("has-client").textContent).toBe("false");
+  });
+
+  it("enters presence channel when connected and showOnlineStatus is true", () => {
+    mockUseSession.mockReturnValue({
+      data: {
+        user: { id: "user-1", showOnlineStatus: true },
+        expires: "",
+      } as never,
+      status: "authenticated",
+      update: vi.fn(),
+    });
+
+    render(
+      <AblyProvider>
+        <TestConsumer />
+      </AblyProvider>
+    );
+
+    // Simulate connection
+    act(() => {
+      connectionHandlers["connected"]?.forEach((handler) =>
+        handler({ current: "connected" })
+      );
+    });
+
+    expect(mockChannelsGet).toHaveBeenCalledWith("presence:global");
+    expect(mockPresenceEnter).toHaveBeenCalled();
+  });
+
+  it("does not enter presence when showOnlineStatus is false", () => {
+    mockUseSession.mockReturnValue({
+      data: {
+        user: { id: "user-1", showOnlineStatus: false },
+        expires: "",
+      } as never,
+      status: "authenticated",
+      update: vi.fn(),
+    });
+
+    render(
+      <AblyProvider>
+        <TestConsumer />
+      </AblyProvider>
+    );
+
+    // Simulate connection
+    act(() => {
+      connectionHandlers["connected"]?.forEach((handler) =>
+        handler({ current: "connected" })
+      );
+    });
+
+    expect(mockPresenceEnter).not.toHaveBeenCalled();
+  });
+
+  it("leaves presence on unmount when connected", () => {
+    mockUseSession.mockReturnValue({
+      data: {
+        user: { id: "user-1", showOnlineStatus: true },
+        expires: "",
+      } as never,
+      status: "authenticated",
+      update: vi.fn(),
+    });
+
+    const { unmount } = render(
+      <AblyProvider>
+        <TestConsumer />
+      </AblyProvider>
+    );
+
+    // Simulate connection
+    act(() => {
+      connectionHandlers["connected"]?.forEach((handler) =>
+        handler({ current: "connected" })
+      );
+    });
+
+    expect(mockPresenceEnter).toHaveBeenCalled();
+
+    unmount();
+
+    expect(mockPresenceLeave).toHaveBeenCalled();
   });
 });

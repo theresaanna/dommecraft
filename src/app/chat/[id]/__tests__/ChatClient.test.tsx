@@ -38,6 +38,15 @@ vi.mock("@/components/providers/ably-provider", () => ({
     },
     isConnected: true,
   }),
+  PRESENCE_CHANNEL: "presence:global",
+}));
+
+const mockIsOnline = vi.fn().mockReturnValue(false);
+vi.mock("@/hooks/use-presence", () => ({
+  usePresence: () => ({
+    onlineUserIds: new Set<string>(),
+    isOnline: mockIsOnline,
+  }),
 }));
 
 const defaultProps = {
@@ -192,5 +201,24 @@ describe("ChatClient", () => {
 
     const sendButton = screen.getByText("Send");
     expect(sendButton).toBeDisabled();
+  });
+
+  it("shows online indicator when other user is online", () => {
+    mockIsOnline.mockReturnValue(true);
+
+    render(<ChatClient {...defaultProps} />);
+
+    const indicator = screen.getByTestId("presence-indicator");
+    expect(indicator.className).toContain("bg-green-500");
+  });
+
+  it("shows offline indicator when other user is offline", () => {
+    mockIsOnline.mockReturnValue(false);
+
+    render(<ChatClient {...defaultProps} />);
+
+    const indicator = screen.getByTestId("presence-indicator");
+    expect(indicator.className).toContain("bg-zinc-300");
+    expect(indicator.className).not.toContain("bg-green-500");
   });
 });

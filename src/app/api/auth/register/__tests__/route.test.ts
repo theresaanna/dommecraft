@@ -83,6 +83,7 @@ describe("POST /api/auth/register", () => {
       avatarUrl: null,
       theme: "SYSTEM",
       calendarDefaultView: "MONTH",
+      showOnlineStatus: true,
       emailVerified: null,
       createdAt: new Date(),
       updatedAt: new Date(),

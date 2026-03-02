@@ -25,6 +25,14 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
+const mockIsOnline = vi.fn().mockReturnValue(false);
+vi.mock("@/hooks/use-presence", () => ({
+  usePresence: () => ({
+    onlineUserIds: new Set<string>(),
+    isOnline: mockIsOnline,
+  }),
+}));
+
 const baseConversation = {
   id: "conv-1",
   other: { id: "user-2", name: "Bob", avatarUrl: null },
@@ -259,5 +267,24 @@ describe("ChatListClient", () => {
     });
 
     expect(mockPush).toHaveBeenCalledWith("/chat/conv-new");
+  });
+
+  it("shows online indicator for online users", () => {
+    mockIsOnline.mockReturnValue(true);
+
+    render(<ChatListClient conversations={[baseConversation]} />);
+
+    const indicator = screen.getByTestId("presence-user-2");
+    expect(indicator.className).toContain("bg-green-500");
+  });
+
+  it("shows offline indicator for offline users", () => {
+    mockIsOnline.mockReturnValue(false);
+
+    render(<ChatListClient conversations={[baseConversation]} />);
+
+    const indicator = screen.getByTestId("presence-user-2");
+    expect(indicator.className).toContain("bg-zinc-300");
+    expect(indicator.className).not.toContain("bg-green-500");
   });
 });

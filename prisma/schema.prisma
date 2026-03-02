@@ -25,6 +25,7 @@ model User {
   avatarUrl            String?              @map("avatar_url")
   theme                Theme                @default(SYSTEM)
   calendarDefaultView  CalendarDefaultView  @default(MONTH) @map("calendar_default_view")
+  showOnlineStatus     Boolean              @default(true) @map("show_online_status")
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt @map("updated_at")
 
