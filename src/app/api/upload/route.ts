@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     const folder = (formData.get("folder") as string) || "uploads";
     const pathname = `${folder}/${session.user.id}/${file.name}`;
 
-    const blob = await put(pathname, file, { access: "public" });
+    const blob = await put(pathname, file, { access: "public", allowOverwrite: true });
 
     return NextResponse.json({ url: blob.url }, { status: 201 });
   } catch (error) {
