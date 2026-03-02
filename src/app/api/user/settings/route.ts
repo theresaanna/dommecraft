@@ -20,6 +20,7 @@ export async function GET() {
         theme: true,
         calendarDefaultView: true,
         slug: true,
+        showOnlineStatus: true,
       },
     });
 
@@ -86,6 +87,9 @@ export async function PATCH(request: Request) {
           calendarDefaultView: body.calendarDefaultView,
         }),
         ...(body.slug !== undefined && { slug: body.slug }),
+        ...(body.showOnlineStatus !== undefined && {
+          showOnlineStatus: body.showOnlineStatus,
+        }),
       },
       select: {
         name: true,
@@ -94,6 +98,7 @@ export async function PATCH(request: Request) {
         theme: true,
         calendarDefaultView: true,
         slug: true,
+        showOnlineStatus: true,
       },
     });
 

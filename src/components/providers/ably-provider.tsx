@@ -10,6 +10,8 @@ import {
 import { useSession } from "next-auth/react";
 import Ably from "ably";
 
+export const PRESENCE_CHANNEL = "presence:global";
+
 type AblyContextValue = {
   client: Ably.Realtime | null;
   isConnected: boolean;
@@ -67,6 +69,21 @@ export function AblyProvider({ children }: { children: ReactNode }) {
       setIsConnected(false);
     };
   }, [session?.user?.id]);
+
+  // Enter global presence channel when connected (if user allows)
+  useEffect(() => {
+    if (!client || !isConnected) return;
+
+    const showOnlineStatus = session?.user?.showOnlineStatus ?? true;
+    if (!showOnlineStatus) return;
+
+    const channel = client.channels.get(PRESENCE_CHANNEL);
+    channel.presence.enter();
+
+    return () => {
+      channel.presence.leave();
+    };
+  }, [client, isConnected, session?.user?.showOnlineStatus]);
 
   return (
     <AblyContext.Provider value={{ client, isConnected }}>

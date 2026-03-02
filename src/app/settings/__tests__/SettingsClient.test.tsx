@@ -31,6 +31,7 @@ const defaultSettings = {
   theme: "SYSTEM" as const,
   calendarDefaultView: "MONTH" as const,
   slug: "test-user-a1b2",
+  showOnlineStatus: true,
 };
 
 describe("SettingsClient", () => {
@@ -66,6 +67,7 @@ describe("SettingsClient", () => {
     expect(screen.getByText("Profile URL")).toBeInTheDocument();
     expect(screen.getByText("Appearance")).toBeInTheDocument();
     expect(screen.getByText("Calendar")).toBeInTheDocument();
+    expect(screen.getByText("Privacy")).toBeInTheDocument();
   });
 
   it("displays initial name and email values", () => {
@@ -397,5 +399,81 @@ describe("SettingsClient", () => {
     expect(
       screen.getByText(/3-30 characters.*lowercase letters, numbers, and hyphens/i)
     ).toBeInTheDocument();
+  });
+
+  it("renders show online status checkbox checked when true", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show online status/i,
+    });
+    expect(checkbox).toBeChecked();
+  });
+
+  it("renders show online status checkbox unchecked when false", () => {
+    render(
+      <SettingsClient
+        initialSettings={{ ...defaultSettings, showOnlineStatus: false }}
+        userRole="DOMME"
+      />
+    );
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show online status/i,
+    });
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("toggles show online status checkbox", async () => {
+    const user = userEvent.setup();
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show online status/i,
+    });
+    expect(checkbox).toBeChecked();
+
+    await user.click(checkbox);
+
+    expect(checkbox).not.toBeChecked();
+  });
+
+  it("shows privacy description text", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(
+      screen.getByText(/when disabled, you will always appear offline/i)
+    ).toBeInTheDocument();
+  });
+
+  it("includes showOnlineStatus in save payload", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    // Uncheck the checkbox first
+    const checkbox = screen.getByRole("checkbox", {
+      name: /show online status/i,
+    });
+    await user.click(checkbox);
+
+    await user.click(screen.getByText("Save Settings"));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalledWith("/api/user/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: expect.any(String),
+      });
+    });
+
+    // Verify the body contains showOnlineStatus: false
+    const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(callBody.showOnlineStatus).toBe(false);
   });
 });

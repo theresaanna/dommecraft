@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type Ably from "ably";
 import { useAbly } from "@/components/providers/ably-provider";
+import { usePresence } from "@/hooks/use-presence";
 
 type Message = {
   id: string;
@@ -34,6 +35,7 @@ export default function ChatClient({
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { client: ablyClient } = useAbly();
+  const { isOnline } = usePresence();
 
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -103,8 +105,16 @@ export default function ChatClient({
         >
           &larr; Back
         </Link>
-        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+        <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
           {other.name || "Unknown"}
+          <span
+            data-testid="presence-indicator"
+            className={`inline-block h-2 w-2 rounded-full ${
+              isOnline(other.id)
+                ? "bg-green-500"
+                : "bg-zinc-300 dark:bg-zinc-600"
+            }`}
+          />
         </span>
       </header>
 

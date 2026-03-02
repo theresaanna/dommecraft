@@ -8,6 +8,7 @@ declare module "next-auth" {
       role: UserRole;
       avatarUrl?: string | null;
       theme: Theme;
+      showOnlineStatus: boolean;
     } & DefaultSession["user"];
   }
 }

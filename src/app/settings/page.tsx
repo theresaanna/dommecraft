@@ -18,6 +18,7 @@ export default async function SettingsPage() {
       theme: true,
       calendarDefaultView: true,
       slug: true,
+      showOnlineStatus: true,
       role: true,
     },
   });
@@ -36,6 +37,7 @@ export default async function SettingsPage() {
           theme: user.theme,
           calendarDefaultView: user.calendarDefaultView,
           slug: user.slug ?? "",
+          showOnlineStatus: user.showOnlineStatus,
         }}
         userRole={user.role}
       />
