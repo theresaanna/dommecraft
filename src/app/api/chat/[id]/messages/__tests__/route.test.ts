@@ -18,6 +18,18 @@ vi.mock("@/lib/prisma", () => ({
   },
 }));
 
+const { mockPublish, mockChannelsGet } = vi.hoisted(() => {
+  const mockPublish = vi.fn().mockResolvedValue(undefined);
+  const mockChannelsGet = vi.fn().mockReturnValue({ publish: mockPublish });
+  return { mockPublish, mockChannelsGet };
+});
+
+vi.mock("@/lib/ably", () => ({
+  getAblyRest: vi.fn().mockReturnValue({
+    channels: { get: mockChannelsGet },
+  }),
+}));
+
 import { GET, POST } from "@/app/api/chat/[id]/messages/route";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -249,6 +261,61 @@ describe("POST /api/chat/[id]/messages", () => {
     expect(data.id).toBe("msg-1");
     expect(data.content).toBe("Hello!");
     expect(data.createdAt).toBe("2025-01-01T12:00:00.000Z");
+  });
+
+  it("publishes message to Ably channel after creation", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "Hello!",
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+
+    await POST(createPostRequest({ content: "Hello!" }), { params });
+
+    expect(mockChannelsGet).toHaveBeenCalledWith("chat:conv-1");
+    expect(mockPublish).toHaveBeenCalledWith("message", {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "Hello!",
+      createdAt: "2025-01-01T12:00:00.000Z",
+    });
+  });
+
+  it("still returns 201 if Ably publish fails", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-1" },
+      expires: "",
+    } as never);
+    mockFindUnique.mockResolvedValue({
+      participant1Id: "user-1",
+      participant2Id: "user-2",
+    } as never);
+
+    const createdMessage = {
+      id: "msg-1",
+      senderId: "user-1",
+      content: "Hello!",
+      createdAt: new Date("2025-01-01T12:00:00Z"),
+    };
+    mockTransaction.mockResolvedValue([createdMessage, {}]);
+    mockPublish.mockRejectedValueOnce(new Error("Ably down"));
+
+    const res = await POST(createPostRequest({ content: "Hello!" }), {
+      params,
+    });
+
+    expect(res.status).toBe(201);
   });
 
   it("trims whitespace from content", async () => {
