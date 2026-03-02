@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 
   const currentUser = await prisma.user.findUnique({
     where: { id: userId },
-    select: { avatarUrl: true },
+    select: { avatarUrl: true, slug: true },
   });
 
   const subs = isDomme
@@ -911,6 +911,12 @@ export default async function DashboardPage() {
           )}
         </div>
         <div className="mt-4 flex items-center justify-center gap-3">
+          <Link
+            href={currentUser?.slug ? `/u/${currentUser.slug}` : `/users/${userId}`}
+            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
+          >
+            My Profile
+          </Link>
           <Link
             href="/chat"
             className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"

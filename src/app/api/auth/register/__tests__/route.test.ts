@@ -17,13 +17,19 @@ vi.mock("bcryptjs", () => ({
   },
 }));
 
+vi.mock("@/lib/slug-utils", () => ({
+  generateUniqueSlug: vi.fn().mockResolvedValue("new-user-a1b2"),
+}));
+
 import { POST } from "@/app/api/auth/register/route";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { generateUniqueSlug } from "@/lib/slug-utils";
 
 const mockFindUnique = vi.mocked(prisma.user.findUnique);
 const mockCreate = vi.mocked(prisma.user.create);
 const mockHash = vi.mocked(bcrypt.hash);
+const mockGenerateUniqueSlug = vi.mocked(generateUniqueSlug);
 
 function createRequest(body: Record<string, unknown>) {
   return new Request("http://localhost:3000/api/auth/register", {
@@ -71,6 +77,7 @@ describe("POST /api/auth/register", () => {
       passwordHash: "$2a$12$hash",
       name: "Existing",
       image: null,
+      slug: null,
       role: "DOMME",
       timezone: "UTC",
       avatarUrl: null,
@@ -239,6 +246,60 @@ describe("POST /api/auth/register", () => {
         }),
       })
     );
+  });
+
+  it("generates a slug on registration from name", async () => {
+    mockFindUnique.mockResolvedValue(null);
+    mockHash.mockResolvedValue("$2a$12$hashed" as never);
+    mockGenerateUniqueSlug.mockResolvedValue("new-user-x7k9");
+    mockCreate.mockResolvedValue({
+      id: "new-user",
+      email: "new@example.com",
+      name: "New User",
+      role: "DOMME",
+      slug: "new-user-x7k9",
+      createdAt: new Date(),
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "new@example.com",
+        password: "password123",
+        name: "New User",
+      })
+    );
+
+    expect(mockGenerateUniqueSlug).toHaveBeenCalledWith("New User");
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          slug: "new-user-x7k9",
+        }),
+      })
+    );
+  });
+
+  it("generates slug from email prefix when no name", async () => {
+    mockFindUnique.mockResolvedValue(null);
+    mockHash.mockResolvedValue("$2a$12$hashed" as never);
+    mockGenerateUniqueSlug.mockResolvedValue("new-a1b2");
+    mockCreate.mockResolvedValue({
+      id: "new-user",
+      email: "new@example.com",
+      name: null,
+      role: "DOMME",
+      slug: "new-a1b2",
+      createdAt: new Date(),
+    } as never);
+
+    await POST(
+      createRequest({
+        email: "new@example.com",
+        password: "password123",
+      })
+    );
+
+    expect(mockGenerateUniqueSlug).toHaveBeenCalledWith("new");
   });
 
   it("returns 500 on unexpected error", async () => {

@@ -10,6 +10,7 @@ type SettingsData = {
   avatarUrl: string | null;
   theme: "LIGHT" | "DARK" | "SYSTEM";
   calendarDefaultView: "MONTH" | "WEEK" | "DAY";
+  slug: string;
 };
 
 export default function SettingsClient({
@@ -212,6 +213,44 @@ export default function SettingsClient({
               }
               className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
+          </div>
+        </div>
+      </div>
+
+      {/* Profile URL Section */}
+      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          Profile URL
+        </h2>
+        <div className="mt-3 space-y-3">
+          <div>
+            <label
+              htmlFor="slug"
+              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Custom URL
+            </label>
+            <div className="mt-1 flex items-center gap-0">
+              <span className="rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 py-2 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+                /u/
+              </span>
+              <input
+                id="slug"
+                type="text"
+                value={settings.slug}
+                onChange={(e) =>
+                  setSettings((prev) => ({
+                    ...prev,
+                    slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""),
+                  }))
+                }
+                placeholder="your-custom-url"
+                className="w-full rounded-r-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              />
+            </div>
+            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              3-30 characters. Lowercase letters, numbers, and hyphens only.
+            </p>
           </div>
         </div>
       </div>
