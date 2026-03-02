@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useUnreadChats } from "@/components/providers/notification-provider";
 import ChatDrawer from "./ChatDrawer";
 
 export default function ChatDrawerToggle() {
   const { data: session } = useSession();
+  const { unreadChatCount } = useUnreadChats();
   const [open, setOpen] = useState(false);
 
   // Only render for authenticated users
@@ -31,6 +33,14 @@ export default function ChatDrawerToggle() {
             clipRule="evenodd"
           />
         </svg>
+        {unreadChatCount > 0 && (
+          <span
+            data-testid="unread-chat-badge"
+            className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white"
+          >
+            {unreadChatCount > 9 ? "9+" : unreadChatCount}
+          </span>
+        )}
       </button>
 
       <ChatDrawer open={open} onClose={() => setOpen(false)} />

@@ -298,6 +298,14 @@ export async function POST(
         },
       });
     }
+
+    // Push real-time notification to the recipient so their
+    // notification provider polls immediately instead of waiting.
+    const rest = getAblyRest();
+    const notifyChannel = rest.channels.get(
+      `user-notifications:${recipientId}`
+    );
+    await notifyChannel.publish("notify", { type: "CHAT_MESSAGE" });
   } catch {
     // Non-fatal: message is persisted, notification creation failed
   }

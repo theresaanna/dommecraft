@@ -32,14 +32,43 @@ vi.mock("@/hooks/use-presence", () => ({
   }),
 }));
 
+const { mockClearUnreadChats, mockUseUnreadChats } = vi.hoisted(() => ({
+  mockClearUnreadChats: vi.fn(),
+  mockUseUnreadChats: vi.fn(),
+}));
+
+vi.mock("@/components/providers/notification-provider", () => ({
+  useUnreadChats: (...args: unknown[]) => mockUseUnreadChats(...args),
+}));
+
 import { useSession } from "next-auth/react";
 
 const mockUseSession = vi.mocked(useSession);
+
+const authenticatedSession = {
+  data: {
+    user: {
+      id: "user-1",
+      name: "Test",
+      role: "DOMME" as const,
+      theme: "SYSTEM" as const,
+      showOnlineStatus: true,
+      notificationSound: true,
+    },
+    expires: "2099-01-01",
+  },
+  status: "authenticated" as const,
+  update: vi.fn(),
+};
 
 describe("ChatDrawerToggle", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     global.fetch = vi.fn();
+    mockUseUnreadChats.mockReturnValue({
+      unreadChatCount: 0,
+      clearUnreadChats: mockClearUnreadChats,
+    });
   });
 
   it("does not render when user is not authenticated", () => {
@@ -57,14 +86,7 @@ describe("ChatDrawerToggle", () => {
   });
 
   it("renders toggle button when user is authenticated", () => {
-    mockUseSession.mockReturnValue({
-      data: {
-        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
-        expires: "2099-01-01",
-      },
-      status: "authenticated",
-      update: vi.fn(),
-    });
+    mockUseSession.mockReturnValue(authenticatedSession);
 
     render(<ChatDrawerToggle />);
 
@@ -72,14 +94,7 @@ describe("ChatDrawerToggle", () => {
   });
 
   it("has accessible label on toggle button", () => {
-    mockUseSession.mockReturnValue({
-      data: {
-        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
-        expires: "2099-01-01",
-      },
-      status: "authenticated",
-      update: vi.fn(),
-    });
+    mockUseSession.mockReturnValue(authenticatedSession);
 
     render(<ChatDrawerToggle />);
 
@@ -87,14 +102,7 @@ describe("ChatDrawerToggle", () => {
   });
 
   it("opens drawer when toggle button is clicked", async () => {
-    mockUseSession.mockReturnValue({
-      data: {
-        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
-        expires: "2099-01-01",
-      },
-      status: "authenticated",
-      update: vi.fn(),
-    });
+    mockUseSession.mockReturnValue(authenticatedSession);
 
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -113,14 +121,7 @@ describe("ChatDrawerToggle", () => {
   });
 
   it("closes drawer when close button is clicked", async () => {
-    mockUseSession.mockReturnValue({
-      data: {
-        user: { id: "user-1", name: "Test", role: "DOMME" as const, theme: "SYSTEM" as const, showOnlineStatus: true },
-        expires: "2099-01-01",
-      },
-      status: "authenticated",
-      update: vi.fn(),
-    });
+    mockUseSession.mockReturnValue(authenticatedSession);
 
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
@@ -141,5 +142,81 @@ describe("ChatDrawerToggle", () => {
 
     const drawer = screen.getByTestId("chat-drawer");
     expect(drawer.className).toContain("translate-y-full");
+  });
+
+  describe("unread chat badge", () => {
+    it("does not show badge when there are no unread chats", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 0,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      expect(
+        screen.queryByTestId("unread-chat-badge")
+      ).not.toBeInTheDocument();
+    });
+
+    it("shows badge with count when there are unread chats", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 3,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      const badge = screen.getByTestId("unread-chat-badge");
+      expect(badge).toBeInTheDocument();
+      expect(badge).toHaveTextContent("3");
+    });
+
+    it("shows badge with single unread chat", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 1,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      const badge = screen.getByTestId("unread-chat-badge");
+      expect(badge).toBeInTheDocument();
+      expect(badge).toHaveTextContent("1");
+    });
+
+    it("shows 9+ when count exceeds 9", () => {
+      mockUseSession.mockReturnValue(authenticatedSession);
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 15,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      const badge = screen.getByTestId("unread-chat-badge");
+      expect(badge).toBeInTheDocument();
+      expect(badge).toHaveTextContent("9+");
+    });
+
+    it("does not show badge when user is not authenticated", () => {
+      mockUseSession.mockReturnValue({
+        data: null,
+        status: "unauthenticated",
+        update: vi.fn(),
+      });
+      mockUseUnreadChats.mockReturnValue({
+        unreadChatCount: 5,
+        clearUnreadChats: mockClearUnreadChats,
+      });
+
+      render(<ChatDrawerToggle />);
+
+      expect(
+        screen.queryByTestId("unread-chat-badge")
+      ).not.toBeInTheDocument();
+    });
   });
 });
