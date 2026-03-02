@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { getAblyRest } from "@/lib/ably";
 
 const PAGE_SIZE = 50;
 
@@ -122,8 +123,16 @@ export async function POST(
     }),
   ]);
 
-  return NextResponse.json(
-    { ...message, createdAt: message.createdAt.toISOString() },
-    { status: 201 }
-  );
+  const messageData = { ...message, createdAt: message.createdAt.toISOString() };
+
+  // Publish to Ably so the other participant gets the message in real-time
+  try {
+    const rest = getAblyRest();
+    const channel = rest.channels.get(`chat:${conversationId}`);
+    await channel.publish("message", messageData);
+  } catch {
+    // Non-fatal: message is persisted, real-time delivery failed
+  }
+
+  return NextResponse.json(messageData, { status: 201 });
 }

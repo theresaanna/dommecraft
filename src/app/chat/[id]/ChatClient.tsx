@@ -88,12 +88,6 @@ export default function ChatClient({
         if (prev.some((m) => m.id === message.id)) return prev;
         return [...prev, message];
       });
-
-      // Publish to Ably so the other participant gets it instantly
-      if (ablyClient) {
-        const channel = ablyClient.channels.get(`chat:${conversationId}`);
-        channel.publish("message", message);
-      }
     } finally {
       setSending(false);
     }
