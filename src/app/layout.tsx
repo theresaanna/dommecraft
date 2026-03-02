@@ -5,7 +5,7 @@ import { NotificationProvider } from "@/components/providers/notification-provid
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AblyProvider } from "@/components/providers/ably-provider";
 import BookmarkBanner from "@/components/BookmarkBanner";
-import ChatDrawerToggle from "@/components/ChatDrawerToggle";
+import GlobalHeader from "@/components/GlobalHeader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,8 +45,8 @@ export default function RootLayout({
             <ThemeProvider>
               <BookmarkBanner />
               <NotificationProvider>
+                <GlobalHeader />
                 {children}
-                <ChatDrawerToggle />
               </NotificationProvider>
             </ThemeProvider>
           </AblyProvider>

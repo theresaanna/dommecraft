@@ -26,11 +26,13 @@ const CHAT_NOTIFICATION_TYPES = ["CHAT_MESSAGE", "GROUP_CHAT_MESSAGE"];
 
 type UnreadChatContextValue = {
   unreadChatCount: number;
+  unreadCount: number;
   clearUnreadChats: () => void;
 };
 
 const UnreadChatContext = createContext<UnreadChatContextValue>({
   unreadChatCount: 0,
+  unreadCount: 0,
   clearUnreadChats: () => {},
 });
 
@@ -77,6 +79,7 @@ export function NotificationProvider({
   const { client: ablyClient } = useAbly();
   const [toasts, setToasts] = useState<ToastData[]>([]);
   const [unreadChatCount, setUnreadChatCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
   const seenIds = useRef<Set<string>>(new Set());
   const initialLoadDone = useRef(false);
   const pollRef = useRef<(() => void) | null>(null);
@@ -116,7 +119,8 @@ export function NotificationProvider({
           type: string;
         }> = await res.json();
 
-        // Track unread chat notification count
+        // Track unread notification counts
+        setUnreadCount(notifications.length);
         const chatCount = notifications.filter((n) =>
           CHAT_NOTIFICATION_TYPES.includes(n.type)
         ).length;
@@ -214,9 +218,9 @@ export function NotificationProvider({
   }, [ablyClient, session?.user?.id]);
 
   return (
-    <UnreadChatContext.Provider value={{ unreadChatCount, clearUnreadChats }}>
+    <UnreadChatContext.Provider value={{ unreadChatCount, unreadCount, clearUnreadChats }}>
       {children}
-      <div className="fixed right-4 top-4 z-50 flex flex-col gap-2">
+      <div className="fixed right-4 top-16 z-50 flex flex-col gap-2">
         {toasts.map((toast) => (
           <Toast
             key={toast.id}
