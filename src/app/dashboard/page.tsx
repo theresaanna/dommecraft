@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import UserAvatar from "@/components/UserAvatar";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -12,11 +11,6 @@ export default async function DashboardPage() {
 
   const isDomme = session.user.role === "DOMME";
   const userId = session.user.id;
-
-  const currentUser = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { avatarUrl: true, slug: true },
-  });
 
   const subs = isDomme
     ? await prisma.subProfile.findMany({
@@ -253,11 +247,6 @@ export default async function DashboardPage() {
       })
     : [];
 
-  // Notifications
-  const unreadNotifications = await prisma.notification.count({
-    where: { userId, isRead: false },
-  });
-
   const EVENT_SOURCE_COLORS: Record<string, string> = {
     STANDALONE: "#3b82f6",
     TASK: "#f59e0b",
@@ -265,69 +254,13 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-16 pb-40">
+    <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
       <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
         Dashboard
       </h1>
-      <div className="mt-2 flex items-center justify-between">
-        <p className="text-zinc-600 dark:text-zinc-400">
-          Welcome, {session.user.name || session.user.email || "User"}
-        </p>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/discover"
-            className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-          >
-            Discover
-          </Link>
-          <Link
-            href="/notifications"
-            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-              unreadNotifications > 0
-                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-            }`}
-          >
-            {unreadNotifications > 0
-              ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
-              : "Notifications"}
-          </Link>
-          <UserAvatar
-            name={session.user.name}
-            email={session.user.email}
-            avatarUrl={currentUser?.avatarUrl}
-          />
-        </div>
-      </div>
-
-      {isDomme && (
-        <div className="mt-6 flex gap-3">
-          <Link
-            href="/subs/new"
-            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-          >
-            Add Sub
-          </Link>
-          <Link
-            href="/financials/new"
-            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-          >
-            New Entry
-          </Link>
-          <Link
-            href="/tasks/new"
-            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-          >
-            Create Task
-          </Link>
-          <Link
-            href="/calendar/new"
-            className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-          >
-            New Event
-          </Link>
-        </div>
-      )}
+      <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+        Welcome, {session.user.name || session.user.email || "User"}
+      </p>
 
       {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
         <div className="mt-8 rounded-lg border border-zinc-200 dark:border-zinc-800">
@@ -878,74 +811,6 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <footer className="sticky bottom-0 mt-12 border-t border-zinc-200 bg-background pb-8 pt-6 dark:border-zinc-800">
-        <div className="flex items-center gap-3">
-          {isDomme ? (
-            <>
-              <Link
-                href="/subs/new"
-                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                Add Sub
-              </Link>
-              <Link
-                href="/financials/new"
-                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                New Entry
-              </Link>
-              <Link
-                href="/tasks/new"
-                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                Create Task
-              </Link>
-              <Link
-                href="/calendar/new"
-                className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-              >
-                New Event
-              </Link>
-            </>
-          ) : (
-            <Link
-              href="/my-tasks"
-              className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
-            >
-              My Tasks
-            </Link>
-          )}
-        </div>
-        <div className="mt-4 flex items-center justify-center gap-3">
-          <Link
-            href={currentUser?.slug ? `/u/${currentUser.slug}` : `/users/${userId}`}
-            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-          >
-            My Profile
-          </Link>
-          <Link
-            href="/chat"
-            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-          >
-            Chat
-          </Link>
-          <Link
-            href="/notifications"
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-              unreadNotifications > 0
-                ? "bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
-            }`}
-          >
-            {unreadNotifications > 0 && (
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
-            )}
-            {unreadNotifications > 0
-              ? `${unreadNotifications} new ${unreadNotifications === 1 ? "notification" : "notifications"}`
-              : "Notifications"}
-          </Link>
-        </div>
-      </footer>
     </div>
   );
 }
