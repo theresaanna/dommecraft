@@ -57,6 +57,16 @@ type ReadEvent = {
 
 const EMOJI_OPTIONS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
+function getInitials(name: string | null): string {
+  if (!name) return "?";
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 function groupReactions(reactions: Reaction[]) {
   const map = new Map<string, string[]>();
   for (const r of reactions) {
@@ -76,6 +86,7 @@ function formatFileSize(bytes: number): string {
 export default function ChatClient({
   conversationId,
   currentUserId,
+  currentUser,
   other,
   initialMessages,
   initialOtherLastReadAt,
@@ -84,6 +95,7 @@ export default function ChatClient({
 }: {
   conversationId: string;
   currentUserId: string;
+  currentUser: { name: string | null; avatarUrl: string | null };
   other: OtherUser;
   initialMessages: Message[];
   initialOtherLastReadAt: string | null;
@@ -499,8 +511,27 @@ export default function ChatClient({
               <div
                 key={msg.id}
                 data-message-id={msg.id}
-                className={`group relative flex ${isMine ? "justify-end" : "justify-start"}`}
+                className={`group relative flex items-end ${isMine ? "justify-end" : "justify-start"}`}
               >
+                {/* Avatar for received messages */}
+                {!isMine && (
+                  <div className="mr-2 flex-shrink-0">
+                    {other.avatarUrl ? (
+                      <Image
+                        src={other.avatarUrl}
+                        alt={other.name || "User"}
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 rounded-full object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                        {getInitials(other.name)}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="max-w-[75%]">
                   <div
                     className={`rounded-lg px-3 py-2 text-sm ${
@@ -721,6 +752,25 @@ export default function ChatClient({
                     )}
                   </div>
                 </div>
+                {/* Avatar for sent messages */}
+                {isMine && (
+                  <div className="ml-2 flex-shrink-0">
+                    {currentUser.avatarUrl ? (
+                      <Image
+                        src={currentUser.avatarUrl}
+                        alt={currentUser.name || "You"}
+                        width={28}
+                        height={28}
+                        className="h-7 w-7 rounded-full object-cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                        {getInitials(currentUser.name)}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}

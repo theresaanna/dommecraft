@@ -32,16 +32,10 @@ export default async function DiscoverPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 pt-16 pb-40">
-      <div className="flex items-center justify-between">
+      <div>
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
           Discover
         </h1>
-        <Link
-          href="/dashboard"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
-        >
-          &larr; Dashboard
-        </Link>
       </div>
       <p className="mt-2 text-zinc-600 dark:text-zinc-400">
         Recent photos from Dommes

@@ -64,6 +64,7 @@ type Props = {
   groupConversationId: string;
   currentUserId: string;
   currentUserName: string;
+  currentUserAvatarUrl: string | null;
   groupName: string;
   members: GroupMemberInfo[];
   initialMessages: GroupMessage[];
@@ -105,6 +106,7 @@ export default function GroupChatClient({
   groupConversationId,
   currentUserId,
   currentUserName,
+  currentUserAvatarUrl,
   groupName,
   members: initialMembers,
   initialMessages,
@@ -615,22 +617,22 @@ export default function GroupChatClient({
                 <div
                   key={msg.id}
                   data-message-id={msg.id}
-                  className={`group relative flex ${isMine ? "justify-end" : "justify-start"}`}
+                  className={`group relative flex items-end ${isMine ? "justify-end" : "justify-start"}`}
                 >
                   {/* Avatar for other users */}
                   {!isMine && (
-                    <div className="mr-2 flex-shrink-0 pt-1">
+                    <div className="mr-2 flex-shrink-0">
                       {senderMember?.avatarUrl ? (
                         <Image
                           src={senderMember.avatarUrl}
                           alt={senderMember.name || "User"}
-                          width={24}
-                          height={24}
-                          className="rounded-full"
+                          width={28}
+                          height={28}
+                          className="h-7 w-7 rounded-full object-cover"
                           unoptimized
                         />
                       ) : (
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
                           {getInitials(msg.senderName)}
                         </div>
                       )}
@@ -917,6 +919,25 @@ export default function GroupChatClient({
                       )}
                     </div>
                   </div>
+                  {/* Avatar for sent messages */}
+                  {isMine && (
+                    <div className="ml-2 flex-shrink-0">
+                      {currentUserAvatarUrl ? (
+                        <Image
+                          src={currentUserAvatarUrl}
+                          alt={currentUserName}
+                          width={28}
+                          height={28}
+                          className="h-7 w-7 rounded-full object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                          {getInitials(currentUserName)}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}

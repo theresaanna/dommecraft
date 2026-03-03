@@ -120,6 +120,7 @@ export default async function GroupChatPage({
       groupConversationId={groupConversationId}
       currentUserId={userId}
       currentUserName={currentUser.name ?? "Unknown"}
+      currentUserAvatarUrl={currentUser.avatarUrl}
       groupName={group.name}
       members={members}
       initialMessages={serializedMessages}

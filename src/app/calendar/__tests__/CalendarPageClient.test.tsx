@@ -174,7 +174,6 @@ describe("CalendarPageClient", () => {
 
     expect(screen.getByText("Calendar")).toBeInTheDocument();
     expect(screen.getByText("New Event")).toBeInTheDocument();
-    expect(screen.getByText(/Dashboard/)).toBeInTheDocument();
   });
 
   it("renders the ScheduleX calendar component", async () => {
@@ -184,16 +183,6 @@ describe("CalendarPageClient", () => {
     render(<CalendarPageClient />);
 
     expect(screen.getByTestId("schedule-x-calendar")).toBeInTheDocument();
-  });
-
-  it("links back to dashboard", async () => {
-    const CalendarPageClient = (
-      await import("../CalendarPageClient")
-    ).default;
-    render(<CalendarPageClient />);
-
-    const dashboardLink = screen.getByText(/Dashboard/);
-    expect(dashboardLink.closest("a")).toHaveAttribute("href", "/dashboard");
   });
 
   it("links to new event page", async () => {
