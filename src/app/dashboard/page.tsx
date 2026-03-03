@@ -267,7 +267,7 @@ export default async function DashboardPage() {
         Welcome, {session.user.name || session.user.email || "User"}
       </p>
 
-      <div className="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 items-start gap-6 md:grid-cols-2">
 
       {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
         <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">

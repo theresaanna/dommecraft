@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type Ably from "ably";
@@ -65,6 +65,36 @@ function getInitials(name: string | null): string {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+}
+
+/** Popup wrapper that flips direction when it would overflow the viewport. */
+function ReactionPopover({
+  children,
+  zIndex = 10,
+}: {
+  children: React.ReactNode;
+  zIndex?: number;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [flipY, setFlipY] = useState(false);
+  const [flipX, setFlipX] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    if (rect.top < 8) setFlipY(true);
+    if (rect.right > window.innerWidth - 8) setFlipX(true);
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{ zIndex }}
+      className={`absolute ${flipY ? "top-full mt-1" : "bottom-full mb-1"} ${flipX ? "right-0" : "left-0"}`}
+    >
+      {children}
+    </div>
+  );
 }
 
 function groupReactions(reactions: Reaction[]) {
@@ -712,9 +742,10 @@ export default function ChatClient({
                       </button>
                     )}
                     {pickerOpenFor === msg.id && (
+                      <ReactionPopover zIndex={10}>
                       <div
                         data-testid="quick-reactions"
-                        className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800"
+                        className="flex items-center gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800"
                       >
                         {EMOJI_OPTIONS.map((emoji) => (
                           <button
@@ -741,14 +772,15 @@ export default function ChatClient({
                           </svg>
                         </button>
                       </div>
+                      </ReactionPopover>
                     )}
                     {fullPickerOpenFor === msg.id && (
-                      <div className="absolute bottom-full left-0 z-20 mb-1">
+                      <ReactionPopover zIndex={20}>
                         <EmojiPicker
                           onSelect={(emoji) => handleReaction(msg.id, emoji)}
                           onClose={() => setFullPickerOpenFor(null)}
                         />
-                      </div>
+                      </ReactionPopover>
                     )}
                   </div>
                 </div>

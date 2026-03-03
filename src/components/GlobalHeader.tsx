@@ -11,7 +11,7 @@ import UserAvatar from "@/components/UserAvatar";
 const QUICK_ACTIONS = [
   { href: "/subs/new", label: "Add Sub" },
   { href: "/financials/new", label: "New Send" },
-  { href: "/tasks/new", label: "Create Task" },
+  { href: "/tasks/new", label: "New Sub Task" },
   { href: "/calendar/new", label: "New Event" },
 ];
 
