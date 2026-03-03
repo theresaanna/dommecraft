@@ -36,11 +36,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = userId;
         const dbUser = await prisma.user.findUnique({
           where: { id: userId },
-          select: { role: true, name: true, email: true, avatarUrl: true, theme: true, showOnlineStatus: true, notificationSound: true },
+          select: { role: true, name: true, email: true, avatarUrl: true, image: true, theme: true, showOnlineStatus: true, notificationSound: true },
         });
         if (dbUser) {
           token.role = dbUser.role;
-          token.avatarUrl = dbUser.avatarUrl;
+          token.avatarUrl = dbUser.avatarUrl || dbUser.image;
           token.theme = dbUser.theme;
           token.showOnlineStatus = dbUser.showOnlineStatus;
           token.notificationSound = dbUser.notificationSound;

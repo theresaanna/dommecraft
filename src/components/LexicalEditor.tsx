@@ -20,8 +20,9 @@ import { LinkNode, AutoLinkNode } from "@lexical/link";
 import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
 import { TableNode, TableRowNode, TableCellNode } from "@lexical/table";
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
-import { $getRoot, $insertNodes, EditorState } from "lexical";
+import { $getRoot, $insertNodes, EditorState, TextNode } from "lexical";
 import LexicalEditorToolbar from "./LexicalEditorToolbar";
+import { ExtendedTextNode } from "./lexical/nodes/ExtendedTextNode";
 import { ImageNode } from "./lexical/nodes/ImageNode";
 import {
   CollapsibleContainerNode,
@@ -115,6 +116,8 @@ export default function LexicalEditor({
     namespace: "NoteEditor",
     theme,
     nodes: [
+      ExtendedTextNode,
+      { replace: TextNode, with: (node: TextNode) => new ExtendedTextNode(node.__text) },
       ListNode,
       ListItemNode,
       HeadingNode,
