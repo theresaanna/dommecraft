@@ -189,7 +189,7 @@ export default function ChatDrawer({
         aria-label="Chat list"
         className={`fixed z-50 bg-white transition-transform duration-200 ease-in-out dark:bg-zinc-950
           bottom-0 right-0 h-[80dvh] w-full rounded-t-2xl border-t border-zinc-200 dark:border-zinc-800
-          md:top-0 md:h-full md:w-96 md:rounded-t-none md:rounded-l-2xl md:border-t-0 md:border-l
+          md:top-14 md:h-[calc(100dvh-3.5rem)] md:w-96 md:rounded-t-none md:rounded-l-2xl md:border-t-0 md:border-l
           ${
             open
               ? "translate-y-0 md:translate-x-0 md:translate-y-0"
