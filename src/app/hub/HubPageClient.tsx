@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CategorySidebar from "./CategorySidebar";
 import ProjectList from "./ProjectList";
-import ProjectForm from "./ProjectForm";
 
 type Category = {
   id: string;
@@ -33,11 +31,9 @@ export default function HubPageClient({
   initialCategories: Category[];
   initialProjects: Project[];
 }) {
-  const router = useRouter();
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     initialCategories[0]?.id || null
   );
-  const [showProjectForm, setShowProjectForm] = useState(false);
 
   const filteredProjects = selectedCategoryId
     ? initialProjects.filter((p) => p.categoryId === selectedCategoryId)
@@ -46,6 +42,10 @@ export default function HubPageClient({
   const selectedCategory = initialCategories.find(
     (c) => c.id === selectedCategoryId
   );
+
+  const newProjectHref = selectedCategoryId
+    ? `/hub/projects/new?category=${selectedCategoryId}`
+    : "/hub/projects/new";
 
   return (
     <div>
@@ -80,26 +80,13 @@ export default function HubPageClient({
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               {selectedCategory?.name || "All Projects"}
             </h2>
-            <button
-              onClick={() => setShowProjectForm(!showProjectForm)}
-              disabled={!selectedCategoryId}
-              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            <Link
+              href={newProjectHref}
+              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
-              {showProjectForm ? "Cancel" : "New Project"}
-            </button>
+              New Project
+            </Link>
           </div>
-
-          {showProjectForm && selectedCategoryId && (
-            <div className="mb-4">
-              <ProjectForm
-                categoryId={selectedCategoryId}
-                onClose={() => {
-                  setShowProjectForm(false);
-                  router.refresh();
-                }}
-              />
-            </div>
-          )}
 
           <ProjectList projects={filteredProjects} />
         </div>
