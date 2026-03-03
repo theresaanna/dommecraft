@@ -13,24 +13,24 @@ datasource db {
 // ============================================================
 
 model User {
-  id            String    @id @default(cuid())
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  passwordHash  String?   @map("password_hash")
-  name          String?
-  image         String?
-  slug          String?   @unique
-  role          UserRole  @default(DOMME)
-  timezone      String    @default("UTC")
-  avatarUrl            String?              @map("avatar_url")
-  theme                Theme                @default(SYSTEM)
-  calendarDefaultView  CalendarDefaultView  @default(MONTH) @map("calendar_default_view")
-  showOnlineStatus     Boolean              @default(true) @map("show_online_status")
-  showReadReceipts     Boolean              @default(true) @map("show_read_receipts")
-  notificationSound    Boolean              @default(true) @map("notification_sound")
-  currency             Currency             @default(USD)
-  createdAt            DateTime             @default(now()) @map("created_at")
-  updatedAt            DateTime             @updatedAt @map("updated_at")
+  id                  String              @id @default(cuid())
+  email               String?             @unique
+  emailVerified       DateTime?           @map("email_verified")
+  passwordHash        String?             @map("password_hash")
+  name                String?
+  image               String?
+  slug                String?             @unique
+  role                UserRole            @default(DOMME)
+  timezone            String              @default("UTC")
+  avatarUrl           String?             @map("avatar_url")
+  theme               Theme               @default(SYSTEM)
+  calendarDefaultView CalendarDefaultView @default(MONTH) @map("calendar_default_view")
+  showOnlineStatus    Boolean             @default(true) @map("show_online_status")
+  showReadReceipts    Boolean             @default(true) @map("show_read_receipts")
+  notificationSound   Boolean             @default(true) @map("notification_sound")
+  currency            Currency            @default(USD)
+  createdAt           DateTime            @default(now()) @map("created_at")
+  updatedAt           DateTime            @updatedAt @map("updated_at")
 
   accounts Account[]
   sessions Session[]
@@ -46,23 +46,24 @@ model User {
   categories       Category[]
   projects         Project[]
   notes            Note[]
+  projectTasks     ProjectTask[]
 
   // Task management
-  tasks              Task[]
-  subtasks           Subtask[]
-  taskProofs         TaskProof[]
-  notifications      Notification[]
-  linkedSubProfiles  SubProfile[] @relation("LinkedSubProfiles")
+  tasks             Task[]
+  subtasks          Subtask[]
+  taskProofs        TaskProof[]
+  notifications     Notification[]
+  linkedSubProfiles SubProfile[]   @relation("LinkedSubProfiles")
 
   // Calendar
   calendarEvents    CalendarEvent[]
   externalCalendars ExternalCalendar[]
 
   // Chat
-  conversationsAs1  Conversation[]     @relation("ConversationParticipant1")
-  conversationsAs2  Conversation[]     @relation("ConversationParticipant2")
-  chatMessages      ChatMessage[]
-  messageReactions  MessageReaction[]
+  conversationsAs1          Conversation[]      @relation("ConversationParticipant1")
+  conversationsAs2          Conversation[]      @relation("ConversationParticipant2")
+  chatMessages              ChatMessage[]
+  messageReactions          MessageReaction[]
   groupConversationsCreated GroupConversation[] @relation("GroupConversationCreator")
   groupMemberships          GroupMember[]
 
@@ -145,8 +146,8 @@ model VerificationToken {
 // ============================================================
 
 model SubProfile {
-  id        String  @id @default(cuid())
-  userId    String? @map("user_id")
+  id     String  @id @default(cuid())
+  userId String? @map("user_id")
 
   // Account linking
   linkedUserId String? @map("linked_user_id")
@@ -165,15 +166,15 @@ model SubProfile {
   birthday         DateTime?
   country          String?
   occupation       String?
-  workSchedule     String?  @map("work_schedule")
-  financialLimits  String?  @map("financial_limits")
-  expendableIncome String?  @map("expendable_income")
+  workSchedule     String?   @map("work_schedule")
+  financialLimits  String?   @map("financial_limits")
+  expendableIncome String?   @map("expendable_income")
   preferences      String[]
-  bestExperiences  String?  @map("best_experiences")
-  worstExperiences String?  @map("worst_experiences")
-  personalityNotes String?  @map("personality_notes")
-  healthNotes      String?  @map("health_notes")
-  obedienceHistory String?  @map("obedience_history")
+  bestExperiences  String?   @map("best_experiences")
+  worstExperiences String?   @map("worst_experiences")
+  personalityNotes String?   @map("personality_notes")
+  healthNotes      String?   @map("health_notes")
+  obedienceHistory String?   @map("obedience_history")
 
   // System fields
   avatarUrl    String?  @map("avatar_url")
@@ -360,10 +361,11 @@ model Project {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  notes    Note[]
-  tasks    Task[]
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  notes        Note[]
+  tasks        Task[]
+  projectTasks ProjectTask[]
 
   @@index([userId])
   @@index([categoryId])
@@ -389,6 +391,27 @@ model Note {
   @@map("notes")
 }
 
+model ProjectTask {
+  id              String    @id @default(cuid())
+  userId          String    @map("user_id")
+  projectId       String    @map("project_id")
+  title           String
+  completed       Boolean   @default(false)
+  deadline        DateTime?
+  sortOrder       Int       @default(0) @map("sort_order")
+  calendarEventId String?   @unique @map("calendar_event_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  calendarEvent CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+
+  @@index([projectId])
+  @@index([userId])
+  @@map("project_tasks")
+}
+
 // ============================================================
 // TASK MANAGEMENT
 // ============================================================
@@ -408,28 +431,28 @@ enum TaskStatus {
 }
 
 model Task {
-  id               String       @id @default(cuid())
-  userId           String?      @map("user_id")
-  subId            String       @map("sub_id")
-  projectId        String?      @map("project_id")
-  sourceNoteId     String?      @map("source_note_id")
-  title            String
-  description      String?
-  tags             String[]
-  deadline         DateTime?
-  priority         TaskPriority @default(MEDIUM)
-  status           TaskStatus   @default(NOT_STARTED)
-  completedAt      DateTime?    @map("completed_at")
-  recurrenceRule   String?      @map("recurrence_rule")
-  recurrenceEndDate DateTime?   @map("recurrence_end_date")
-  reminderOffset   Int?         @map("reminder_offset")
-  createdAt        DateTime     @default(now()) @map("created_at")
-  updatedAt        DateTime     @updatedAt @map("updated_at")
+  id                String       @id @default(cuid())
+  userId            String?      @map("user_id")
+  subId             String       @map("sub_id")
+  projectId         String?      @map("project_id")
+  sourceNoteId      String?      @map("source_note_id")
+  title             String
+  description       String?
+  tags              String[]
+  deadline          DateTime?
+  priority          TaskPriority @default(MEDIUM)
+  status            TaskStatus   @default(NOT_STARTED)
+  completedAt       DateTime?    @map("completed_at")
+  recurrenceRule    String?      @map("recurrence_rule")
+  recurrenceEndDate DateTime?    @map("recurrence_end_date")
+  reminderOffset    Int?         @map("reminder_offset")
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
 
-  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  sub        SubProfile @relation(fields: [subId], references: [id], onDelete: Cascade)
-  project    Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
-  sourceNote Note?      @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sub        SubProfile  @relation(fields: [subId], references: [id], onDelete: Cascade)
+  project    Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  sourceNote Note?       @relation(fields: [sourceNoteId], references: [id], onDelete: SetNull)
   subtasks   Subtask[]
   proofs     TaskProof[]
 
@@ -460,7 +483,7 @@ model Subtask {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("subtasks")
@@ -490,7 +513,7 @@ model TaskProof {
   createdAt DateTime @default(now()) @map("created_at")
 
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
-  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task Task  @relation(fields: [taskId], references: [id], onDelete: Cascade)
 
   @@index([taskId])
   @@map("task_proofs")
@@ -585,6 +608,7 @@ enum EventSourceType {
   STANDALONE
   TASK
   REMINDER
+  PROJECT_TASK
 }
 
 model CalendarEvent {
@@ -607,6 +631,7 @@ model CalendarEvent {
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   sourceTask    Task?          @relation(fields: [sourceTaskId], references: [id], onDelete: SetNull)
+  projectTask   ProjectTask?
   notifications Notification[]
 
   @@index([userId])
@@ -669,7 +694,7 @@ model ChatMessage {
   replyToId           String?   @map("reply_to_id")
 
   conversation      Conversation?      @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  groupConversation GroupConversation?  @relation(fields: [groupConversationId], references: [id], onDelete: Cascade)
+  groupConversation GroupConversation? @relation(fields: [groupConversationId], references: [id], onDelete: Cascade)
   sender            User               @relation(fields: [senderId], references: [id], onDelete: Cascade)
   reactions         MessageReaction[]
   replyTo           ChatMessage?       @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
@@ -708,7 +733,7 @@ model GroupConversation {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  createdBy User           @relation("GroupConversationCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy User          @relation("GroupConversationCreator", fields: [createdById], references: [id], onDelete: Cascade)
   members   GroupMember[]
   messages  ChatMessage[]
 
@@ -725,7 +750,7 @@ model GroupMember {
   lastReadAt          DateTime?       @map("last_read_at")
 
   groupConversation GroupConversation @relation(fields: [groupConversationId], references: [id], onDelete: Cascade)
-  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([groupConversationId, userId])
   @@index([groupConversationId])

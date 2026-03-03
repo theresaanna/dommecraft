@@ -4,6 +4,17 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import NoteForm from "../NoteForm";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    refresh: vi.fn(),
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    prefetch: vi.fn(),
+  }),
+}));
+
 // Mock the LexicalEditor since it has complex DOM requirements
 let mockEditorContent = "";
 vi.mock("@/components/LexicalEditor", () => ({
@@ -90,7 +101,11 @@ describe("NoteForm", () => {
     await waitFor(() => {
       expect(screen.getByText("Note content is required")).toBeInTheDocument();
     });
-    expect(fetch).not.toHaveBeenCalled();
+    // Only the projects fetch should have been called (from useEffect), not a notes API call
+    expect(fetch).not.toHaveBeenCalledWith(
+      expect.stringContaining("/notes"),
+      expect.anything()
+    );
   });
 
   it("submits POST request when creating a new note", async () => {
