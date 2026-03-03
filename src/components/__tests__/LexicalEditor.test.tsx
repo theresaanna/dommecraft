@@ -11,7 +11,7 @@ describe("LexicalEditor", () => {
     expect(editor).toBeInTheDocument();
   });
 
-  it("renders the toolbar with formatting buttons", () => {
+  it("renders the toolbar with inline formatting buttons", () => {
     render(<LexicalEditor onChange={vi.fn()} />);
 
     const toolbar = screen.getByRole("toolbar", { name: /text formatting/i });
@@ -25,11 +25,58 @@ describe("LexicalEditor", () => {
     expect(
       screen.getByRole("button", { name: "Strikethrough" })
     ).toBeInTheDocument();
+  });
+
+  it("renders block type and alignment dropdowns", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
+    expect(screen.getByLabelText("Block type")).toBeInTheDocument();
+    expect(screen.getByLabelText("Text alignment")).toBeInTheDocument();
+  });
+
+  it("renders clear formatting, link, and horizontal rule buttons", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
     expect(
-      screen.getByRole("button", { name: "Bullet list" })
+      screen.getByRole("button", { name: "Clear formatting" })
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Link" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Horizontal rule" })
+    ).toBeInTheDocument();
+  });
+
+  it("renders text color and background color buttons", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
+    expect(
+      screen.getByRole("button", { name: "Text color" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Numbered list" })
+      screen.getByRole("button", { name: "Background color" })
+    ).toBeInTheDocument();
+  });
+
+  it("renders undo and redo buttons", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
+    expect(screen.getByRole("button", { name: "Undo" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Redo" })).toBeInTheDocument();
+  });
+
+  it("renders highlight button", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
+    expect(
+      screen.getByRole("button", { name: "Highlight" })
+    ).toBeInTheDocument();
+  });
+
+  it("renders insert dropdown button", () => {
+    render(<LexicalEditor onChange={vi.fn()} />);
+
+    expect(
+      screen.getByRole("button", { name: "Insert" })
     ).toBeInTheDocument();
   });
 
