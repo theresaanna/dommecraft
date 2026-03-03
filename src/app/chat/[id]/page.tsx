@@ -111,6 +111,7 @@ export default async function ChatConversationPage({
     <ChatClient
       conversationId={conversationId}
       currentUserId={userId}
+      currentUser={{ name: currentParticipant.name, avatarUrl: currentParticipant.avatarUrl }}
       other={{ id: other.id, name: other.name, avatarUrl: other.avatarUrl, role: other.role }}
       initialMessages={serializedMessages}
       initialOtherLastReadAt={otherLastReadAt?.toISOString() ?? null}

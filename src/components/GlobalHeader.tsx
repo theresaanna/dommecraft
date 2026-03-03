@@ -153,7 +153,7 @@ export default function GlobalHeader() {
                   href="/discover"
                   className={navLinkClass(isActive("/discover"))}
                 >
-                  {isDomme ? "Gallery" : "Discover"}
+                  {isDomme ? "Domme Gallery" : "Discover"}
                 </Link>
 
                 {/* Divider */}
@@ -426,7 +426,7 @@ export default function GlobalHeader() {
                     : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
                 }`}
               >
-                {isDomme ? "Gallery" : "Discover"}
+                {isDomme ? "Domme Gallery" : "Discover"}
               </Link>
 
               <div className="my-1 border-t border-zinc-100 dark:border-zinc-800" />

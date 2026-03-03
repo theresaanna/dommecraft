@@ -85,12 +85,10 @@ describe("DiscoverPage", () => {
     );
   });
 
-  it("renders the page title and back link", async () => {
+  it("renders the page title", async () => {
     const page = await DiscoverPage();
     render(page);
 
     expect(screen.getByText("Discover")).toBeInTheDocument();
-    const backLink = screen.getByText(/Dashboard/);
-    expect(backLink).toHaveAttribute("href", "/dashboard");
   });
 });

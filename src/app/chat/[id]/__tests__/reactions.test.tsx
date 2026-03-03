@@ -61,6 +61,7 @@ vi.mock("@/components/providers/notification-provider", () => ({
 const defaultProps = {
   conversationId: "conv-1",
   currentUserId: "user-1",
+  currentUser: { name: "Me", avatarUrl: null },
   other: { id: "user-2", name: "Alice", avatarUrl: null, role: "SUB" as const },
   initialMessages: [
     {
