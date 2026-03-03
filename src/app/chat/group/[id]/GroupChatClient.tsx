@@ -567,7 +567,7 @@ export default function GroupChatClient({
   }
 
   return (
-    <div className="flex h-dvh">
+    <div className="flex h-[calc(100dvh-3.5rem)] pt-14">
       <div className="flex flex-1 flex-col">
         {/* Header */}
         <header className="flex items-center gap-3 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">

@@ -38,7 +38,7 @@ export default function BookmarkBanner() {
   if (!visible) return null;
 
   return (
-    <div className="flex items-center justify-between bg-zinc-100 px-4 py-2 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+    <div className="fixed top-14 right-0 left-0 z-30 flex items-center justify-between bg-zinc-100 px-4 py-2 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
       <span>{getBookmarkInstructions()}</span>
       <button
         type="button"
