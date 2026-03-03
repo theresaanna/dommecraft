@@ -3,12 +3,14 @@
 import { useState, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { CURRENCY_OPTIONS } from "@/lib/currency";
 
 type SettingsData = {
   name: string;
   email: string;
   avatarUrl: string | null;
   theme: "LIGHT" | "DARK" | "SYSTEM";
+  currency: "USD" | "GBP" | "AUD" | "EUR";
   calendarDefaultView: "MONTH" | "WEEK" | "DAY";
   slug: string;
   showOnlineStatus: boolean;
@@ -286,6 +288,38 @@ export default function SettingsClient({
             <option value="SYSTEM">System</option>
             <option value="LIGHT">Light</option>
             <option value="DARK">Dark</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Currency Section */}
+      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          Currency
+        </h2>
+        <div className="mt-3">
+          <label
+            htmlFor="currency"
+            className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+          >
+            Currency
+          </label>
+          <select
+            id="currency"
+            value={settings.currency}
+            onChange={(e) =>
+              setSettings((prev) => ({
+                ...prev,
+                currency: e.target.value as SettingsData["currency"],
+              }))
+            }
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          >
+            {CURRENCY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

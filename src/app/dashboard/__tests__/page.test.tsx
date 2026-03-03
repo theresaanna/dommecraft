@@ -43,34 +43,28 @@ describe("DashboardPage quick action links", () => {
     });
   });
 
-  it("links 'New Entry' to /financials/new", async () => {
+  it("links 'Add Entry' to /financials/new", async () => {
     const page = await DashboardPage();
     render(page);
 
-    const links = screen.getAllByRole("link", { name: /new entry/i });
-    links.forEach((link: HTMLElement) => {
-      expect(link).toHaveAttribute("href", "/financials/new");
-    });
+    const link = screen.getByRole("link", { name: /add entry/i });
+    expect(link).toHaveAttribute("href", "/financials/new");
   });
 
-  it("links 'Create Task' to /tasks/new", async () => {
+  it("links 'View Tasks' to /tasks", async () => {
     const page = await DashboardPage();
     render(page);
 
-    const links = screen.getAllByRole("link", { name: /create task/i });
-    links.forEach((link: HTMLElement) => {
-      expect(link).toHaveAttribute("href", "/tasks/new");
-    });
+    const link = screen.getByRole("link", { name: /view tasks/i });
+    expect(link).toHaveAttribute("href", "/tasks");
   });
 
-  it("links 'New Event' to /calendar/new", async () => {
+  it("links 'View Calendar' to /calendar", async () => {
     const page = await DashboardPage();
     render(page);
 
-    const links = screen.getAllByRole("link", { name: /new event/i });
-    links.forEach((link: HTMLElement) => {
-      expect(link).toHaveAttribute("href", "/calendar/new");
-    });
+    const link = screen.getByRole("link", { name: /view calendar/i });
+    expect(link).toHaveAttribute("href", "/calendar");
   });
 
   it("links 'Add Sub' to /subs/new", async () => {
@@ -79,14 +73,6 @@ describe("DashboardPage quick action links", () => {
 
     const links = screen.getAllByRole("link", { name: /add sub/i });
     expect(links[0]).toHaveAttribute("href", "/subs/new");
-  });
-
-  it("renders 'My Profile' link with slug URL", async () => {
-    const page = await DashboardPage();
-    render(page);
-
-    const link = screen.getByRole("link", { name: /my profile/i });
-    expect(link).toHaveAttribute("href", "/u/test-a1b2");
   });
 });
 
@@ -103,9 +89,9 @@ describe("DashboardPage SUB view", () => {
     render(page);
 
     expect(screen.queryByRole("link", { name: /add sub/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /new entry/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /create task/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: /new event/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /add entry/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /view tasks/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /view calendar/i })).not.toBeInTheDocument();
   });
 
   it("does not show My Subs section for SUB users", async () => {
@@ -152,26 +138,3 @@ describe("DashboardPage SUB view", () => {
   });
 });
 
-describe("DashboardPage user avatar", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    mockAuth.mockResolvedValue({
-      user: { id: "user-1", name: "Test User", email: "test@test.com", role: "DOMME" },
-    });
-  });
-
-  it("renders avatar link to /settings", async () => {
-    const page = await DashboardPage();
-    render(page);
-
-    const settingsLink = screen.getByTitle("Settings");
-    expect(settingsLink).toHaveAttribute("href", "/settings");
-  });
-
-  it("shows user initials when no avatar image", async () => {
-    const page = await DashboardPage();
-    render(page);
-
-    expect(screen.getByText("TU")).toBeInTheDocument();
-  });
-});

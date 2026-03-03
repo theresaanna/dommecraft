@@ -4,6 +4,7 @@ import Link from "next/link";
 import FinancialsFilters from "./FinancialsFilters";
 import FinancialsSummary from "./FinancialsSummary";
 import FinancialsList from "./FinancialsList";
+import type { CurrencyCode } from "@/lib/currency";
 
 type AvailableSub = {
   id: string;
@@ -13,7 +14,6 @@ type AvailableSub = {
 type FinancialEntry = {
   id: string;
   amount: string;
-  currency: string;
   category: string;
   paymentMethod: string | null;
   notes: string | null;
@@ -57,11 +57,13 @@ export default function FinancialsPageClient({
   summary,
   availableSubs,
   currentParams,
+  currency,
 }: {
   entries: FinancialEntry[];
   summary: SummaryData;
   availableSubs: AvailableSub[];
   currentParams: FilterParams;
+  currency: CurrencyCode;
 }) {
   return (
     <>
@@ -82,9 +84,9 @@ export default function FinancialsPageClient({
         availableSubs={availableSubs}
       />
 
-      <FinancialsSummary summary={summary} />
+      <FinancialsSummary summary={summary} currency={currency} />
 
-      <FinancialsList entries={entries} />
+      <FinancialsList entries={entries} currency={currency} />
     </>
   );
 }

@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { formatCurrency } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -11,6 +13,9 @@ export default async function DashboardPage() {
 
   const isDomme = session.user.role === "DOMME";
   const userId = session.user.id;
+  const userCurrency = isDomme
+    ? (((await prisma.user.findUnique({ where: { id: userId }, select: { currency: true } }))?.currency || "USD") as CurrencyCode)
+    : ("USD" as CurrencyCode);
 
   const subs = isDomme
     ? await prisma.subProfile.findMany({
@@ -288,7 +293,7 @@ export default async function DashboardPage() {
                     </span>
                   </div>
                   <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                    ${parseFloat(entry.amount.toString()).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatCurrency(entry.amount.toString(), userCurrency)}
                   </span>
                 </Link>
               </li>
@@ -439,7 +444,7 @@ export default async function DashboardPage() {
                     All Time
                   </p>
                   <p className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                    ${parseFloat(financialTotals._sum.amount?.toString() || "0").toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatCurrency(financialTotals._sum.amount?.toString() || "0", userCurrency)}
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {financialTotals._count} entries
@@ -450,7 +455,7 @@ export default async function DashboardPage() {
                     Last 30 Days
                   </p>
                   <p className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                    ${parseFloat(financialRecent?._sum.amount?.toString() || "0").toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    {formatCurrency(financialRecent?._sum.amount?.toString() || "0", userCurrency)}
                   </p>
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {financialRecent?._count || 0} entries
@@ -473,7 +478,7 @@ export default async function DashboardPage() {
                           {String(subNameMap.get(entry.subId!) || "Unknown")}
                         </span>
                         <span className="font-medium text-zinc-900 dark:text-zinc-50">
-                          ${parseFloat(entry._sum.amount?.toString() || "0").toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          {formatCurrency(entry._sum.amount?.toString() || "0", userCurrency)}
                         </span>
                       </li>
                     ))}

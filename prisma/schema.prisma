@@ -28,6 +28,7 @@ model User {
   showOnlineStatus     Boolean              @default(true) @map("show_online_status")
   showReadReceipts     Boolean              @default(true) @map("show_read_receipts")
   notificationSound    Boolean              @default(true) @map("notification_sound")
+  currency             Currency             @default(USD)
   createdAt            DateTime             @default(now()) @map("created_at")
   updatedAt            DateTime             @updatedAt @map("updated_at")
 
@@ -90,6 +91,13 @@ enum CalendarDefaultView {
   MONTH
   WEEK
   DAY
+}
+
+enum Currency {
+  USD
+  GBP
+  AUD
+  EUR
 }
 
 model Account {

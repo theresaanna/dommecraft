@@ -14,7 +14,6 @@ const mockEntries = [
   {
     id: "entry-1",
     amount: "100.00",
-    currency: "USD",
     category: "Tribute",
     paymentMethod: "CashApp",
     notes: "Monthly tribute",
@@ -25,7 +24,6 @@ const mockEntries = [
   {
     id: "entry-2",
     amount: "50.00",
-    currency: "EUR",
     category: "Gift",
     paymentMethod: null,
     notes: null,
@@ -45,7 +43,7 @@ describe("FinancialsList", () => {
   });
 
   it("renders entries with amount, category, and date", () => {
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     expect(screen.getByText("$100.00")).toBeInTheDocument();
     expect(screen.getByText("Tribute")).toBeInTheDocument();
@@ -53,7 +51,7 @@ describe("FinancialsList", () => {
   });
 
   it("renders empty state when no entries", () => {
-    render(<FinancialsList entries={[]} />);
+    render(<FinancialsList entries={[]} currency="USD" />);
 
     expect(
       screen.getByText("No financial entries yet. Add your first entry to get started.")
@@ -61,26 +59,26 @@ describe("FinancialsList", () => {
   });
 
   it("shows Unlinked for entries without sub", () => {
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     expect(screen.getByText("Unlinked")).toBeInTheDocument();
   });
 
   it("shows In-app badge for in-app entries", () => {
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     expect(screen.getByText("In-app")).toBeInTheDocument();
   });
 
   it("shows payment method when present", () => {
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     expect(screen.getByText("CashApp")).toBeInTheDocument();
   });
 
   it("toggles checkbox selection", async () => {
     const user = userEvent.setup();
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     const checkboxes = screen.getAllByRole("checkbox");
     await user.click(checkboxes[0]);
@@ -91,7 +89,7 @@ describe("FinancialsList", () => {
 
   it("select all toggles all checkboxes", async () => {
     const user = userEvent.setup();
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     await user.click(screen.getByText("Select All"));
 
@@ -114,7 +112,7 @@ describe("FinancialsList", () => {
       revokeObjectURL: vi.fn(),
     });
 
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     await user.click(screen.getByText("Export CSV"));
 
@@ -138,7 +136,7 @@ describe("FinancialsList", () => {
       revokeObjectURL: vi.fn(),
     });
 
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     await user.click(screen.getByText("Export PDF"));
 
@@ -154,7 +152,7 @@ describe("FinancialsList", () => {
     const mockConfirm = vi.fn().mockReturnValue(false);
     vi.stubGlobal("confirm", mockConfirm);
 
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     // Select an entry first
     const checkboxes = screen.getAllByRole("checkbox");
@@ -168,7 +166,7 @@ describe("FinancialsList", () => {
   });
 
   it("renders notes preview when notes exist", () => {
-    render(<FinancialsList entries={mockEntries} />);
+    render(<FinancialsList entries={mockEntries} currency="USD" />);
 
     expect(screen.getByText("Monthly tribute")).toBeInTheDocument();
   });
