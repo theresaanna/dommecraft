@@ -28,6 +28,9 @@ export default async function ProjectDetailPage({
       notes: {
         orderBy: { sortOrder: "asc" },
       },
+      projectTasks: {
+        orderBy: { sortOrder: "asc" },
+      },
     },
   });
 
@@ -45,6 +48,17 @@ export default async function ProjectDetailPage({
     updatedAt: note.updatedAt.toISOString(),
   }));
 
+  const serializedTasks = project.projectTasks.map((task: (typeof project.projectTasks)[number]) => ({
+    id: task.id,
+    title: task.title,
+    completed: task.completed,
+    deadline: task.deadline?.toISOString() || null,
+    sortOrder: task.sortOrder,
+    calendarEventId: task.calendarEventId,
+    createdAt: task.createdAt.toISOString(),
+    updatedAt: task.updatedAt.toISOString(),
+  }));
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
       <ProjectDetailClient
@@ -58,6 +72,7 @@ export default async function ProjectDetailPage({
           updatedAt: project.updatedAt.toISOString(),
         }}
         initialNotes={serializedNotes}
+        initialTasks={serializedTasks}
       />
     </div>
   );

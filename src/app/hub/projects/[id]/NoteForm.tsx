@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LexicalEditor from "@/components/LexicalEditor";
 
 type Note = {
@@ -19,9 +20,27 @@ export default function NoteForm({
   note?: Note;
   onClose: () => void;
 }) {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [content, setContent] = useState(note?.content || "");
+  const [projects, setProjects] = useState<{ id: string; name: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/hub/projects")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProjects(
+            data.map((p: { id: string; name: string }) => ({
+              id: p.id,
+              name: p.name,
+            }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const isEditing = !!note;
 
@@ -109,6 +128,11 @@ export default function NoteForm({
             <LexicalEditor
               initialContent={note?.content}
               onChange={setContent}
+              contextMenuConfig={{
+                projectId,
+                projects,
+                onTaskCreated: () => router.refresh(),
+              }}
             />
           </div>
         </div>

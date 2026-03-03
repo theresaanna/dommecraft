@@ -37,6 +37,7 @@ import ImagePlugin from "./lexical/plugins/ImagePlugin";
 import CollapsiblePlugin from "./lexical/plugins/CollapsiblePlugin";
 import ColumnsLayoutPlugin from "./lexical/plugins/ColumnsLayoutPlugin";
 import StickyNotePlugin from "./lexical/plugins/StickyNotePlugin";
+import ContextMenuPlugin from "./lexical/plugins/ContextMenuPlugin";
 
 const theme = {
   paragraph: "mb-1",
@@ -95,12 +96,20 @@ function InitialContentPlugin({ initialHtml }: { initialHtml: string }) {
   return null;
 }
 
+type ContextMenuConfig = {
+  projectId: string;
+  projects?: { id: string; name: string }[];
+  onTaskCreated?: () => void;
+};
+
 export default function LexicalEditor({
   initialContent,
   onChange,
+  contextMenuConfig,
 }: {
   initialContent?: string;
   onChange: (html: string) => void;
+  contextMenuConfig?: ContextMenuConfig;
 }) {
   const initialConfig = {
     namespace: "NoteEditor",
@@ -167,6 +176,13 @@ export default function LexicalEditor({
         <CollapsiblePlugin />
         <ColumnsLayoutPlugin />
         <StickyNotePlugin />
+        {contextMenuConfig && (
+          <ContextMenuPlugin
+            projectId={contextMenuConfig.projectId}
+            projects={contextMenuConfig.projects}
+            onTaskCreated={contextMenuConfig.onTaskCreated}
+          />
+        )}
         <OnChangePlugin onChange={handleChange} />
         {initialContent && (
           <InitialContentPlugin initialHtml={initialContent} />

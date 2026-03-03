@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NotesList from "./NotesList";
 import NoteForm from "./NoteForm";
+import ProjectTaskForm from "./ProjectTaskForm";
+import ProjectTaskList from "./ProjectTaskList";
 
 type Project = {
   id: string;
@@ -26,16 +28,30 @@ type Note = {
   updatedAt: string;
 };
 
+type ProjectTask = {
+  id: string;
+  title: string;
+  completed: boolean;
+  deadline: string | null;
+  sortOrder: number;
+  calendarEventId: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export default function ProjectDetailClient({
   project,
   initialNotes,
+  initialTasks,
 }: {
   project: Project;
   initialNotes: Note[];
+  initialTasks: ProjectTask[];
 }) {
   const router = useRouter();
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
+  const [showTaskForm, setShowTaskForm] = useState(false);
 
   async function handleDeleteProject() {
     if (
@@ -127,6 +143,33 @@ export default function ProjectDetailClient({
           setShowNoteForm(false);
         }}
       />
+
+      {/* Tasks Section */}
+      <div className="mt-10 mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+          Tasks
+        </h2>
+        <button
+          onClick={() => setShowTaskForm(!showTaskForm)}
+          className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        >
+          {showTaskForm ? "Cancel" : "New Task"}
+        </button>
+      </div>
+
+      {showTaskForm && (
+        <div className="mb-4">
+          <ProjectTaskForm
+            projectId={project.id}
+            onCreated={() => {
+              setShowTaskForm(false);
+              router.refresh();
+            }}
+          />
+        </div>
+      )}
+
+      <ProjectTaskList tasks={initialTasks} />
     </div>
   );
 }
