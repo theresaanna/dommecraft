@@ -2,12 +2,21 @@
 
 import { useState } from "react";
 
+type Category = {
+  id: string;
+  name: string;
+};
+
 export default function ProjectForm({
   categoryId,
+  categories,
+  defaultCategoryId,
   project,
   onClose,
 }: {
-  categoryId: string;
+  categoryId?: string;
+  categories?: Category[];
+  defaultCategoryId?: string | null;
   project?: {
     id: string;
     name: string;
@@ -17,8 +26,12 @@ export default function ProjectForm({
 }) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    categoryId || defaultCategoryId || ""
+  );
 
   const isEditing = !!project;
+  const showCategorySelector = !categoryId && categories && categories.length > 0;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -34,10 +47,17 @@ export default function ProjectForm({
       return;
     }
 
+    const resolvedCategoryId = categoryId || selectedCategoryId;
+    if (!resolvedCategoryId) {
+      setError("Please select a category");
+      setSubmitting(false);
+      return;
+    }
+
     const body = {
       name: name.trim(),
       description: (form.get("description") as string) || null,
-      categoryId,
+      categoryId: resolvedCategoryId,
     };
 
     try {
@@ -75,6 +95,31 @@ export default function ProjectForm({
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+        {showCategorySelector && (
+          <div>
+            <label
+              htmlFor="categoryId"
+              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Category *
+            </label>
+            <select
+              id="categoryId"
+              value={selectedCategoryId}
+              onChange={(e) => setSelectedCategoryId(e.target.value)}
+              required
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div>
           <label
             htmlFor="name"

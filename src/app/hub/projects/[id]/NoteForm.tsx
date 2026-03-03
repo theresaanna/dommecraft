@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import LexicalEditor from "@/components/LexicalEditor";
 
 type Note = {
   id: string;
@@ -20,6 +21,7 @@ export default function NoteForm({
 }) {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [content, setContent] = useState(note?.content || "");
 
   const isEditing = !!note;
 
@@ -29,9 +31,14 @@ export default function NoteForm({
     setSubmitting(true);
 
     const form = new FormData(e.currentTarget);
-    const content = form.get("content") as string;
 
-    if (!content || content.trim() === "") {
+    // Check if content is empty (Lexical produces <p><br></p> for empty editor)
+    const strippedContent = content
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/g, " ")
+      .trim();
+
+    if (!strippedContent) {
       setError("Note content is required");
       setSubmitting(false);
       return;
@@ -39,7 +46,7 @@ export default function NoteForm({
 
     const body = {
       title: (form.get("title") as string) || null,
-      content: content.trim(),
+      content,
       reminderAt: (form.get("reminderAt") as string) || null,
     };
 
@@ -95,20 +102,15 @@ export default function NoteForm({
         </div>
 
         <div>
-          <label
-            htmlFor="content"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-          >
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Content *
           </label>
-          <textarea
-            id="content"
-            name="content"
-            rows={6}
-            defaultValue={note?.content || ""}
-            required
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-          />
+          <div className="mt-1">
+            <LexicalEditor
+              initialContent={note?.content}
+              onChange={setContent}
+            />
+          </div>
         </div>
 
         <div>

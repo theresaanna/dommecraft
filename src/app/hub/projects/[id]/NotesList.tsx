@@ -59,9 +59,10 @@ export default function NotesList({
                   {note.title}
                 </h3>
               )}
-              <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">
-                {note.content}
-              </p>
+              <div
+                className="prose prose-sm prose-zinc mt-2 dark:prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: note.content }}
+              />
               <div className="mt-3 flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
                 <span>
                   Updated {new Date(note.updatedAt).toLocaleDateString()}
