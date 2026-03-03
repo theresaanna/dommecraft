@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 type SettingsData = {
@@ -23,6 +23,7 @@ export default function SettingsClient({
   initialSettings: SettingsData;
   userRole: "DOMME" | "SUB";
 }) {
+  const { update: updateSession } = useSession();
   const [settings, setSettings] = useState<SettingsData>(initialSettings);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -46,6 +47,7 @@ export default function SettingsClient({
         return;
       }
       document.cookie = `theme=${settings.theme};path=/;max-age=${60 * 60 * 24 * 365}`;
+      await updateSession();
       setMessage("Settings saved");
     } catch {
       setMessage("Failed to save settings. Please try again.");

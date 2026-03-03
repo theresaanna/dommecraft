@@ -6,6 +6,7 @@ import SettingsClient from "../SettingsClient";
 
 vi.mock("next-auth/react", () => ({
   signOut: vi.fn(),
+  useSession: vi.fn(() => ({ update: vi.fn() })),
 }));
 
 vi.mock("next/link", () => ({
