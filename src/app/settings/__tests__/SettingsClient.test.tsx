@@ -31,6 +31,7 @@ const defaultSettings = {
   avatarUrl: null as string | null,
   theme: "SYSTEM" as const,
   calendarDefaultView: "MONTH" as const,
+  currency: "USD" as const,
   slug: "test-user-a1b2",
   showOnlineStatus: true,
   showReadReceipts: true,
@@ -69,6 +70,7 @@ describe("SettingsClient", () => {
     expect(screen.getByText("Profile")).toBeInTheDocument();
     expect(screen.getByText("Profile URL")).toBeInTheDocument();
     expect(screen.getByText("Appearance")).toBeInTheDocument();
+    expect(screen.getByLabelText("Currency")).toBeInTheDocument();
     expect(screen.getByText("Calendar")).toBeInTheDocument();
     expect(screen.getByText("Privacy")).toBeInTheDocument();
     expect(screen.getByText("Notifications")).toBeInTheDocument();

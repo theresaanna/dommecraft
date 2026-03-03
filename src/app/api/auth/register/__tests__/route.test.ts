@@ -86,6 +86,7 @@ describe("POST /api/auth/register", () => {
       showOnlineStatus: true,
       showReadReceipts: true,
       notificationSound: true,
+      currency: "USD",
       emailVerified: null,
       createdAt: new Date(),
       updatedAt: new Date(),

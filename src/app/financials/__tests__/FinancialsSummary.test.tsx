@@ -27,28 +27,28 @@ const populatedSummary = {
 
 describe("FinancialsSummary", () => {
   it("renders total earnings formatted as currency", () => {
-    render(<FinancialsSummary summary={populatedSummary} />);
+    render(<FinancialsSummary summary={populatedSummary} currency="USD" />);
 
     expect(screen.getByText("$1,500.00")).toBeInTheDocument();
     expect(screen.getByText("Total Earnings")).toBeInTheDocument();
   });
 
   it("renders average per entry", () => {
-    render(<FinancialsSummary summary={populatedSummary} />);
+    render(<FinancialsSummary summary={populatedSummary} currency="USD" />);
 
     expect(screen.getByText("$300.00")).toBeInTheDocument();
     expect(screen.getByText("Average per Entry")).toBeInTheDocument();
   });
 
   it("renders entry count", () => {
-    render(<FinancialsSummary summary={populatedSummary} />);
+    render(<FinancialsSummary summary={populatedSummary} currency="USD" />);
 
     expect(screen.getByText("5")).toBeInTheDocument();
     expect(screen.getByText("Entry Count")).toBeInTheDocument();
   });
 
   it("renders per-sub breakdown", () => {
-    render(<FinancialsSummary summary={populatedSummary} />);
+    render(<FinancialsSummary summary={populatedSummary} currency="USD" />);
 
     expect(screen.getByText("Top Earners")).toBeInTheDocument();
     expect(screen.getByText("Top Sub")).toBeInTheDocument();
@@ -56,7 +56,7 @@ describe("FinancialsSummary", () => {
   });
 
   it("renders category breakdown", () => {
-    render(<FinancialsSummary summary={populatedSummary} />);
+    render(<FinancialsSummary summary={populatedSummary} currency="USD" />);
 
     expect(screen.getByText("By Category")).toBeInTheDocument();
     expect(screen.getByText(/Tribute/)).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("FinancialsSummary", () => {
   });
 
   it("renders no data message when count is zero", () => {
-    render(<FinancialsSummary summary={emptySummary} />);
+    render(<FinancialsSummary summary={emptySummary} currency="USD" />);
 
     expect(
       screen.getByText("No financial data to display.")
@@ -72,19 +72,19 @@ describe("FinancialsSummary", () => {
   });
 
   it("does not render per-sub section when empty", () => {
-    render(<FinancialsSummary summary={emptySummary} />);
+    render(<FinancialsSummary summary={emptySummary} currency="USD" />);
 
     expect(screen.queryByText("Top Earners")).not.toBeInTheDocument();
   });
 
   it("does not render category section when empty", () => {
-    render(<FinancialsSummary summary={emptySummary} />);
+    render(<FinancialsSummary summary={emptySummary} currency="USD" />);
 
     expect(screen.queryByText("By Category")).not.toBeInTheDocument();
   });
 
   it("renders $0.00 for zero totals", () => {
-    render(<FinancialsSummary summary={emptySummary} />);
+    render(<FinancialsSummary summary={emptySummary} currency="USD" />);
 
     expect(screen.getAllByText("$0.00")).toHaveLength(2); // total + average
   });

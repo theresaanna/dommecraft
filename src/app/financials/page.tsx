@@ -6,6 +6,7 @@ import FinancialsFilters from "./FinancialsFilters";
 import FinancialsSummary from "./FinancialsSummary";
 import FinancialsList from "./FinancialsList";
 import FinancialsPageClient from "./FinancialsPageClient";
+import type { CurrencyCode } from "@/lib/currency";
 
 type SearchParams = {
   time_range?: string;
@@ -37,6 +38,12 @@ export default async function FinancialsPage({
   if (session.user.role !== "DOMME") {
     redirect("/dashboard");
   }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { currency: true },
+  });
+  const userCurrency = (user?.currency || "USD") as CurrencyCode;
 
   const params = await searchParams;
   const timeRange = params.time_range || "";
@@ -175,7 +182,6 @@ export default async function FinancialsPage({
   const serializedEntries = entries.map((entry: (typeof entries)[number]) => ({
     id: entry.id,
     amount: entry.amount.toString(),
-    currency: entry.currency,
     category: entry.category,
     paymentMethod: entry.paymentMethod,
     notes: entry.notes,
@@ -199,6 +205,7 @@ export default async function FinancialsPage({
         entries={serializedEntries}
         summary={summary}
         availableSubs={availableSubs}
+        currency={userCurrency}
         currentParams={{
           time_range: timeRange,
           date_from: dateFrom,

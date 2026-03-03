@@ -34,7 +34,6 @@ describe("FinancialEntryForm", () => {
     );
 
     expect(screen.getByLabelText("Amount *")).toBeInTheDocument();
-    expect(screen.getByLabelText("Currency")).toBeInTheDocument();
     expect(screen.getByLabelText("Category *")).toBeInTheDocument();
     expect(screen.getByLabelText("Payment Method")).toBeInTheDocument();
     expect(screen.getByLabelText("Sub")).toBeInTheDocument();
@@ -59,7 +58,6 @@ describe("FinancialEntryForm", () => {
         entry={{
           id: "entry-1",
           amount: "100.00",
-          currency: "USD",
           category: "Tribute",
           paymentMethod: "CashApp",
           notes: "Test note",
@@ -138,7 +136,6 @@ describe("FinancialEntryForm", () => {
         entry={{
           id: "entry-1",
           amount: "100.00",
-          currency: "USD",
           category: "Tribute",
           paymentMethod: null,
           notes: null,
@@ -215,7 +212,6 @@ describe("FinancialEntryForm", () => {
         entry={{
           id: "entry-1",
           amount: "250.50",
-          currency: "EUR",
           category: "Gift",
           paymentMethod: "PayPal",
           notes: "Birthday gift",
@@ -228,7 +224,6 @@ describe("FinancialEntryForm", () => {
     );
 
     expect(screen.getByLabelText("Amount *")).toHaveValue(250.5);
-    expect(screen.getByLabelText("Currency")).toHaveValue("EUR");
     expect(screen.getByLabelText("Category *")).toHaveValue("Gift");
     expect(screen.getByLabelText("Payment Method")).toHaveValue("PayPal");
     expect(screen.getByLabelText("Sub")).toHaveValue("sub-1");

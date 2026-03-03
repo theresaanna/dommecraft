@@ -21,8 +21,6 @@ const PAYMENT_METHOD_OPTIONS = [
   "Custom",
 ];
 
-const CURRENCY_OPTIONS = ["USD", "EUR", "GBP", "CAD", "AUD"];
-
 type AvailableSub = {
   id: string;
   fullName: string;
@@ -31,7 +29,6 @@ type AvailableSub = {
 type EntryData = {
   id: string;
   amount: string;
-  currency: string;
   category: string;
   paymentMethod: string | null;
   notes: string | null;
@@ -78,7 +75,6 @@ export default function FinancialEntryForm({
 
     const body = {
       amount,
-      currency: form.get("currency") as string,
       category,
       paymentMethod: (form.get("paymentMethod") as string) || null,
       notes: (form.get("notes") as string) || null,
@@ -125,48 +121,24 @@ export default function FinancialEntryForm({
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          {/* Amount */}
-          <div>
-            <label
-              htmlFor="amount"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Amount *
-            </label>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              step="0.01"
-              min="0.01"
-              defaultValue={entry?.amount || ""}
-              required
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            />
-          </div>
-
-          {/* Currency */}
-          <div>
-            <label
-              htmlFor="currency"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-            >
-              Currency
-            </label>
-            <select
-              id="currency"
-              name="currency"
-              defaultValue={entry?.currency || "USD"}
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-            >
-              {CURRENCY_OPTIONS.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Amount */}
+        <div>
+          <label
+            htmlFor="amount"
+            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+          >
+            Amount *
+          </label>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            step="0.01"
+            min="0.01"
+            defaultValue={entry?.amount || ""}
+            required
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

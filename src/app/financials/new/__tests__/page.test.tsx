@@ -48,6 +48,5 @@ describe("NewFinancialEntryPageClient", () => {
 
     expect(screen.getByLabelText(/amount/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/category/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/currency/i)).toBeInTheDocument();
   });
 });

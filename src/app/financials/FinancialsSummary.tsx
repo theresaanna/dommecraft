@@ -1,5 +1,8 @@
 "use client";
 
+import { formatCurrency } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
+
 type PerSubEntry = {
   subId: string | null;
   subName: string;
@@ -21,16 +24,12 @@ type SummaryData = {
   byCategory: CategoryEntry[];
 };
 
-function formatCurrency(value: string | number): string {
-  const num = typeof value === "string" ? parseFloat(value) : value;
-  if (isNaN(num)) return "$0.00";
-  return `$${num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-}
-
 export default function FinancialsSummary({
   summary,
+  currency,
 }: {
   summary: SummaryData;
+  currency: CurrencyCode;
 }) {
   const totalNum =
     typeof summary.total === "string"
@@ -52,7 +51,7 @@ export default function FinancialsSummary({
             Total Earnings
           </p>
           <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            {formatCurrency(summary.total)}
+            {formatCurrency(summary.total, currency)}
           </p>
         </div>
         <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
@@ -60,7 +59,7 @@ export default function FinancialsSummary({
             Average per Entry
           </p>
           <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            {formatCurrency(summary.average)}
+            {formatCurrency(summary.average, currency)}
           </p>
         </div>
         <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
@@ -95,7 +94,7 @@ export default function FinancialsSummary({
                   {entry.subName}
                 </span>
                 <span className="font-medium text-zinc-900 dark:text-zinc-50">
-                  {formatCurrency(entry.total)}{" "}
+                  {formatCurrency(entry.total, currency)}{" "}
                   <span className="text-xs text-zinc-400">
                     ({entry.count})
                   </span>
@@ -129,7 +128,7 @@ export default function FinancialsSummary({
                       {cat.category}
                     </span>
                     <span className="font-medium text-zinc-900 dark:text-zinc-50">
-                      {formatCurrency(cat.total)} ({pct}%)
+                      {formatCurrency(cat.total, currency)} ({pct}%)
                     </span>
                   </div>
                   <div className="mt-1 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800">

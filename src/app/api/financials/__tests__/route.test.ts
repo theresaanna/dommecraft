@@ -9,6 +9,9 @@ vi.mock("@/lib/prisma", () => ({
     subProfile: {
       findUnique: vi.fn(),
     },
+    user: {
+      findUnique: vi.fn(),
+    },
   },
 }));
 
@@ -25,6 +28,7 @@ const mockAuth = vi.mocked(auth) as any;
 const mockFindMany = vi.mocked(prisma.financialEntry.findMany);
 const mockCreate = vi.mocked(prisma.financialEntry.create);
 const mockSubFindUnique = vi.mocked(prisma.subProfile.findUnique);
+const mockUserFindUnique = vi.mocked(prisma.user.findUnique);
 
 function createRequest(body: Record<string, unknown>) {
   return new Request("http://localhost:3000/api/financials", {
@@ -340,6 +344,7 @@ describe("GET /api/financials", () => {
 describe("POST /api/financials", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUserFindUnique.mockResolvedValue({ currency: "USD" } as never);
   });
 
   it("returns 401 when not authenticated", async () => {

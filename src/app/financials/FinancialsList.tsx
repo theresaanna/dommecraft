@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { formatCurrency } from "@/lib/currency";
+import type { CurrencyCode } from "@/lib/currency";
 
 type FinancialEntry = {
   id: string;
   amount: string;
-  currency: string;
   category: string;
   paymentMethod: string | null;
   notes: string | null;
@@ -17,8 +18,10 @@ type FinancialEntry = {
 
 export default function FinancialsList({
   entries,
+  currency,
 }: {
   entries: FinancialEntry[];
+  currency: CurrencyCode;
 }) {
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -84,13 +87,6 @@ export default function FinancialsList({
     await Promise.all(promises);
     setSelected(new Set());
     router.refresh();
-  }
-
-  function formatCurrency(amount: string, currency: string): string {
-    const num = parseFloat(amount);
-    if (isNaN(num)) return `${currency} 0.00`;
-    const symbol = currency === "USD" ? "$" : currency === "EUR" ? "\u20AC" : currency === "GBP" ? "\u00A3" : `${currency} `;
-    return `${symbol}${num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
 
   return (
@@ -159,7 +155,7 @@ export default function FinancialsList({
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
-                      {formatCurrency(entry.amount, entry.currency)}
+                      {formatCurrency(entry.amount, currency)}
                     </span>
                     <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                       {entry.category}

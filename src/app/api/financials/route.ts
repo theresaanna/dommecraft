@@ -130,6 +130,11 @@ export async function POST(request: Request) {
       );
     }
 
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { currency: true },
+    });
+
     // Verify sub ownership if subId is provided
     if (body.subId) {
       const sub = await prisma.subProfile.findUnique({
@@ -148,7 +153,7 @@ export async function POST(request: Request) {
       data: {
         userId: session.user.id,
         amount: body.amount,
-        currency: body.currency || "USD",
+        currency: user?.currency || "USD",
         category: body.category.trim(),
         paymentMethod: body.paymentMethod || null,
         notes: body.notes || null,
