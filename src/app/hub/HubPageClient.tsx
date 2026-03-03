@@ -66,8 +66,8 @@ export default function HubPageClient({
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-        <div className="lg:col-span-1">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
+        <div className="md:col-span-1">
           <CategorySidebar
             categories={initialCategories}
             selectedCategoryId={selectedCategoryId}
@@ -75,7 +75,7 @@ export default function HubPageClient({
           />
         </div>
 
-        <div className="lg:col-span-3">
+        <div className="md:col-span-3">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
               {selectedCategory?.name || "All Projects"}
