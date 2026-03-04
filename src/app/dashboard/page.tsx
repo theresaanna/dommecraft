@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/currency";
 import type { CurrencyCode } from "@/lib/currency";
-import { getSubRowClassName } from "@/lib/sub-colors";
+import { getSubRowClassName, getRowClassName } from "@/lib/sub-colors";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -85,6 +85,7 @@ export default async function DashboardPage() {
         select: {
           id: true,
           name: true,
+          color: true,
           category: { select: { name: true } },
           _count: { select: { notes: true } },
         },
@@ -527,10 +528,10 @@ export default async function DashboardPage() {
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {recentProjects.map((project: (typeof recentProjects)[number]) => (
-                <li key={project.id}>
+                <li key={project.id} className={getRowClassName(project.color)}>
                   <Link
                     href={`/hub/projects/${project.id}`}
-                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    className="flex items-center justify-between px-4 py-3"
                   >
                     <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                       {project.name}

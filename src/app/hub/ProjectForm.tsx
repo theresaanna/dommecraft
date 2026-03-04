@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { COLOR_OPTIONS } from "@/lib/sub-colors";
 
 type Category = {
   id: string;
@@ -21,6 +22,7 @@ export default function ProjectForm({
     id: string;
     name: string;
     description: string | null;
+    color: string | null;
   };
   onClose: () => void;
 }) {
@@ -29,6 +31,7 @@ export default function ProjectForm({
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categoryId || defaultCategoryId || ""
   );
+  const [selectedColor, setSelectedColor] = useState(project?.color || "");
 
   const isEditing = !!project;
   const showCategorySelector = !categoryId && categories && categories.length > 0;
@@ -58,6 +61,7 @@ export default function ProjectForm({
       name: name.trim(),
       description: (form.get("description") as string) || null,
       categoryId: resolvedCategoryId,
+      color: selectedColor || null,
     };
 
     try {
@@ -151,6 +155,30 @@ export default function ProjectForm({
             defaultValue={project?.description || ""}
             className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Color
+          </label>
+          <div className="mt-1 flex gap-2">
+            {COLOR_OPTIONS.map((c) => (
+              <button
+                key={c.value}
+                type="button"
+                onClick={() => setSelectedColor(c.value)}
+                className={`h-7 w-7 rounded-full border-2 ${
+                  selectedColor === c.value
+                    ? "border-zinc-900 dark:border-zinc-100"
+                    : "border-zinc-300 dark:border-zinc-600"
+                }`}
+                style={{
+                  backgroundColor: c.value || "#a1a1aa",
+                }}
+                title={c.label}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-end gap-2">

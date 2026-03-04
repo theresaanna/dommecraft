@@ -102,6 +102,7 @@ export default async function HubPage() {
       id: p.id,
       name: p.name,
       description: p.description,
+      color: p.color,
       categoryId: p.categoryId,
       category: p.category,
       notesCount: p._count.notes,

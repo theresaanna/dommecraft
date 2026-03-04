@@ -98,6 +98,7 @@ export async function POST(request: Request) {
         categoryId: body.categoryId,
         name: body.name.trim(),
         description: body.description || null,
+        color: body.color || null,
       },
     });
 

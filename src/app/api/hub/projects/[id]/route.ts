@@ -56,6 +56,9 @@ export async function PATCH(
         ...(body.categoryId !== undefined && {
           categoryId: body.categoryId,
         }),
+        ...(body.color !== undefined && {
+          color: body.color || null,
+        }),
       },
     });
 
