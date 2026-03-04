@@ -168,6 +168,7 @@ export default function CalendarPageClient({
       onEventClick(calendarEvent) {
         if ((calendarEvent as Record<string, unknown>).sourceType === "STANDALONE") {
           const originalEventId = (calendarEvent as Record<string, unknown>).originalEventId as string;
+          document.body.style.cursor = "wait";
           router.push(`/calendar/${originalEventId}/edit`);
         }
       },

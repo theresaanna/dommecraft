@@ -22,6 +22,7 @@ export default async function SettingsPage() {
       showReadReceipts: true,
       currency: true,
       notificationSound: true,
+      pushNotifications: true,
       role: true,
     },
   });
@@ -44,6 +45,7 @@ export default async function SettingsPage() {
           showOnlineStatus: user.showOnlineStatus,
           showReadReceipts: user.showReadReceipts,
           notificationSound: user.notificationSound,
+          pushNotifications: user.pushNotifications,
         }}
         userRole={user.role}
       />

@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = userId;
         const dbUser = await prisma.user.findUnique({
           where: { id: userId },
-          select: { role: true, name: true, email: true, avatarUrl: true, image: true, theme: true, showOnlineStatus: true, notificationSound: true },
+          select: { role: true, name: true, email: true, avatarUrl: true, image: true, theme: true, showOnlineStatus: true, notificationSound: true, pushNotifications: true },
         });
         if (dbUser) {
           token.role = dbUser.role;
@@ -44,6 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.theme = dbUser.theme;
           token.showOnlineStatus = dbUser.showOnlineStatus;
           token.notificationSound = dbUser.notificationSound;
+          token.pushNotifications = dbUser.pushNotifications;
           // Ensure name/email are on the token for OAuth users
           if (dbUser.name) token.name = dbUser.name;
           if (dbUser.email) token.email = dbUser.email;
@@ -59,6 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.theme = (token.theme as "LIGHT" | "DARK" | "SYSTEM") ?? "SYSTEM";
         session.user.showOnlineStatus = (token.showOnlineStatus as boolean) ?? true;
         session.user.notificationSound = (token.notificationSound as boolean) ?? true;
+        session.user.pushNotifications = (token.pushNotifications as boolean) ?? true;
         // Fallback display: use token name, email, or "User"
         if (!session.user.name && token.name) {
           session.user.name = token.name;

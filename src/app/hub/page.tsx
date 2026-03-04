@@ -63,6 +63,15 @@ export default async function HubPage() {
       category: {
         select: { id: true, name: true },
       },
+      projectTasks: {
+        orderBy: { sortOrder: "asc" },
+        select: {
+          id: true,
+          title: true,
+          completed: true,
+          deadline: true,
+        },
+      },
       _count: {
         select: { notes: true },
       },
@@ -84,6 +93,12 @@ export default async function HubPage() {
     categoryId: p.categoryId,
     category: p.category,
     notesCount: p._count.notes,
+    tasks: p.projectTasks.map((t: (typeof p.projectTasks)[number]) => ({
+      id: t.id,
+      title: t.title,
+      completed: t.completed,
+      deadline: t.deadline ? t.deadline.toISOString() : null,
+    })),
     createdAt: p.createdAt.toISOString(),
     updatedAt: p.updatedAt.toISOString(),
   }));

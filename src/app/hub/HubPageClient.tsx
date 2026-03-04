@@ -13,6 +13,13 @@ type Category = {
   createdAt: string;
 };
 
+type ProjectTask = {
+  id: string;
+  title: string;
+  completed: boolean;
+  deadline: string | null;
+};
+
 type Project = {
   id: string;
   name: string;
@@ -20,6 +27,7 @@ type Project = {
   categoryId: string;
   category: { id: string; name: string };
   notesCount: number;
+  tasks: ProjectTask[];
   createdAt: string;
   updatedAt: string;
 };
