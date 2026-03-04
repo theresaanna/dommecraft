@@ -296,7 +296,7 @@ export default function GlobalHeader() {
             <div className="flex items-center gap-2">
               {/* New button with dropdown (Domme only) */}
               {isDomme && (
-                <div ref={newRef} className="relative">
+                <div ref={newRef} className="relative hidden md:block">
                   <button
                     onClick={() => toggleDropdown("new")}
                     className="flex h-9 items-center gap-1 rounded-md bg-zinc-800 px-3 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
