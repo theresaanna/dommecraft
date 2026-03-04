@@ -273,7 +273,7 @@ export default async function DashboardPage() {
       <div className="mt-8 grid grid-cols-1 items-start gap-6 md:grid-cols-2">
 
       {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Recent Activity
@@ -354,7 +354,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               My Subs
@@ -416,7 +416,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && financialTotals && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Financials
@@ -503,7 +503,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Creation Hub
@@ -564,7 +564,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Task Summary
@@ -667,7 +667,7 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               Calendar
@@ -742,7 +742,7 @@ export default async function DashboardPage() {
       )}
 
       {!isDomme && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
             <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
               My Tasks

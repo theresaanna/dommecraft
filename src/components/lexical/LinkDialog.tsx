@@ -59,7 +59,7 @@ export default function LinkDialog({
   return (
     <div
       ref={dialogRef}
-      className="absolute left-0 top-full z-20 mt-1 w-72 rounded-md border border-zinc-200 bg-white p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800"
+      className="absolute left-0 top-full z-20 mt-1 w-72 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80"
     >
       <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
         URL

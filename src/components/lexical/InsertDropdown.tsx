@@ -79,7 +79,7 @@ export default function InsertDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-52 rounded-md border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800">
+        <div className="absolute left-0 top-full z-20 mt-1 w-52 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80">
           <MenuItem label="Image" onClick={() => handleSelect("image")} />
           <MenuItem label="Table" onClick={() => handleSelect("table")} />
           <div className="my-1 border-t border-zinc-100 dark:border-zinc-700" />

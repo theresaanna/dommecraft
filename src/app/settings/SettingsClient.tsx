@@ -128,7 +128,7 @@ export default function SettingsClient({
       )}
 
       {/* Avatar Section */}
-      <div className="mt-6 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Avatar
         </h2>
@@ -179,7 +179,7 @@ export default function SettingsClient({
       </div>
 
       {/* Profile Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Profile
         </h2>
@@ -222,7 +222,7 @@ export default function SettingsClient({
       </div>
 
       {/* Bio Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Bio
         </h2>
@@ -240,7 +240,7 @@ export default function SettingsClient({
       </div>
 
       {/* Profile URL Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Profile URL
         </h2>
@@ -278,7 +278,7 @@ export default function SettingsClient({
       </div>
 
       {/* Appearance Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Appearance
         </h2>
@@ -308,7 +308,7 @@ export default function SettingsClient({
       </div>
 
       {/* Currency Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Currency
         </h2>
@@ -340,7 +340,7 @@ export default function SettingsClient({
       </div>
 
       {/* Calendar Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Calendar
         </h2>
@@ -379,7 +379,7 @@ export default function SettingsClient({
       </div>
 
       {/* Privacy Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Privacy
         </h2>
@@ -429,7 +429,7 @@ export default function SettingsClient({
       </div>
 
       {/* Notifications Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
         <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
           Notifications
         </h2>

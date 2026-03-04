@@ -66,7 +66,7 @@ export default function ActivityPageClient({
           <p>No activity yet.</p>
         </div>
       ) : (
-        <div className="mt-6 rounded-lg border border-zinc-200 dark:border-zinc-800">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {items.map((item) => {
               const style = TYPE_STYLES[item.type];
