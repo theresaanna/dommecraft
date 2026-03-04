@@ -13,7 +13,7 @@ import type {
 } from "lexical";
 import { DecoratorNode, createCommand, LexicalCommand } from "lexical";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export type StickyNoteColor = "yellow" | "pink" | "blue" | "green";
 
@@ -34,36 +34,82 @@ const COLOR_MAP: Record<StickyNoteColor, { bg: string; border: string }> = {
   green: { bg: "#dcfce7", border: "#86efac" },
 };
 
+export const STICKY_NOTE_DRAG_TYPE = "application/x-lexical-sticky";
+
 function StickyNoteComponent({
   color,
   initialText,
+  nodeKey,
   onTextChange,
 }: {
   color: StickyNoteColor;
   initialText: string;
+  nodeKey: string;
   onTextChange: (text: string) => void;
 }) {
   const [text, setText] = useState(initialText);
+  const [isDragging, setIsDragging] = useState(false);
+  const handleRef = useRef<HTMLDivElement>(null);
   const colors = COLOR_MAP[color];
+
+  const onDragStart = useCallback(
+    (e: React.DragEvent) => {
+      e.dataTransfer.setData(STICKY_NOTE_DRAG_TYPE, nodeKey);
+      e.dataTransfer.effectAllowed = "move";
+      setIsDragging(true);
+    },
+    [nodeKey]
+  );
+
+  const onDragEnd = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
   return (
     <div
-      className="my-2 inline-block w-64 rounded-md p-3 shadow-md"
+      draggable
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      className={`my-2 inline-block w-64 rounded-md shadow-md transition-opacity ${isDragging ? "opacity-40" : ""}`}
       style={{
         backgroundColor: colors.bg,
         borderLeft: `4px solid ${colors.border}`,
       }}
     >
-      <textarea
-        value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-          onTextChange(e.target.value);
-        }}
-        className="w-full resize-none border-none bg-transparent text-sm text-zinc-800 outline-none"
-        rows={3}
-        placeholder="Write something..."
-      />
+      <div
+        ref={handleRef}
+        className="flex cursor-grab items-center justify-center rounded-t-md py-1 active:cursor-grabbing"
+        style={{ backgroundColor: colors.border + "40" }}
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <svg
+          width="16"
+          height="6"
+          viewBox="0 0 16 6"
+          fill="none"
+          className="opacity-50"
+        >
+          <circle cx="4" cy="1" r="1" fill="currentColor" />
+          <circle cx="8" cy="1" r="1" fill="currentColor" />
+          <circle cx="12" cy="1" r="1" fill="currentColor" />
+          <circle cx="4" cy="5" r="1" fill="currentColor" />
+          <circle cx="8" cy="5" r="1" fill="currentColor" />
+          <circle cx="12" cy="5" r="1" fill="currentColor" />
+        </svg>
+      </div>
+      <div className="p-3 pt-2">
+        <textarea
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            onTextChange(e.target.value);
+          }}
+          onDragStart={(e) => e.preventDefault()}
+          className="w-full resize-none border-none bg-transparent text-sm text-zinc-800 outline-none"
+          rows={3}
+          placeholder="Write something..."
+        />
+      </div>
     </div>
   );
 }
@@ -158,6 +204,7 @@ export class StickyNoteNode extends DecoratorNode<ReactNode> {
       <StickyNoteComponent
         color={this.__color}
         initialText={this.__text}
+        nodeKey={this.__key}
         onTextChange={(text) => {
           _editor.update(() => {
             const writable = this.getWritable();

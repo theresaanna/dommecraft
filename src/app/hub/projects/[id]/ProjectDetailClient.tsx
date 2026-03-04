@@ -138,6 +138,7 @@ export default function ProjectDetailClient({
 
       <NotesList
         notes={initialNotes}
+        editingNoteId={editingNote?.id ?? null}
         onEdit={(note) => {
           setEditingNote(note);
           setShowNoteForm(false);
