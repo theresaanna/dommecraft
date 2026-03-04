@@ -8,6 +8,7 @@ import BookmarkBanner from "@/components/BookmarkBanner";
 import GlobalHeader from "@/components/GlobalHeader";
 import SparkleEffect from "@/components/SparkleEffect";
 import SkyAnimation from "@/components/SkyAnimation";
+import ParallaxCloud from "@/components/ParallaxCloud";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -47,6 +48,7 @@ export default function RootLayout({
             <ThemeProvider>
               <SparkleEffect />
               <SkyAnimation />
+              <ParallaxCloud />
               <BookmarkBanner />
               <NotificationProvider>
                 <GlobalHeader />

@@ -24,6 +24,13 @@
   --bg-color: #162d50;
 }
 
+body {
+  background: var(--bg-image) repeat-x bottom / contain, var(--bg-color);
+  color: var(--foreground);
+  font-family: var(--font-nunito), Arial, Helvetica, sans-serif;
+  background-attachment: fixed;
+}
+
 @media (max-width: 767px) {
   body {
     background-attachment: scroll;
@@ -38,13 +45,6 @@
   .dark {
     --bg-image: url("/clouds-night-mobile.svg");
   }
-}
-
-body {
-  background: var(--bg-image) repeat-x bottom / contain, var(--bg-color);
-  color: var(--foreground);
-  font-family: var(--font-nunito), Arial, Helvetica, sans-serif;
-  background-attachment: fixed;
 }
 
 .sx-react-calendar-wrapper {
