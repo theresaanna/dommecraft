@@ -112,7 +112,7 @@ export default function NotificationsPageClient({
     <>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             Notifications
           </h1>
         </div>
@@ -120,7 +120,7 @@ export default function NotificationsPageClient({
           <button
             onClick={markAllAsRead}
             disabled={markingAll}
-            className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {markingAll ? "Marking..." : "Mark all as read"}
           </button>
@@ -128,11 +128,11 @@ export default function NotificationsPageClient({
       </div>
 
       {notifications.length === 0 ? (
-        <div className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="mt-8 text-center text-base text-zinc-500 dark:text-zinc-400">
           <p>No notifications yet.</p>
         </div>
       ) : (
-        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {notifications.map((notification) => {
               const style = TYPE_STYLES[notification.type] || {
@@ -152,16 +152,16 @@ export default function NotificationsPageClient({
                     <div>
                       <div className="flex items-center gap-2">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-xs ${style.className}`}
+                          className={`rounded-full px-2 py-0.5 text-sm ${style.className}`}
                         >
                           {style.label}
                         </span>
-                        <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                        <span className="text-sm text-zinc-400 dark:text-zinc-500">
                           {timeAgo(notification.createdAt)}
                         </span>
                       </div>
                       <p
-                        className={`mt-1 text-sm ${
+                        className={`mt-1 text-base ${
                           notification.isRead
                             ? "text-zinc-500 dark:text-zinc-400"
                             : "font-medium text-zinc-900 dark:text-zinc-50"
@@ -178,7 +178,7 @@ export default function NotificationsPageClient({
                         e.stopPropagation();
                         markAsRead([notification.id]);
                       }}
-                      className="flex-shrink-0 text-xs text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
+                      className="flex-shrink-0 text-sm text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
                     >
                       Mark read
                     </button>

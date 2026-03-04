@@ -77,13 +77,13 @@ export default function ImageUploadDialog({
   return (
     <div
       ref={dialogRef}
-      className="absolute left-0 top-full z-20 mt-1 w-80 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
+      className="absolute left-0 top-full z-20 mt-1 w-80 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
     >
       <div className="mb-3 flex gap-1 border-b border-zinc-200 dark:border-zinc-700">
         <button
           type="button"
           onClick={() => setTab("upload")}
-          className={`px-3 py-1.5 text-xs font-medium ${
+          className={`px-3 py-1.5 text-sm font-medium ${
             tab === "upload"
               ? "border-b-2 border-zinc-800 text-zinc-900 dark:border-zinc-200 dark:text-zinc-50"
               : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
@@ -94,7 +94,7 @@ export default function ImageUploadDialog({
         <button
           type="button"
           onClick={() => setTab("url")}
-          className={`px-3 py-1.5 text-xs font-medium ${
+          className={`px-3 py-1.5 text-sm font-medium ${
             tab === "url"
               ? "border-b-2 border-zinc-800 text-zinc-900 dark:border-zinc-200 dark:text-zinc-50"
               : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
@@ -104,7 +104,7 @@ export default function ImageUploadDialog({
         </button>
       </div>
 
-      <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
+      <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
         Alt text
       </label>
       <input
@@ -112,7 +112,7 @@ export default function ImageUploadDialog({
         value={altText}
         onChange={(e) => setAltText(e.target.value)}
         placeholder="Describe the image"
-        className="mt-1 mb-3 w-full rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+        className="mt-1 mb-3 w-full rounded border border-zinc-300 px-2 py-1 text-base dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
       />
 
       {tab === "upload" ? (
@@ -122,15 +122,15 @@ export default function ImageUploadDialog({
             accept="image/*"
             onChange={handleFileUpload}
             disabled={uploading}
-            className="w-full text-sm text-zinc-600 file:mr-2 file:rounded file:border-0 file:bg-zinc-100 file:px-3 file:py-1 file:text-xs file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-400 dark:file:bg-zinc-700 dark:file:text-zinc-300"
+            className="w-full text-base text-zinc-600 file:mr-2 file:rounded file:border-0 file:bg-zinc-100 file:px-3 file:py-1 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-400 dark:file:bg-zinc-700 dark:file:text-zinc-300"
           />
           {uploading && (
-            <p className="mt-2 text-xs text-zinc-500">Uploading...</p>
+            <p className="mt-2 text-sm text-zinc-500">Uploading...</p>
           )}
         </div>
       ) : (
         <div>
-          <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
+          <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
             Image URL
           </label>
           <input
@@ -145,13 +145,13 @@ export default function ImageUploadDialog({
             }}
             placeholder="https://example.com/image.png"
             autoFocus
-            className="mt-1 w-full rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+            className="mt-1 w-full rounded border border-zinc-300 px-2 py-1 text-base dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
           />
           <div className="mt-2 flex justify-end">
             <button
               type="button"
               onClick={handleUrlInsert}
-              className="rounded bg-zinc-800 px-2 py-1 text-xs text-white hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded bg-zinc-800 px-2 py-1 text-sm text-white hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               Insert
             </button>
@@ -160,7 +160,7 @@ export default function ImageUploadDialog({
       )}
 
       {error && (
-        <p className="mt-2 text-xs text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
     </div>
   );

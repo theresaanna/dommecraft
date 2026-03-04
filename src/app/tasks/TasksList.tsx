@@ -84,7 +84,7 @@ export default function TasksList({
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <button
           onClick={onSelectAll}
-          className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
           {selectedTasks.size === tasks.length ? "Deselect All" : "Select All"}
         </button>
@@ -93,27 +93,27 @@ export default function TasksList({
           <>
             <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
 
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
               {selectedTasks.size} selected
             </span>
 
             <button
               onClick={() => onBulkAction("complete")}
-              className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Mark Complete
             </button>
 
             <button
               onClick={() => onBulkAction("archive")}
-              className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Archive
             </button>
 
             <button
               onClick={() => onBulkAction("delete")}
-              className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+              className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
             >
               Delete
             </button>
@@ -157,20 +157,20 @@ export default function TasksList({
                   </Link>
 
                   {/* Sub badge */}
-                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                  <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                     {task.sub.fullName}
                   </span>
 
                   {/* Priority badge */}
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
+                    className={`rounded-full px-2 py-0.5 text-sm font-medium ${PRIORITY_STYLES[task.priority]}`}
                   >
                     {task.priority}
                   </span>
 
                   {/* Status badge */}
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                    className={`rounded-full px-2 py-0.5 text-sm font-medium ${
                       task.status === "PENDING" && task.declineReason
                         ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                         : STATUS_STYLES[task.status]
@@ -182,7 +182,7 @@ export default function TasksList({
                   </span>
                 </div>
 
-                <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="mt-1 flex flex-wrap items-center gap-3 text-base text-zinc-500 dark:text-zinc-400">
                   {/* Deadline */}
                   {task.deadline && (
                     <span className={overdue ? "font-medium text-red-600 dark:text-red-400" : ""}>
@@ -216,7 +216,7 @@ export default function TasksList({
                       {task.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                          className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                         >
                           {tag}
                         </span>

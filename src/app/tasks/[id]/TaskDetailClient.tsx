@@ -182,7 +182,7 @@ export default function TaskDetailClient({
         <div className="mb-4">
           <Link
             href="/tasks"
-            className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             &larr; Back to Tasks
           </Link>
@@ -216,26 +216,26 @@ export default function TaskDetailClient({
       <div className="mb-4">
         <Link
           href="/tasks"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; Back to Tasks
         </Link>
       </div>
 
       <div className="flex items-start justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           {task.title}
         </h1>
         <div className="flex gap-2">
           <button
             onClick={() => setEditing(true)}
-            className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+            className="rounded-md border border-red-300 px-4 py-2 text-base font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
           >
             Delete
           </button>
@@ -243,11 +243,11 @@ export default function TaskDetailClient({
       </div>
 
       {/* Task Info Section */}
-      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-6 dark:border-zinc-800 dark:bg-zinc-900/60">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-6 dark:border-zinc-800 dark:bg-zinc-900/60">
         <div className="flex flex-wrap items-center gap-3">
           {/* Status badge */}
           <span
-            className={`rounded-full px-3 py-1 text-xs font-medium ${STATUS_STYLES[task.status]} ${
+            className={`rounded-full px-3 py-1 text-sm font-medium ${STATUS_STYLES[task.status]} ${
               task.status === "SUBMITTED"
                 ? "ring-2 ring-amber-300 dark:ring-amber-600"
                 : ""
@@ -258,7 +258,7 @@ export default function TaskDetailClient({
 
           {/* Priority badge */}
           <span
-            className={`rounded-full px-3 py-1 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
+            className={`rounded-full px-3 py-1 text-sm font-medium ${PRIORITY_STYLES[task.priority]}`}
           >
             {task.priority}
           </span>
@@ -267,10 +267,10 @@ export default function TaskDetailClient({
         <dl className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Assigned sub */}
           <div>
-            <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
               Assigned To
             </dt>
-            <dd className="mt-1 text-sm text-zinc-900 dark:text-zinc-50">
+            <dd className="mt-1 text-base text-zinc-900 dark:text-zinc-50">
               {task.sub.fullName}
             </dd>
           </div>
@@ -278,10 +278,10 @@ export default function TaskDetailClient({
           {/* Project */}
           {task.project && (
             <div>
-              <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
                 Project
               </dt>
-              <dd className="mt-1 text-sm text-zinc-900 dark:text-zinc-50">
+              <dd className="mt-1 text-base text-zinc-900 dark:text-zinc-50">
                 <Link
                   href={`/hub/projects/${task.project.id}`}
                   className="hover:underline"
@@ -295,11 +295,11 @@ export default function TaskDetailClient({
           {/* Deadline */}
           {task.deadline && (
             <div>
-              <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
                 Deadline
               </dt>
               <dd
-                className={`mt-1 text-sm ${
+                className={`mt-1 text-base ${
                   overdue
                     ? "font-medium text-red-600 dark:text-red-400"
                     : "text-zinc-900 dark:text-zinc-50"
@@ -314,10 +314,10 @@ export default function TaskDetailClient({
           {/* Completed at */}
           {task.completedAt && (
             <div>
-              <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
                 Completed
               </dt>
-              <dd className="mt-1 text-sm text-zinc-900 dark:text-zinc-50">
+              <dd className="mt-1 text-base text-zinc-900 dark:text-zinc-50">
                 {formatDate(task.completedAt)}
               </dd>
             </div>
@@ -327,10 +327,10 @@ export default function TaskDetailClient({
         {/* Description */}
         {task.description && (
           <div className="mt-4">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            <h3 className="text-base font-medium text-zinc-500 dark:text-zinc-400">
               Description
             </h3>
-            <p className="mt-1 whitespace-pre-wrap text-sm text-zinc-900 dark:text-zinc-50">
+            <p className="mt-1 whitespace-pre-wrap text-base text-zinc-900 dark:text-zinc-50">
               {task.description}
             </p>
           </div>
@@ -339,14 +339,14 @@ export default function TaskDetailClient({
         {/* Tags */}
         {task.tags.length > 0 && (
           <div className="mt-4">
-            <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            <h3 className="text-base font-medium text-zinc-500 dark:text-zinc-400">
               Tags
             </h3>
             <div className="mt-1 flex flex-wrap gap-1">
               {task.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                 >
                   {tag}
                 </span>
@@ -356,7 +356,7 @@ export default function TaskDetailClient({
         )}
 
         {/* Timestamps */}
-        <div className="mt-4 flex gap-4 text-xs text-zinc-400 dark:text-zinc-500">
+        <div className="mt-4 flex gap-4 text-sm text-zinc-400 dark:text-zinc-500">
           <span>Created {formatDate(task.createdAt)}</span>
           <span>Updated {formatDate(task.updatedAt)}</span>
         </div>
@@ -368,10 +368,10 @@ export default function TaskDetailClient({
           <div className="space-y-3">
             {task.declineReason && (
               <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/20">
-                <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                <p className="text-base font-medium text-red-700 dark:text-red-400">
                   Declined by sub
                 </p>
-                <p className="mt-1 text-sm text-red-600 dark:text-red-300">
+                <p className="mt-1 text-base text-red-600 dark:text-red-300">
                   {task.declineReason}
                 </p>
               </div>
@@ -379,7 +379,7 @@ export default function TaskDetailClient({
             <button
               onClick={() => handleStatusChange("PENDING")}
               disabled={actionLoading}
-              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               {task.declineReason ? "Re-send Request" : "Awaiting Response"}
             </button>
@@ -391,14 +391,14 @@ export default function TaskDetailClient({
             <button
               onClick={() => handleStatusChange("COMPLETED")}
               disabled={actionLoading}
-              className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+              className="rounded-md bg-emerald-600 px-4 py-2 text-base font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
             >
               Approve
             </button>
             <button
               onClick={() => handleStatusChange("IN_PROGRESS")}
               disabled={actionLoading}
-              className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Return for Revision
             </button>
@@ -409,7 +409,7 @@ export default function TaskDetailClient({
           <button
             onClick={() => handleStatusChange("IN_PROGRESS")}
             disabled={actionLoading}
-            className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             Start
           </button>
@@ -418,7 +418,7 @@ export default function TaskDetailClient({
 
       {/* Subtasks Section */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Subtasks
         </h2>
         <div className="mt-3">
@@ -431,7 +431,7 @@ export default function TaskDetailClient({
 
       {/* Proofs Section */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Proofs
         </h2>
         <div className="mt-3">
@@ -441,7 +441,7 @@ export default function TaskDetailClient({
 
       {/* Dependencies Section */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Dependencies
         </h2>
         <div className="mt-3">

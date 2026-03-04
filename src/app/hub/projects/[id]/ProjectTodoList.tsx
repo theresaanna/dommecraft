@@ -101,7 +101,7 @@ export default function ProjectTodoList({
 
   if (tasks.length === 0) {
     return (
-      <p className="py-4 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="py-4 text-base text-zinc-500 dark:text-zinc-400">
         No todos yet. Add one above.
       </p>
     );
@@ -128,7 +128,7 @@ export default function ProjectTodoList({
                   type="text"
                   value={editTitle}
                   onChange={(e) => setEditTitle(e.target.value)}
-                  className="w-full rounded-md border border-zinc-300 px-2 py-1 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                  className="w-full rounded-md border border-zinc-300 px-2 py-1 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
                   aria-label={`Edit title for "${task.title}"`}
                 />
               </div>
@@ -136,24 +136,24 @@ export default function ProjectTodoList({
                 type="date"
                 value={editDeadline}
                 onChange={(e) => setEditDeadline(e.target.value)}
-                className="rounded-md border border-zinc-300 px-2 py-1 text-sm text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="rounded-md border border-zinc-300 px-2 py-1 text-base text-zinc-900 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
                 aria-label="Deadline"
               />
               <button
                 onClick={() => handleSaveEdit(task.id)}
                 disabled={saving}
-                className="rounded-md bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                className="rounded-md bg-zinc-800 px-3 py-1 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={cancelEdit}
-                className="rounded-md border border-zinc-300 px-3 py-1 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                className="rounded-md border border-zinc-300 px-3 py-1 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
               >
                 Cancel
               </button>
               {editError && (
-                <span className="w-full text-sm text-red-500 dark:text-red-400">
+                <span className="w-full text-base text-red-500 dark:text-red-400">
                   {editError}
                 </span>
               )}
@@ -162,7 +162,7 @@ export default function ProjectTodoList({
             <>
               <div className="min-w-0 flex-1">
                 <span
-                  className={`text-sm ${
+                  className={`text-base ${
                     task.completed
                       ? "text-zinc-400 line-through dark:text-zinc-500"
                       : "text-zinc-900 dark:text-zinc-50"
@@ -171,7 +171,7 @@ export default function ProjectTodoList({
                   {task.title}
                 </span>
                 {task.deadline && (
-                  <span className="ml-2 text-xs text-zinc-400 dark:text-zinc-500">
+                  <span className="ml-2 text-sm text-zinc-400 dark:text-zinc-500">
                     {formatDeadline(task.deadline)}
                   </span>
                 )}

@@ -146,7 +146,7 @@ export default function ChatDrawer({
   function renderLastMessage(conv: ConversationItem) {
     if (!conv.lastMessage) {
       return (
-        <p className="text-sm italic text-zinc-400 dark:text-zinc-500">
+        <p className="text-base italic text-zinc-400 dark:text-zinc-500">
           No messages yet
         </p>
       );
@@ -158,7 +158,7 @@ export default function ChatDrawer({
           ? `${(conv as GroupSummary).lastMessage!.senderName}: `
           : "";
       return (
-        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="truncate text-base text-zinc-500 dark:text-zinc-400">
           {prefix}
           {conv.lastMessage.content}
         </p>
@@ -167,20 +167,20 @@ export default function ChatDrawer({
 
     if (conv.lastMessage.mediaMimeType?.startsWith("video/")) {
       return (
-        <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+        <p className="truncate text-base italic text-zinc-400 dark:text-zinc-500">
           Video message
         </p>
       );
     }
     if (conv.lastMessage.mediaMimeType?.startsWith("image/")) {
       return (
-        <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+        <p className="truncate text-base italic text-zinc-400 dark:text-zinc-500">
           Picture message
         </p>
       );
     }
     return (
-      <p className="truncate text-sm italic text-zinc-400 dark:text-zinc-500">
+      <p className="truncate text-base italic text-zinc-400 dark:text-zinc-500">
         Media message
       </p>
     );
@@ -214,7 +214,7 @@ export default function ChatDrawer({
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-          <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
             Chats
           </h2>
           <button
@@ -238,7 +238,7 @@ export default function ChatDrawer({
           {loading && (
             <p
               data-testid="chat-drawer-loading"
-              className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400"
+              className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400"
             >
               Loading...
             </p>
@@ -247,7 +247,7 @@ export default function ChatDrawer({
           {error && !loading && (
             <p
               data-testid="chat-drawer-error"
-              className="px-4 py-8 text-center text-sm text-red-500 dark:text-red-400"
+              className="px-4 py-8 text-center text-base text-red-500 dark:text-red-400"
             >
               Failed to load chats.
             </p>
@@ -256,7 +256,7 @@ export default function ChatDrawer({
           {!loading && !error && conversations.length === 0 && (
             <p
               data-testid="chat-drawer-empty"
-              className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400"
+              className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400"
             >
               No conversations yet.
             </p>
@@ -290,7 +290,7 @@ export default function ChatDrawer({
                                 className="h-10 w-10 rounded-full object-cover"
                               />
                             ) : (
-                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-base font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                                 {getInitials(conv.other.name)}
                               </span>
                             )}
@@ -304,20 +304,20 @@ export default function ChatDrawer({
                             />
                           </>
                         ) : (
-                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-base font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                             {getInitials(conv.name)}
                           </span>
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between gap-2">
-                          <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                          <span className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
                             {conv.type === "dm"
                               ? conv.other.name || "Unknown"
                               : conv.name}
                           </span>
                           {conv.lastMessage && (
-                            <span className="shrink-0 text-xs text-zinc-400 dark:text-zinc-500">
+                            <span className="shrink-0 text-sm text-zinc-400 dark:text-zinc-500">
                               {formatTime(conv.lastMessage.createdAt)}
                             </span>
                           )}
@@ -330,7 +330,7 @@ export default function ChatDrawer({
                             return (
                               <p
                                 data-testid={`drawer-typing-${conv.type}-${conv.id}`}
-                                className="truncate text-sm text-zinc-400 dark:text-zinc-500"
+                                className="truncate text-base text-zinc-400 dark:text-zinc-500"
                               >
                                 {typingText.replace("...", "")}
                                 <span className="animate-pulse">...</span>
@@ -353,7 +353,7 @@ export default function ChatDrawer({
           <Link
             href="/chat"
             onClick={onClose}
-            className="block text-center text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="block text-center text-base font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
           >
             Open full chat
           </Link>

@@ -10,10 +10,10 @@ export default async function LinkPage() {
 
   return (
     <div className="mx-auto max-w-md px-4 py-16">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Link Your Account
       </h1>
-      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="mt-2 text-base text-zinc-500 dark:text-zinc-400">
         Enter the invite code from your Domme to link your account.
       </p>
       <LinkAccountForm />

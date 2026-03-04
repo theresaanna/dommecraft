@@ -141,12 +141,12 @@ export default function CalendarEventForm({
 
   return (
     <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-      <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+      <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
         {isEditing ? "Edit Event" : "New Event"}
       </h3>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-base text-red-600 dark:text-red-400">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
@@ -154,7 +154,7 @@ export default function CalendarEventForm({
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Title *
           </label>
@@ -164,7 +164,7 @@ export default function CalendarEventForm({
             name="title"
             defaultValue={event?.title || ""}
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -172,7 +172,7 @@ export default function CalendarEventForm({
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Description
           </label>
@@ -181,7 +181,7 @@ export default function CalendarEventForm({
             name="description"
             rows={2}
             defaultValue={event?.description || ""}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -197,7 +197,7 @@ export default function CalendarEventForm({
           />
           <label
             htmlFor="isAllDay"
-            className="text-sm text-zinc-700 dark:text-zinc-300"
+            className="text-base text-zinc-700 dark:text-zinc-300"
           >
             All-day event
           </label>
@@ -208,7 +208,7 @@ export default function CalendarEventForm({
           <div>
             <label
               htmlFor={isAllDay ? "startDate" : "startAt"}
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Start *
             </label>
@@ -219,7 +219,7 @@ export default function CalendarEventForm({
                 name="startDate"
                 defaultValue={defaultStart.split("T")[0]}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             ) : (
               <input
@@ -228,7 +228,7 @@ export default function CalendarEventForm({
                 name="startAt"
                 defaultValue={defaultStart}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             )}
           </div>
@@ -237,7 +237,7 @@ export default function CalendarEventForm({
           <div>
             <label
               htmlFor={isAllDay ? "endDate" : "endAt"}
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               End
             </label>
@@ -247,7 +247,7 @@ export default function CalendarEventForm({
                 id="endDate"
                 name="endDate"
                 defaultValue={defaultEnd.split("T")[0]}
-                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             ) : (
               <input
@@ -255,7 +255,7 @@ export default function CalendarEventForm({
                 id="endAt"
                 name="endAt"
                 defaultValue={defaultEnd}
-                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             )}
           </div>
@@ -266,7 +266,7 @@ export default function CalendarEventForm({
           <div>
             <label
               htmlFor="color"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Color
             </label>
@@ -274,7 +274,7 @@ export default function CalendarEventForm({
               id="color"
               name="color"
               defaultValue=""
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               {COLOR_OPTIONS.map((c) => (
                 <option key={c.value} value={c.value}>
@@ -288,7 +288,7 @@ export default function CalendarEventForm({
           <div>
             <label
               htmlFor="category"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Category
             </label>
@@ -298,7 +298,7 @@ export default function CalendarEventForm({
               name="category"
               defaultValue=""
               placeholder="e.g. Session, Meeting"
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -307,7 +307,7 @@ export default function CalendarEventForm({
         <div>
           <label
             htmlFor="recurrenceRule"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Repeat
           </label>
@@ -315,7 +315,7 @@ export default function CalendarEventForm({
             id="recurrenceRule"
             name="recurrenceRule"
             defaultValue=""
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {RECURRENCE_OPTIONS.map((r) => (
               <option key={r.value} value={r.value}>
@@ -330,14 +330,14 @@ export default function CalendarEventForm({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {submitting
               ? "Saving..."

@@ -77,9 +77,9 @@ export default function ColorPickerDropdown({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={label}
-        className="flex flex-col items-center rounded px-2 py-1 text-sm text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
+        className="flex flex-col items-center rounded px-2 py-1 text-base text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
       >
-        <span className="text-xs font-semibold">
+        <span className="text-sm font-semibold">
           {isTextColor ? "A" : "A"}
         </span>
         <span
@@ -95,7 +95,7 @@ export default function ColorPickerDropdown({
         />
       </button>
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm p-2 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60">
+        <div className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm p-2 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60">
           <div className="mb-1.5 grid grid-cols-6 gap-1">
             {COLORS.map((color) => (
               <button
@@ -111,7 +111,7 @@ export default function ColorPickerDropdown({
           <button
             type="button"
             onClick={() => applyColor(null)}
-            className="w-full rounded px-2 py-1 text-left text-xs text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
+            className="w-full rounded px-2 py-1 text-left text-sm text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-700"
           >
             Remove {isTextColor ? "color" : "highlight"}
           </button>

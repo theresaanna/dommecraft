@@ -90,7 +90,7 @@ export function RegisterForm() {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+        <div className="rounded-md bg-red-50 p-3 text-base text-red-600 dark:bg-red-950 dark:text-red-400">
           {error}
         </div>
       )}
@@ -99,7 +99,7 @@ export function RegisterForm() {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Display Name
           </label>
@@ -107,13 +107,13 @@ export function RegisterForm() {
             id="name"
             name="name"
             type="text"
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Email
           </label>
@@ -122,13 +122,13 @@ export function RegisterForm() {
             name="email"
             type="email"
             required
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Password
           </label>
@@ -138,13 +138,13 @@ export function RegisterForm() {
             type="password"
             required
             minLength={8}
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <div>
           <label
             htmlFor="confirmPassword"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Confirm Password
           </label>
@@ -154,18 +154,18 @@ export function RegisterForm() {
             type="password"
             required
             minLength={8}
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <fieldset>
-          <legend className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <legend className="block text-base font-medium text-zinc-700 dark:text-zinc-300">
             I am a...
           </legend>
           <div className="mt-2 flex gap-3">
             <button
               type="button"
               onClick={() => setRole("DOMME")}
-              className={`flex-1 rounded-md border px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-md border px-4 py-2.5 text-base font-medium transition-colors ${
                 role === "DOMME"
                   ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                   : "border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -176,7 +176,7 @@ export function RegisterForm() {
             <button
               type="button"
               onClick={() => setRole("SUB")}
-              className={`flex-1 rounded-md border px-4 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-md border px-4 py-2.5 text-base font-medium transition-colors ${
                 role === "SUB"
                   ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
                   : "border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -191,7 +191,7 @@ export function RegisterForm() {
           <div>
             <label
               htmlFor="inviteCode"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Invite Code
             </label>
@@ -200,9 +200,9 @@ export function RegisterForm() {
               name="inviteCode"
               type="text"
               placeholder="Enter code from your Domme"
-              className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
             />
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               Optional. You can also link your account later from the dashboard.
             </p>
           </div>
@@ -211,7 +211,7 @@ export function RegisterForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
           {isLoading ? "Creating account..." : "Create account"}
         </button>

@@ -21,12 +21,12 @@ export default function NewFinancialEntryPageClient({
       <div className="mb-4">
         <Link
           href="/financials"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; All Financials
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         New Entry
       </h1>
       <div className="mt-6">

@@ -96,7 +96,7 @@ export default function SubsList({
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
             onClick={toggleAll}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {selected.size === subs.length ? "Deselect All" : "Select All"}
           </button>
@@ -106,14 +106,14 @@ export default function SubsList({
           <button
             onClick={() => handleExport("csv")}
             disabled={selected.size === 0 || exporting !== null}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {exporting === "csv" ? "Exporting..." : "Export CSV"}
           </button>
           <button
             onClick={() => handleExport("pdf")}
             disabled={selected.size === 0 || exporting !== null}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {exporting === "pdf" ? "Exporting..." : "Export PDF"}
           </button>
@@ -123,7 +123,7 @@ export default function SubsList({
               <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
               <button
                 onClick={handleArchive}
-                className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+                className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
               >
                 Archive ({selected.size})
               </button>
@@ -131,7 +131,7 @@ export default function SubsList({
           )}
 
           {selected.size > 0 && (
-            <span className="ml-auto text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
               {selected.size} selected
             </span>
           )}
@@ -159,11 +159,11 @@ export default function SubsList({
                 className="block flex-1 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
               >
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+                  <h2 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
                     {sub.fullName}
                   </h2>
                   {sub.contactInfo && (
-                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <span className="text-base text-zinc-500 dark:text-zinc-400">
                       {sub.contactInfo}
                     </span>
                   )}
@@ -172,7 +172,7 @@ export default function SubsList({
                   {sub.subType.map((type) => (
                     <span
                       key={type}
-                      className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                      className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                     >
                       {type}
                     </span>
@@ -180,7 +180,7 @@ export default function SubsList({
                   {sub.arrangementType.map((type) => (
                     <span
                       key={type}
-                      className="rounded-full bg-zinc-200 px-2 py-0.5 text-xs text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
+                      className="rounded-full bg-zinc-200 px-2 py-0.5 text-sm text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300"
                     >
                       {type}
                     </span>
@@ -191,7 +191,7 @@ export default function SubsList({
                     {sub.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-xs text-zinc-400 dark:text-zinc-500"
+                        className="text-sm text-zinc-400 dark:text-zinc-500"
                       >
                         #{tag}
                       </span>

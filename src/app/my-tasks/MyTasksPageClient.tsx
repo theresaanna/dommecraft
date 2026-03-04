@@ -178,16 +178,16 @@ export default function MyTasksPageClient({
   if (!hasLinkedProfile) {
     return (
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           {title}
         </h1>
-        <p className="mt-4 text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="mt-4 text-base text-zinc-700 dark:text-zinc-300">
           Your account is not linked to any profile yet. Ask your Domme for an
           invite code, then enter it on the Link Account page.
         </p>
         <Link
           href="/link"
-          className="mt-4 inline-block rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="mt-4 inline-block rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           Link Account
         </Link>
@@ -200,10 +200,10 @@ export default function MyTasksPageClient({
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           {title}
         </h1>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">
           {subtitle}
         </p>
       </div>
@@ -217,7 +217,7 @@ export default function MyTasksPageClient({
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
+              className={`px-4 py-2 text-base font-medium transition-colors ${
                 isActive
                   ? "border-b-2 border-zinc-900 text-zinc-900 dark:border-zinc-50 dark:text-zinc-50"
                   : "text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
@@ -225,7 +225,7 @@ export default function MyTasksPageClient({
             >
               {tab.label}
               {count > 0 && (
-                <span className="ml-1.5 text-xs text-zinc-400 dark:text-zinc-500">
+                <span className="ml-1.5 text-sm text-zinc-400 dark:text-zinc-500">
                   {count}
                 </span>
               )}
@@ -236,7 +236,7 @@ export default function MyTasksPageClient({
 
       {/* Task list */}
       {filtered.length === 0 ? (
-        <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-8 text-center text-base text-zinc-500 dark:text-zinc-400">
           No tasks in this category.
         </p>
       ) : (
@@ -256,14 +256,14 @@ export default function MyTasksPageClient({
 
                     {/* Priority badge */}
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
+                      className={`rounded-full px-2 py-0.5 text-sm font-medium ${PRIORITY_STYLES[task.priority]}`}
                     >
                       {task.priority}
                     </span>
 
                     {/* Status badge */}
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      className={`rounded-full px-2 py-0.5 text-sm font-medium ${
                         task.status === "PENDING" && task.declineReason
                           ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                           : STATUS_STYLES[task.status]
@@ -275,7 +275,7 @@ export default function MyTasksPageClient({
                     </span>
                   </div>
 
-                  <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+                  <div className="mt-1 flex flex-wrap items-center gap-3 text-base text-zinc-500 dark:text-zinc-400">
                     {/* Deadline */}
                     {task.deadline && (
                       <span
@@ -311,7 +311,7 @@ export default function MyTasksPageClient({
                         {task.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                            className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                           >
                             {tag}
                           </span>

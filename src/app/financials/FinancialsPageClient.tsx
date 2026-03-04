@@ -68,12 +68,12 @@ export default function FinancialsPageClient({
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           Financial Tracking
         </h1>
         <Link
           href="/financials/new"
-          className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           Add Entry
         </Link>

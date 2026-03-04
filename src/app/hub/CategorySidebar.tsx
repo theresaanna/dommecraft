@@ -18,9 +18,9 @@ export default function CategorySidebar({
   onSelectCategory: (id: string) => void;
 }) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+    <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
       <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Categories
         </h3>
       </div>
@@ -36,10 +36,10 @@ export default function CategorySidebar({
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                   {category.name}
                 </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
                   {category.projectCount}
                 </span>
               </div>

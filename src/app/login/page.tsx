@@ -16,18 +16,18 @@ export default async function LoginPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-      <div className="w-full max-w-md space-y-8 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 dark:border-zinc-800 dark:bg-zinc-950/60">
+      <div className="w-full max-w-md space-y-8 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 dark:border-zinc-800 dark:bg-zinc-950/60">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Sign in to DommeCraft
           </h1>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
             Welcome back
           </p>
         </div>
 
         {params.error && (
-          <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+          <div className="rounded-md bg-red-50 p-3 text-base text-red-600 dark:bg-red-950 dark:text-red-400">
             {params.error === "CredentialsSignin"
               ? "Invalid email or password."
               : "An error occurred. Please try again."}
@@ -36,7 +36,7 @@ export default async function LoginPage({
 
         <LoginForm callbackUrl={params.callbackUrl || "/dashboard"} />
 
-        <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-center text-base text-zinc-600 dark:text-zinc-400">
           Don&apos;t have an account?{" "}
           <a
             href="/register"

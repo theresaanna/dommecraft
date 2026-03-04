@@ -26,8 +26,8 @@ type Project = {
 export default function ProjectList({ projects }: { projects: Project[] }) {
   if (projects.length === 0) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
+        <p className="text-base text-zinc-500 dark:text-zinc-400">
           No projects yet. Create your first project to get started.
         </p>
       </div>
@@ -35,7 +35,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
   }
 
   return (
-    <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
+    <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
       {projects.map((project) => {
         const completedCount = project.tasks.filter((t) => t.completed).length;
         const totalCount = project.tasks.length;
@@ -50,13 +50,13 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                 {project.name}
               </h3>
               {project.description && (
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
                   {project.description}
                 </p>
               )}
               {project.tasks.length > 0 && (
                 <div className="mt-2">
-                  <div className="mb-1.5 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="mb-1.5 flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
                     <span>
                       {completedCount}/{totalCount} todos
                     </span>
@@ -73,7 +73,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                     {project.tasks.map((task) => (
                       <li
                         key={task.id}
-                        className="flex items-center gap-2 text-sm"
+                        className="flex items-center gap-2 text-base"
                       >
                         <span
                           className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border ${
@@ -112,7 +112,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
                   </ul>
                 </div>
               )}
-              <div className="mt-2 flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+              <div className="mt-2 flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
                 <span>
                   {project.notesCount}{" "}
                   {project.notesCount === 1 ? "note" : "notes"}

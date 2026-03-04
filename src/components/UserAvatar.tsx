@@ -29,7 +29,7 @@ export default function UserAvatar({
   avatarUrl,
   size = "sm",
 }: UserAvatarProps) {
-  const sizeClasses = size === "sm" ? "h-8 w-8 text-xs" : "h-16 w-16 text-lg";
+  const sizeClasses = size === "sm" ? "h-8 w-8 text-sm" : "h-16 w-16 text-xl";
 
   return (
     <Link

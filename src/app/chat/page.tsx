@@ -91,7 +91,7 @@ export default async function ChatPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-16">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Chat
       </h1>
       <ChatListClient conversations={allConversations} />

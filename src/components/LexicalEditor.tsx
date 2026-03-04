@@ -47,7 +47,7 @@ const theme = {
     italic: "italic",
     underline: "underline",
     strikethrough: "line-through",
-    code: "rounded bg-zinc-100 px-1 py-0.5 font-mono text-sm dark:bg-zinc-800",
+    code: "rounded bg-zinc-100 px-1 py-0.5 font-mono text-base dark:bg-zinc-800",
     highlight: "bg-yellow-200 dark:bg-yellow-800",
   },
   list: {
@@ -60,21 +60,21 @@ const theme = {
     listitemUnchecked: "lexical-listitem-unchecked ml-0 relative pl-6",
   },
   heading: {
-    h1: "text-2xl font-bold mb-2",
-    h2: "text-xl font-bold mb-1.5",
-    h3: "text-lg font-bold mb-1",
+    h1: "text-3xl font-bold mb-2",
+    h2: "text-2xl font-bold mb-1.5",
+    h3: "text-xl font-bold mb-1",
   },
   quote:
     "border-l-4 border-zinc-300 pl-4 italic text-zinc-600 dark:border-zinc-600 dark:text-zinc-400 my-2",
-  code: "block rounded-md bg-zinc-100 p-3 font-mono text-sm dark:bg-zinc-800 my-2 overflow-x-auto",
+  code: "block rounded-md bg-zinc-100 p-3 font-mono text-base dark:bg-zinc-800 my-2 overflow-x-auto",
   link: "text-blue-600 underline cursor-pointer dark:text-blue-400",
   horizontalrule: "my-4 border-t border-zinc-300 dark:border-zinc-700",
   table:
     "border-collapse w-full my-2 border border-zinc-300 dark:border-zinc-600",
   tableCell:
-    "relative align-top outline-none border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600",
+    "relative align-top outline-none border border-zinc-300 px-2 py-1 text-base dark:border-zinc-600",
   tableCellHeader:
-    "relative align-top outline-none border border-zinc-300 bg-zinc-100 px-2 py-1 text-sm font-semibold dark:border-zinc-600 dark:bg-zinc-800",
+    "relative align-top outline-none border border-zinc-300 bg-zinc-100 px-2 py-1 text-base font-semibold dark:border-zinc-600 dark:bg-zinc-800",
   image: "my-2",
 };
 
@@ -161,7 +161,7 @@ export default function LexicalEditor({
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="min-h-[200px] px-3 py-2 text-sm text-zinc-900 outline-none md:min-h-[450px] dark:bg-zinc-900 dark:text-zinc-50"
+                className="min-h-[200px] px-3 py-2 text-base text-zinc-900 outline-none md:min-h-[450px] dark:bg-zinc-900 dark:text-zinc-50"
                 aria-label="Note content"
               />
             }

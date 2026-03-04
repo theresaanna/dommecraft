@@ -29,13 +29,13 @@ export default function Toast({ message, linkUrl, type, onDismiss }: ToastProps)
         }
         onDismiss();
       }}
-      className="relative w-80 animate-slide-in cursor-pointer rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm px-4 py-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
+      className="relative w-80 animate-slide-in cursor-pointer rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm px-4 py-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
       role="alert"
     >
-      <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
         {typeLabel}
       </p>
-      <p className="mt-0.5 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+      <p className="mt-0.5 text-base font-medium text-zinc-900 dark:text-zinc-50">
         {message}
       </p>
       <button

@@ -91,7 +91,7 @@ export default function BlockTypeDropdown({
       aria-label="Block type"
       value={blockType}
       onChange={(e) => applyBlockType(e.target.value)}
-      className="rounded border border-zinc-300 bg-transparent px-1.5 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
+      className="rounded border border-zinc-300 bg-transparent px-1.5 py-1 text-sm text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
     >
       {BLOCK_TYPE_OPTIONS.map((opt) => (
         <option key={opt.value} value={opt.value}>

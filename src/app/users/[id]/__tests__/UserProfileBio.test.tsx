@@ -17,13 +17,13 @@ function BioSection({
       {bio && (
         <section>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               About
             </h2>
             {isOwnProfile && (
               <a
                 href="/settings"
-                className="text-sm text-zinc-500 hover:text-zinc-700"
+                className="text-base text-zinc-500 hover:text-zinc-700"
               >
                 Edit bio &rarr;
               </a>
@@ -40,7 +40,7 @@ function BioSection({
         <section>
           <a
             href="/settings"
-            className="text-sm text-zinc-500 hover:text-zinc-700"
+            className="text-base text-zinc-500 hover:text-zinc-700"
           >
             Add a bio &rarr;
           </a>

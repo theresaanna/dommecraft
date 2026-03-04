@@ -105,7 +105,7 @@ function StickyNoteComponent({
             onTextChange(e.target.value);
           }}
           onDragStart={(e) => e.preventDefault()}
-          className="w-full resize-none border-none bg-transparent text-sm text-zinc-800 outline-none"
+          className="w-full resize-none border-none bg-transparent text-base text-zinc-800 outline-none"
           rows={3}
           placeholder="Write something..."
         />

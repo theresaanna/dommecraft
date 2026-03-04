@@ -117,19 +117,19 @@ export default function SettingsClient({
 
   return (
     <>
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Settings
       </h1>
 
       {message && (
-        <p className="mt-4 rounded-md bg-zinc-100 px-3 py-2 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+        <p className="mt-4 rounded-md bg-zinc-100 px-3 py-2 text-base text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
           {message}
         </p>
       )}
 
       {/* Avatar Section */}
-      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Avatar
         </h2>
         <div className="mt-3 flex items-center gap-4">
@@ -141,7 +141,7 @@ export default function SettingsClient({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-lg font-medium text-zinc-500 dark:text-zinc-400">
+              <div className="flex h-full w-full items-center justify-center text-xl font-medium text-zinc-500 dark:text-zinc-400">
                 {settings.name?.[0]?.toUpperCase() ||
                   settings.email?.[0]?.toUpperCase() ||
                   "?"}
@@ -153,7 +153,7 @@ export default function SettingsClient({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               {uploading ? "Uploading..." : "Upload"}
             </button>
@@ -161,7 +161,7 @@ export default function SettingsClient({
               <button
                 type="button"
                 onClick={handleRemoveAvatar}
-                className="rounded-md border border-zinc-200 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                className="rounded-md border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
               >
                 Remove
               </button>
@@ -179,15 +179,15 @@ export default function SettingsClient({
       </div>
 
       {/* Profile Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Profile
         </h2>
         <div className="mt-3 space-y-4">
           <div>
             <label
               htmlFor="name"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               Display Name
             </label>
@@ -198,13 +198,13 @@ export default function SettingsClient({
               onChange={(e) =>
                 setSettings((prev) => ({ ...prev, name: e.target.value }))
               }
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               Email
             </label>
@@ -215,18 +215,18 @@ export default function SettingsClient({
               onChange={(e) =>
                 setSettings((prev) => ({ ...prev, email: e.target.value }))
               }
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
       </div>
 
       {/* Bio Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Bio
         </h2>
-        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
           Tell others about yourself. This will appear on your profile page.
         </p>
         <div className="mt-3">
@@ -240,20 +240,20 @@ export default function SettingsClient({
       </div>
 
       {/* Profile URL Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Profile URL
         </h2>
         <div className="mt-3 space-y-3">
           <div>
             <label
               htmlFor="slug"
-              className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               Custom URL
             </label>
             <div className="mt-1 flex items-center gap-0">
-              <span className="rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 py-2 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
+              <span className="rounded-l-md border border-r-0 border-zinc-300 bg-zinc-100 px-3 py-2 text-base text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400">
                 /u/
               </span>
               <input
@@ -267,10 +267,10 @@ export default function SettingsClient({
                   }))
                 }
                 placeholder="your-custom-url"
-                className="w-full rounded-r-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="w-full rounded-r-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             </div>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               3-30 characters. Lowercase letters, numbers, and hyphens only.
             </p>
           </div>
@@ -278,14 +278,14 @@ export default function SettingsClient({
       </div>
 
       {/* Appearance Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Appearance
         </h2>
         <div className="mt-3">
           <label
             htmlFor="theme"
-            className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Theme
           </label>
@@ -298,7 +298,7 @@ export default function SettingsClient({
                 theme: e.target.value as SettingsData["theme"],
               }))
             }
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           >
             <option value="SYSTEM">System</option>
             <option value="LIGHT">Light</option>
@@ -308,14 +308,14 @@ export default function SettingsClient({
       </div>
 
       {/* Currency Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Currency
         </h2>
         <div className="mt-3">
           <label
             htmlFor="currency"
-            className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Currency
           </label>
@@ -328,7 +328,7 @@ export default function SettingsClient({
                 currency: e.target.value as SettingsData["currency"],
               }))
             }
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           >
             {CURRENCY_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -340,14 +340,14 @@ export default function SettingsClient({
       </div>
 
       {/* Calendar Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Calendar
         </h2>
         <div className="mt-3">
           <label
             htmlFor="calendarDefaultView"
-            className="block text-xs font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Default View
           </label>
@@ -361,7 +361,7 @@ export default function SettingsClient({
                   e.target.value as SettingsData["calendarDefaultView"],
               }))
             }
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           >
             <option value="MONTH">Month</option>
             <option value="WEEK">Week</option>
@@ -371,7 +371,7 @@ export default function SettingsClient({
         <div className="mt-3">
           <Link
             href="/settings/calendar"
-            className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             External calendar sync settings &rarr;
           </Link>
@@ -379,8 +379,8 @@ export default function SettingsClient({
       </div>
 
       {/* Privacy Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Privacy
         </h2>
         <div className="mt-3">
@@ -396,11 +396,11 @@ export default function SettingsClient({
               }
               className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
             />
-            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+            <span className="text-base text-zinc-900 dark:text-zinc-50">
               Show online status
             </span>
           </label>
-          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 ml-7 text-sm text-zinc-500 dark:text-zinc-400">
             When disabled, you will always appear offline to others.
           </p>
         </div>
@@ -417,11 +417,11 @@ export default function SettingsClient({
               }
               className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
             />
-            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+            <span className="text-base text-zinc-900 dark:text-zinc-50">
               Show read receipts
             </span>
           </label>
-          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 ml-7 text-sm text-zinc-500 dark:text-zinc-400">
             When disabled, you won&apos;t send read receipts and won&apos;t see
             when others read your messages.
           </p>
@@ -429,8 +429,8 @@ export default function SettingsClient({
       </div>
 
       {/* Notifications Section */}
-      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
           Notifications
         </h2>
         <div className="mt-3">
@@ -446,11 +446,11 @@ export default function SettingsClient({
               }
               className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
             />
-            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+            <span className="text-base text-zinc-900 dark:text-zinc-50">
               Message notification sound
             </span>
           </label>
-          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 ml-7 text-sm text-zinc-500 dark:text-zinc-400">
             Play a sound when you receive a new chat message.
           </p>
         </div>
@@ -467,11 +467,11 @@ export default function SettingsClient({
               }
               className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
             />
-            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+            <span className="text-base text-zinc-900 dark:text-zinc-50">
               Push notifications
             </span>
           </label>
-          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 ml-7 text-sm text-zinc-500 dark:text-zinc-400">
             Show browser notifications when you receive new alerts.
           </p>
         </div>
@@ -482,7 +482,7 @@ export default function SettingsClient({
         type="button"
         onClick={handleSave}
         disabled={saving}
-        className="mt-6 rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        className="mt-6 rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
         {saving ? "Saving..." : "Save Settings"}
       </button>
@@ -492,7 +492,7 @@ export default function SettingsClient({
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+          className="rounded-md bg-zinc-200 px-4 py-2 text-base font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         >
           Sign out
         </button>
@@ -505,16 +505,16 @@ export default function SettingsClient({
             <button
               type="button"
               onClick={() => setShowDeleteConfirm(true)}
-              className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+              className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700"
             >
               Delete Account
             </button>
           ) : (
             <div className="rounded-lg border border-red-300 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
-              <p className="text-sm font-medium text-red-800 dark:text-red-200">
+              <p className="text-base font-medium text-red-800 dark:text-red-200">
                 Are you sure you want to delete your account?
               </p>
-              <p className="mt-1 text-sm text-red-700 dark:text-red-300">
+              <p className="mt-1 text-base text-red-700 dark:text-red-300">
                 This action cannot be reversed. Your subs will keep their task
                 history but will no longer be associated with you.
               </p>
@@ -523,7 +523,7 @@ export default function SettingsClient({
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
                   disabled={deleting}
-                  className="rounded-md bg-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+                  className="rounded-md bg-zinc-200 px-4 py-2 text-base font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
                 >
                   Cancel
                 </button>
@@ -531,7 +531,7 @@ export default function SettingsClient({
                   type="button"
                   onClick={handleDeleteAccount}
                   disabled={deleting}
-                  className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                  className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700 disabled:opacity-50"
                 >
                   {deleting ? "Deleting..." : "Yes, Delete My Account"}
                 </button>

@@ -102,7 +102,7 @@ export default function TagInput({
 
   return (
     <div ref={containerRef}>
-      <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label className="block text-base font-medium text-zinc-700 dark:text-zinc-300">
         {label}
       </label>
       {/* Hidden inputs for form submission */}
@@ -116,7 +116,7 @@ export default function TagInput({
         {value.map((tag) => (
           <span
             key={tag}
-            className="flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+            className="flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
           >
             {tag}
             <button
@@ -144,19 +144,19 @@ export default function TagInput({
             onFocus={() => setShowDropdown(true)}
             onKeyDown={handleKeyDown}
             placeholder={value.length === 0 ? placeholder : ""}
-            className="w-full min-w-[120px] border-none bg-transparent py-0.5 text-sm text-zinc-900 outline-none placeholder-zinc-500 dark:text-zinc-50 dark:placeholder-zinc-400"
+            className="w-full min-w-[120px] border-none bg-transparent py-0.5 text-base text-zinc-900 outline-none placeholder-zinc-500 dark:text-zinc-50 dark:placeholder-zinc-400"
           />
           {showDropdown && filtered.length > 0 && (
             <ul
               role="listbox"
-              className="absolute left-0 top-full z-10 mt-1 max-h-48 w-64 overflow-auto rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
+              className="absolute left-0 top-full z-10 mt-1 max-h-48 w-64 overflow-auto rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
             >
               {filtered.map((suggestion, i) => (
                 <li
                   key={suggestion}
                   role="option"
                   aria-selected={i === highlightIndex}
-                  className={`cursor-pointer px-3 py-1.5 text-sm ${
+                  className={`cursor-pointer px-3 py-1.5 text-base ${
                     i === highlightIndex
                       ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                       : "text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
