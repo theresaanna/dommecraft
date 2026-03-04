@@ -25,6 +25,12 @@
 }
 
 @media (max-width: 767px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
+@media (max-width: 479px) {
   :root {
     --bg-image: url("/clouds-day-mobile.svg");
   }
