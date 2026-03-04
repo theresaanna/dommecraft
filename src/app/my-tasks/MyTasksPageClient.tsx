@@ -149,6 +149,9 @@ export default function MyTasksPageClient({
   }, []);
 
   useEffect(() => {
+    // Fetch fresh data on mount (e.g. navigating back from detail page)
+    fetchTasks();
+
     function handleVisibility() {
       if (document.visibilityState === "visible") {
         fetchTasks();
@@ -162,9 +165,13 @@ export default function MyTasksPageClient({
     document.addEventListener("visibilitychange", handleVisibility);
     window.addEventListener("notifications:refresh", handleRefresh);
 
+    // Poll every 30 seconds for new tasks
+    const interval = setInterval(fetchTasks, 30_000);
+
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
       window.removeEventListener("notifications:refresh", handleRefresh);
+      clearInterval(interval);
     };
   }, [fetchTasks]);
 

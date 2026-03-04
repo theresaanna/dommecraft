@@ -102,7 +102,7 @@ describe("GET /api/subs/suggestions", () => {
     expect(data.tags).toEqual(["alpha", "middle", "zebra"]);
   });
 
-  it("fetches from all subs globally (not user-scoped)", async () => {
+  it("scopes query to authenticated user", async () => {
     mockAuth.mockResolvedValue({
       user: { id: "user-1", role: "DOMME" },
       expires: "",
@@ -113,6 +113,7 @@ describe("GET /api/subs/suggestions", () => {
     await GET();
 
     expect(mockFindMany).toHaveBeenCalledWith({
+      where: { userId: "user-1" },
       select: {
         tags: true,
         softLimits: true,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TagInput from "@/components/TagInput";
+import { useTagSuggestions } from "@/hooks/use-tag-suggestions";
 import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 type AvailableSub = {
@@ -38,6 +39,7 @@ export default function TaskForm({
   task?: TaskData;
 }) {
   const router = useRouter();
+  const tagSuggestions = useTagSuggestions();
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [tags, setTags] = useState<string[]>(task?.tags ?? []);
@@ -251,6 +253,7 @@ export default function TaskForm({
           label="Tags"
           name="tags"
           placeholder="Add tags..."
+          suggestions={tagSuggestions}
           value={tags}
           onChange={setTags}
         />
