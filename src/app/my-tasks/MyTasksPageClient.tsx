@@ -9,6 +9,7 @@ type SerializedTask = {
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   deadline: string | null;
   tags: string[];
   sub: { id: string; fullName: string };
@@ -92,6 +93,7 @@ type ApiTask = {
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   deadline: string | null;
   tags: string[];
   sub: { id: string; fullName: string };
@@ -107,6 +109,7 @@ function serializeApiTasks(apiTasks: ApiTask[]): SerializedTask[] {
     description: t.description,
     priority: t.priority,
     status: t.status,
+    declineReason: t.declineReason,
     deadline: t.deadline,
     tags: t.tags,
     sub: t.sub,
@@ -253,9 +256,15 @@ export default function MyTasksPageClient({
 
                     {/* Status badge */}
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        task.status === "PENDING" && task.declineReason
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          : STATUS_STYLES[task.status]
+                      }`}
                     >
-                      {STATUS_LABELS[task.status]}
+                      {task.status === "PENDING" && task.declineReason
+                        ? "Declined"
+                        : STATUS_LABELS[task.status]}
                     </span>
                   </div>
 

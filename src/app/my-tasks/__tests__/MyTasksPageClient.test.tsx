@@ -26,6 +26,7 @@ function makeTask(overrides: Record<string, unknown> = {}) {
     description: null,
     priority: "MEDIUM" as const,
     status: "NOT_STARTED" as const,
+    declineReason: null,
     deadline: null,
     tags: [],
     sub: { id: "sub-1", fullName: "Test Sub" },

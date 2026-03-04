@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 type Subtask = {
   id: string;
@@ -126,6 +127,7 @@ export default function MyTaskDetailClient({
         throw new Error(data.error || "Failed to accept task");
       }
 
+      triggerNotificationRefresh();
       router.push(backHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -155,6 +157,7 @@ export default function MyTaskDetailClient({
         throw new Error(data.error || "Failed to decline task");
       }
 
+      triggerNotificationRefresh();
       router.push(backHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -264,9 +267,15 @@ export default function MyTaskDetailClient({
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
+            className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+              task.status === "PENDING" && task.declineReason
+                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                : STATUS_STYLES[task.status]
+            }`}
           >
-            {STATUS_LABELS[task.status]}
+            {task.status === "PENDING" && task.declineReason
+              ? "Declined"
+              : STATUS_LABELS[task.status]}
           </span>
           <span
             className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
@@ -484,7 +493,21 @@ export default function MyTaskDetailClient({
 
         {/* Submit / Status section */}
         <div className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
-          {task.status === "PENDING" && (
+          {task.status === "PENDING" && task.declineReason && (
+            <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/20">
+              <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                You declined this task
+              </p>
+              <p className="mt-1 text-sm text-red-600 dark:text-red-300">
+                {task.declineReason}
+              </p>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+                Waiting for your Domme to respond.
+              </p>
+            </div>
+          )}
+
+          {task.status === "PENDING" && !task.declineReason && (
             <div className="space-y-4">
               <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
                 This is a task request from your Domme. Accept or decline it below.
