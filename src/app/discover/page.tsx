@@ -54,7 +54,7 @@ export default async function DiscoverPage() {
             return (
               <div
                 key={photo.id}
-                className="overflow-hidden rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80"
+                className="overflow-hidden rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60"
               >
                 <img
                   src={photo.fileUrl}

@@ -34,7 +34,7 @@ export default function TaskProofs({ proofs }: { proofs: Proof[] }) {
       {proofs.map((proof) => (
         <div
           key={proof.id}
-          className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80"
+          className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
         >
           {/* Media preview */}
           {proof.fileType.startsWith("image") ? (

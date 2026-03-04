@@ -218,7 +218,7 @@ export default function ChatListClient({
               No new contacts available.
             </p>
           ) : (
-            <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/80">
+            <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
               {contacts.map((contact) => (
                 <li key={contact.id}>
                   <button
@@ -255,7 +255,7 @@ export default function ChatListClient({
 
       {/* New Group form */}
       {showGroupForm && (
-        <div className="mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
+        <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           <input
             type="text"
             placeholder="Group name"

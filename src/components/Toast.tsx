@@ -29,7 +29,7 @@ export default function Toast({ message, linkUrl, type, onDismiss }: ToastProps)
         }
         onDismiss();
       }}
-      className="relative w-80 animate-slide-in cursor-pointer rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm px-4 py-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80"
+      className="relative w-80 animate-slide-in cursor-pointer rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm px-4 py-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
       role="alert"
     >
       <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">

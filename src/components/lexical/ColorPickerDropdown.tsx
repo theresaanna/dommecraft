@@ -95,7 +95,7 @@ export default function ColorPickerDropdown({
         />
       </button>
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm p-2 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80">
+        <div className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm p-2 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60">
           <div className="mb-1.5 grid grid-cols-6 gap-1">
             {COLORS.map((color) => (
               <button

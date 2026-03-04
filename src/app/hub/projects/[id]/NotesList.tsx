@@ -39,7 +39,7 @@ export default function NotesList({
 
   if (notes.length === 0) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/80">
+      <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           No notes yet. Create your first note to get started.
         </p>
@@ -52,7 +52,7 @@ export default function NotesList({
       {notes.map((note) => (
         <li
           key={note.id}
-          className={`rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80 ${editingNoteId === note.id ? "hidden" : ""}`}
+          className={`rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${editingNoteId === note.id ? "hidden" : ""}`}
         >
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">

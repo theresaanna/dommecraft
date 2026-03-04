@@ -132,11 +132,11 @@ export default function GlobalHeader() {
     "block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800";
 
   const dropdownMenuClass =
-    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80";
+    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60";
 
   return (
     <>
-      <header className="fixed top-0 right-0 left-0 z-40 border-b border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/80">
+      <header className="fixed top-0 right-0 left-0 z-40 border-b border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/60">
         <div className="mx-auto max-w-5xl px-4">
           <div className="flex h-14 items-center justify-between">
             {/* Left: Brand + Nav */}
@@ -312,7 +312,7 @@ export default function GlobalHeader() {
                     New
                   </button>
                   {activeDropdown === "new" && (
-                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80">
+                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60">
                       {QUICK_ACTIONS.map((action) => (
                         <Link
                           key={action.href}
@@ -380,6 +380,43 @@ export default function GlobalHeader() {
                     {unreadChatCount > 9 ? "9+" : unreadChatCount}
                   </span>
                 )}
+              </button>
+
+              {/* Theme toggle */}
+              <button
+                onClick={() => {
+                  const root = document.documentElement;
+                  const isDark = root.classList.contains("dark");
+                  const newTheme = isDark ? "LIGHT" : "DARK";
+                  root.classList.toggle("dark", !isDark);
+                  document.cookie = `theme=${newTheme};path=/;max-age=${60 * 60 * 24 * 365}`;
+                  fetch("/api/user/settings", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ theme: newTheme }),
+                  });
+                }}
+                className="flex h-9 w-9 items-center justify-center rounded-md text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
+                title="Toggle theme"
+              >
+                {/* Sun (visible in dark mode) */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="hidden h-5 w-5 dark:block"
+                >
+                  <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+                </svg>
+                {/* Moon (visible in light mode) */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="block h-5 w-5 dark:hidden"
+                >
+                  <path fillRule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clipRule="evenodd" />
+                </svg>
               </button>
 
               {/* User avatar */}

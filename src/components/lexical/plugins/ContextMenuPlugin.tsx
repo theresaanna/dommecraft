@@ -140,7 +140,7 @@ export default function ContextMenuPlugin({
     <div
       ref={menuRef}
       data-testid="context-menu"
-      className="fixed z-50 w-52 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80"
+      className="fixed z-50 w-52 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
       style={{ left: menuState.x, top: menuState.y }}
     >
       {feedback ? (
@@ -182,7 +182,7 @@ export default function ContextMenuPlugin({
           {showSubmenu && (
             <div
               data-testid="project-submenu"
-              className="absolute left-full top-0 ml-0.5 w-48 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80"
+              className="absolute left-full top-0 ml-0.5 w-48 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
             >
               {/* Current project first */}
               {projects
