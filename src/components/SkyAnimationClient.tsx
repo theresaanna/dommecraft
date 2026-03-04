@@ -31,16 +31,16 @@ function injectStyles() {
       z-index: 9998;
     }
     @keyframes sky-fly-diagonal-up {
-      from { transform: translate(-80px, calc(100vh + 80px)) rotate(45deg); }
-      to { transform: translate(calc(100vw + 80px), -80px) rotate(45deg); }
+      from { transform: translate(-150px, calc(100vh + 150px)) rotate(45deg); }
+      to { transform: translate(calc(100vw + 150px), -150px) rotate(45deg); }
     }
     @keyframes sky-fly-diagonal-down {
-      from { transform: translate(calc(100vw + 80px), -80px) rotate(225deg); }
-      to { transform: translate(-80px, calc(100vh + 80px)) rotate(225deg); }
+      from { transform: translate(calc(100vw + 150px), -150px) rotate(225deg); }
+      to { transform: translate(-150px, calc(100vh + 150px)) rotate(225deg); }
     }
     @keyframes sky-rise {
       from { transform: translateY(calc(100vh + 100px)); }
-      to { transform: translateY(-150px); }
+      to { transform: translateY(calc(-100vh - 100px)); }
     }
   `;
   document.head.appendChild(style);

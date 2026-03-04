@@ -1,0 +1,39 @@
+"use client";
+
+import { ParallaxProvider, useParallax } from "react-scroll-parallax";
+
+function ParallaxCloudInner() {
+  const { ref } = useParallax<HTMLDivElement>({
+    translateY: [10, -10],
+    startScroll: 0,
+    endScroll: 2000,
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="fixed bottom-0 right-0 pointer-events-none z-[1] w-[500px] max-w-[60vw]"
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-day-cloud-large.svg"
+        className="dark:hidden w-full"
+        alt=""
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-night-cloud-large.svg"
+        className="hidden dark:block w-full"
+        alt=""
+      />
+    </div>
+  );
+}
+
+export default function ParallaxCloudClient() {
+  return (
+    <ParallaxProvider>
+      <ParallaxCloudInner />
+    </ParallaxProvider>
+  );
+}
