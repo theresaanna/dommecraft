@@ -12,13 +12,13 @@ export default function SparkleEffectClient() {
       if (isDark && !instanceRef.current) {
         try {
           instanceRef.current = new SparkleFall({
-            interval: 100,
-            wind: 0,
-            maxSparkles: 100,
+            interval: 800,
+            wind: 15,
+            maxSparkles: 25,
             minSize: 10,
             maxSize: 20,
-            minDuration: 2,
-            maxDuration: 5,
+            minDuration: 6,
+            maxDuration: 12,
             sparkles: ["·"],
             colors: ["rgba(255,255,255,0.8)"],
           });
