@@ -21,9 +21,10 @@
 }
 
 body {
-  background: var(--background);
+  background: url("/clouds.svg") repeat-x bottom / contain, #eaf8fdff;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  background-attachment: fixed;
 }
 
 .sx-react-calendar-wrapper {
