@@ -161,7 +161,7 @@ export default function LexicalEditor({
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="min-h-[450px] px-3 py-2 text-sm text-zinc-900 outline-none dark:bg-zinc-900 dark:text-zinc-50"
+                className="min-h-[200px] px-3 py-2 text-sm text-zinc-900 outline-none md:min-h-[450px] dark:bg-zinc-900 dark:text-zinc-50"
                 aria-label="Note content"
               />
             }
