@@ -9,6 +9,27 @@ vi.mock("next-auth/react", () => ({
   useSession: vi.fn(() => ({ update: vi.fn() })),
 }));
 
+let mockBioOnChange: ((html: string) => void) | undefined;
+vi.mock("@/components/LexicalEditor", () => ({
+  default: ({
+    initialContent,
+    onChange,
+  }: {
+    initialContent?: string;
+    onChange?: (html: string) => void;
+  }) => {
+    mockBioOnChange = onChange;
+    return (
+      <textarea
+        data-testid="bio-editor"
+        defaultValue={initialContent || ""}
+        onChange={(e) => onChange?.(e.target.value)}
+        aria-label="Note content"
+      />
+    );
+  },
+}));
+
 vi.mock("next/link", () => ({
   default: ({
     children,
@@ -37,6 +58,7 @@ const defaultSettings = {
   showReadReceipts: true,
   notificationSound: true,
   pushNotifications: true,
+  bio: "",
 };
 
 describe("SettingsClient", () => {
@@ -69,6 +91,7 @@ describe("SettingsClient", () => {
 
     expect(screen.getByText("Avatar")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
+    expect(screen.getByText("Bio")).toBeInTheDocument();
     expect(screen.getByText("Profile URL")).toBeInTheDocument();
     expect(screen.getByText("Appearance")).toBeInTheDocument();
     expect(screen.getByLabelText("Currency")).toBeInTheDocument();
@@ -638,5 +661,47 @@ describe("SettingsClient", () => {
 
     const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
     expect(callBody.notificationSound).toBe(false);
+  });
+
+  it("renders Bio section with editor", () => {
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    expect(screen.getByText("Bio")).toBeInTheDocument();
+    expect(screen.getByTestId("bio-editor")).toBeInTheDocument();
+  });
+
+  it("renders Bio editor with initial content", () => {
+    render(
+      <SettingsClient
+        initialSettings={{ ...defaultSettings, bio: "<p>Hello world</p>" }}
+        userRole="DOMME"
+      />
+    );
+
+    expect(screen.getByTestId("bio-editor")).toHaveValue("<p>Hello world</p>");
+  });
+
+  it("includes bio in save payload", async () => {
+    const user = userEvent.setup();
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    });
+    vi.stubGlobal("fetch", mockFetch);
+
+    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+
+    // Simulate bio change via the mock onChange
+    const bioEditor = screen.getByTestId("bio-editor");
+    await user.type(bioEditor, "<p>My bio</p>");
+
+    await user.click(screen.getByText("Save Settings"));
+
+    await waitFor(() => {
+      expect(mockFetch).toHaveBeenCalled();
+    });
+
+    const callBody = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(callBody.bio).toBeDefined();
   });
 });

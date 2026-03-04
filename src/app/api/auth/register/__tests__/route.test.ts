@@ -88,6 +88,7 @@ describe("POST /api/auth/register", () => {
       notificationSound: true,
       pushNotifications: true,
       currency: "USD",
+      bio: null,
       emailVerified: null,
       createdAt: new Date(),
       updatedAt: new Date(),
