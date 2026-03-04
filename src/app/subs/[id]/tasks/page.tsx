@@ -11,6 +11,8 @@ const PRIORITY_STYLES: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
+  PENDING:
+    "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
   NOT_STARTED: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
   IN_PROGRESS:
     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -22,6 +24,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending",
   NOT_STARTED: "Not Started",
   IN_PROGRESS: "In Progress",
   SUBMITTED: "Submitted",
@@ -29,7 +32,7 @@ const STATUS_LABELS: Record<string, string> = {
   ARCHIVED: "Archived",
 };
 
-const OPEN_STATUSES = ["NOT_STARTED", "IN_PROGRESS", "SUBMITTED"] as const;
+const OPEN_STATUSES = ["PENDING", "NOT_STARTED", "IN_PROGRESS", "SUBMITTED"] as const;
 
 function isOverdue(deadline: Date | null, status: string): boolean {
   if (!deadline) return false;

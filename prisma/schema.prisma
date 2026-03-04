@@ -426,6 +426,7 @@ enum TaskPriority {
 }
 
 enum TaskStatus {
+  PENDING
   NOT_STARTED
   IN_PROGRESS
   SUBMITTED
@@ -444,7 +445,8 @@ model Task {
   tags              String[]
   deadline          DateTime?
   priority          TaskPriority @default(MEDIUM)
-  status            TaskStatus   @default(NOT_STARTED)
+  status            TaskStatus   @default(PENDING)
+  declineReason     String?      @map("decline_reason")
   completedAt       DateTime?    @map("completed_at")
   recurrenceRule    String?      @map("recurrence_rule")
   recurrenceEndDate DateTime?    @map("recurrence_end_date")
@@ -531,6 +533,7 @@ enum NotificationType {
   TASK_UPDATED
   TASK_SUBMITTED
   TASK_COMPLETED
+  TASK_DECLINED
   CALENDAR_REMINDER
   SUB_JOINED
   FRIEND_REQUEST

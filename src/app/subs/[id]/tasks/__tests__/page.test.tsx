@@ -223,4 +223,27 @@ describe("SubTasksPage", () => {
     expect(screen.getByText("Submitted")).toBeInTheDocument();
     expect(screen.queryByText("Closed")).not.toBeInTheDocument();
   });
+
+  it("groups PENDING tasks as open", async () => {
+    mockFindMany.mockResolvedValue([
+      makeTask({ title: "Pending Task", status: "PENDING" }),
+    ] as never);
+
+    const page = await SubTasksPage({ params });
+    render(page);
+
+    expect(screen.getByText("Open")).toBeInTheDocument();
+    expect(screen.getByText("Pending")).toBeInTheDocument();
+  });
+
+  it("displays Pending status badge for PENDING tasks", async () => {
+    mockFindMany.mockResolvedValue([
+      makeTask({ title: "Pending Task", status: "PENDING" }),
+    ] as never);
+
+    const page = await SubTasksPage({ params });
+    render(page);
+
+    expect(screen.getByText("Pending")).toBeInTheDocument();
+  });
 });

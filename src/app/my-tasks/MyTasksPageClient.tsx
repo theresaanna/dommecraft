@@ -8,7 +8,7 @@ type SerializedTask = {
   title: string;
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
-  status: "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
   deadline: string | null;
   tags: string[];
   sub: { id: string; fullName: string };
@@ -18,7 +18,7 @@ type SerializedTask = {
   createdAt: string;
 };
 
-type FilterTab = "active" | "submitted" | "completed" | "all";
+type FilterTab = "pending" | "active" | "submitted" | "completed" | "all";
 
 const PRIORITY_STYLES: Record<string, string> = {
   LOW: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
@@ -28,6 +28,8 @@ const PRIORITY_STYLES: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
+  PENDING:
+    "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
   NOT_STARTED: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
   IN_PROGRESS:
     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -38,6 +40,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending Request",
   NOT_STARTED: "Not Started",
   IN_PROGRESS: "In Progress",
   SUBMITTED: "Submitted",
@@ -59,6 +62,7 @@ function formatDeadline(deadline: string): string {
 }
 
 const TABS: { key: FilterTab; label: string }[] = [
+  { key: "pending", label: "Requests" },
   { key: "active", label: "Active" },
   { key: "submitted", label: "Submitted" },
   { key: "completed", label: "Completed" },
@@ -67,6 +71,8 @@ const TABS: { key: FilterTab; label: string }[] = [
 
 function filterTasks(tasks: SerializedTask[], tab: FilterTab): SerializedTask[] {
   switch (tab) {
+    case "pending":
+      return tasks.filter((t) => t.status === "PENDING");
     case "active":
       return tasks.filter(
         (t) => t.status === "NOT_STARTED" || t.status === "IN_PROGRESS"
@@ -93,7 +99,8 @@ export default function MyTasksPageClient({
   subtitle?: string;
   basePath?: string;
 }) {
-  const [activeTab, setActiveTab] = useState<FilterTab>("active");
+  const hasPending = tasks.some((t) => t.status === "PENDING");
+  const [activeTab, setActiveTab] = useState<FilterTab>(hasPending ? "pending" : "active");
 
   if (!hasLinkedProfile) {
     return (

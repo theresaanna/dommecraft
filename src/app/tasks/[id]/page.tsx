@@ -60,6 +60,7 @@ export default async function TaskDetailPage({
     deadline: task.deadline?.toISOString() ?? null,
     priority: task.priority,
     status: task.status,
+    declineReason: task.declineReason,
     completedAt: task.completedAt?.toISOString() ?? null,
     recurrenceRule: task.recurrenceRule,
     recurrenceEndDate: task.recurrenceEndDate?.toISOString() ?? null,

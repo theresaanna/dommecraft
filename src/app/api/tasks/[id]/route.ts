@@ -120,6 +120,9 @@ export async function PATCH(
       }
     }
 
+    // When re-sending a declined task, clear the decline reason
+    const isResending = existing.status === "PENDING" && body.status === "PENDING";
+
     const updatedTask = await prisma.task.update({
       where: { id },
       data: {
@@ -136,11 +139,12 @@ export async function PATCH(
         }),
         ...(body.projectId !== undefined && { projectId: body.projectId }),
         ...(completedAt !== undefined && { completedAt }),
+        ...(isResending && { declineReason: null }),
       },
     });
 
     // Send notification on relevant status changes
-    if (body.status && body.status !== existing.status) {
+    if (body.status && (body.status !== existing.status || isResending)) {
       const task = await prisma.task.findUnique({
         where: { id },
         include: { sub: true },
@@ -148,7 +152,7 @@ export async function PATCH(
 
       if (task?.sub.linkedUserId) {
         let message: string | null = null;
-        let type: "TASK_COMPLETED" | "TASK_UPDATED" | null = null;
+        let type: "TASK_COMPLETED" | "TASK_UPDATED" | "TASK_ASSIGNED" | null = null;
 
         if (body.status === "COMPLETED") {
           message = `Task approved: ${task.title}`;
@@ -159,6 +163,9 @@ export async function PATCH(
         ) {
           message = `Task returned for revision: ${task.title}`;
           type = "TASK_UPDATED";
+        } else if (isResending) {
+          message = `Task request re-sent: ${task.title}`;
+          type = "TASK_ASSIGNED";
         }
 
         if (message && type) {

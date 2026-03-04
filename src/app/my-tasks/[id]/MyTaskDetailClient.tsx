@@ -25,7 +25,8 @@ type Task = {
   title: string;
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
-  status: "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   deadline: string | null;
   tags: string[];
   sub: { id: string; fullName: string };
@@ -44,6 +45,8 @@ const PRIORITY_STYLES: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
+  PENDING:
+    "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
   NOT_STARTED: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
   IN_PROGRESS:
     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -54,6 +57,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending Request",
   NOT_STARTED: "Not Started",
   IN_PROGRESS: "In Progress",
   SUBMITTED: "Submitted",
@@ -97,11 +101,67 @@ export default function MyTaskDetailClient({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [declining, setDeclining] = useState(false);
+  const [showDeclineForm, setShowDeclineForm] = useState(false);
+  const [declineReasonInput, setDeclineReasonInput] = useState("");
   const [proofNotes, setProofNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const overdue = isOverdue(task.deadline, task.status);
   const completedSubtasks = task.subtasks.filter((s) => s.isCompleted).length;
+
+  async function handleAcceptTask() {
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/my-tasks/${task.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "NOT_STARTED" }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to accept task");
+      }
+
+      router.push(backHref);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleDeclineTask() {
+    if (!declineReasonInput.trim()) return;
+
+    setDeclining(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/my-tasks/${task.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          status: "PENDING",
+          declineReason: declineReasonInput.trim(),
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to decline task");
+      }
+
+      router.push(backHref);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setDeclining(false);
+    }
+  }
 
   async function handleUploadProof() {
     const file = fileInputRef.current?.files?.[0];
@@ -177,7 +237,7 @@ export default function MyTaskDetailClient({
         throw new Error(data.error || "Failed to submit task");
       }
 
-      router.refresh();
+      router.push(backHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -424,6 +484,69 @@ export default function MyTaskDetailClient({
 
         {/* Submit / Status section */}
         <div className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
+          {task.status === "PENDING" && (
+            <div className="space-y-4">
+              <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
+                This is a task request from your Domme. Accept or decline it below.
+              </div>
+
+              {!showDeclineForm ? (
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleAcceptTask}
+                    disabled={submitting}
+                    className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                  >
+                    {submitting ? "Accepting..." : "Accept Task"}
+                  </button>
+                  <button
+                    onClick={() => setShowDeclineForm(true)}
+                    className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  >
+                    Decline
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div>
+                    <label
+                      htmlFor="decline-reason"
+                      className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    >
+                      Reason for declining
+                    </label>
+                    <textarea
+                      id="decline-reason"
+                      value={declineReasonInput}
+                      onChange={(e) => setDeclineReasonInput(e.target.value)}
+                      rows={3}
+                      className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                      placeholder="Explain why you're declining this task..."
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleDeclineTask}
+                      disabled={declining || !declineReasonInput.trim()}
+                      className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
+                    >
+                      {declining ? "Declining..." : "Submit Decline"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowDeclineForm(false);
+                        setDeclineReasonInput("");
+                      }}
+                      className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {(task.status === "NOT_STARTED" || task.status === "IN_PROGRESS") && (
             <button
               onClick={handleSubmitTask}
