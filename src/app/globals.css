@@ -6,6 +6,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-image: url("/clouds-day.svg");
+  --bg-color: #eaf8fdff;
 }
 
 @theme inline {
@@ -18,17 +20,15 @@
 .dark {
   --background: #162d50;
   --foreground: #ededed;
+  --bg-image: url("/clouds-night.svg");
+  --bg-color: #162d50;
 }
 
 body {
-  background: url("/clouds-day.svg") repeat-x bottom / contain, #eaf8fdff;
+  background: var(--bg-image) repeat-x bottom / contain, var(--bg-color);
   color: var(--foreground);
   font-family: var(--font-nunito), Arial, Helvetica, sans-serif;
   background-attachment: fixed;
-}
-
-.dark body {
-  background: url("/clouds-night.svg") repeat-x bottom / contain, #162d50;
 }
 
 .sx-react-calendar-wrapper {
