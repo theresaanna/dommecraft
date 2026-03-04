@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AblyProvider } from "@/components/providers/ably-provider";
 import BookmarkBanner from "@/components/BookmarkBanner";
 import GlobalHeader from "@/components/GlobalHeader";
+import SparkleEffect from "@/components/SparkleEffect";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -43,6 +44,7 @@ export default function RootLayout({
         <SessionProvider>
           <AblyProvider>
             <ThemeProvider>
+              <SparkleEffect />
               <BookmarkBanner />
               <NotificationProvider>
                 <GlobalHeader />
