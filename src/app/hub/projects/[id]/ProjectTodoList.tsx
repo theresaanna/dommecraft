@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-type ProjectTask = {
+type ProjectTodo = {
   id: string;
   title: string;
   completed: boolean;
@@ -23,10 +23,10 @@ function formatDeadline(iso: string): string {
   });
 }
 
-export default function ProjectTaskList({
+export default function ProjectTodoList({
   tasks,
 }: {
-  tasks: ProjectTask[];
+  tasks: ProjectTodo[];
 }) {
   const router = useRouter();
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export default function ProjectTaskList({
   const [editError, setEditError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  async function handleToggle(task: ProjectTask) {
+  async function handleToggle(task: ProjectTodo) {
     await fetch(`/api/hub/projects/tasks/${task.id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -44,8 +44,8 @@ export default function ProjectTaskList({
     router.refresh();
   }
 
-  async function handleDelete(task: ProjectTask) {
-    if (!confirm(`Delete task "${task.title}"?`)) return;
+  async function handleDelete(task: ProjectTodo) {
+    if (!confirm(`Delete todo "${task.title}"?`)) return;
 
     await fetch(`/api/hub/projects/tasks/${task.id}`, {
       method: "DELETE",
@@ -53,7 +53,7 @@ export default function ProjectTaskList({
     router.refresh();
   }
 
-  function startEdit(task: ProjectTask) {
+  function startEdit(task: ProjectTodo) {
     setEditingId(task.id);
     setEditTitle(task.title);
     setEditDeadline(
@@ -87,13 +87,13 @@ export default function ProjectTaskList({
       });
       if (!res.ok) {
         const data = await res.json();
-        setEditError(data.error || "Failed to update task");
+        setEditError(data.error || "Failed to update todo");
         return;
       }
       setEditingId(null);
       router.refresh();
     } catch {
-      setEditError("Failed to update task");
+      setEditError("Failed to update todo");
     } finally {
       setSaving(false);
     }
@@ -102,7 +102,7 @@ export default function ProjectTaskList({
   if (tasks.length === 0) {
     return (
       <p className="py-4 text-sm text-zinc-500 dark:text-zinc-400">
-        No tasks yet. Add one above.
+        No todos yet. Add one above.
       </p>
     );
   }

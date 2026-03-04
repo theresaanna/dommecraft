@@ -73,7 +73,7 @@ const TABS: { key: FilterTab; label: string }[] = [
 function filterTasks(tasks: SerializedTask[], tab: FilterTab): SerializedTask[] {
   switch (tab) {
     case "pending":
-      return tasks.filter((t) => t.status === "PENDING");
+      return tasks.filter((t) => t.status === "PENDING" && !t.declineReason);
     case "active":
       return tasks.filter(
         (t) => t.status === "NOT_STARTED" || t.status === "IN_PROGRESS"
