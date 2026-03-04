@@ -67,7 +67,7 @@ function getInitials(name: string | null): string {
     .slice(0, 2);
 }
 
-/** Popup wrapper that flips direction when it would overflow the viewport. */
+/** Popup wrapper that positions itself via fixed coordinates to avoid scroll clipping. */
 function ReactionPopover({
   children,
   zIndex = 10,
@@ -76,21 +76,35 @@ function ReactionPopover({
   zIndex?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [flipY, setFlipY] = useState(false);
-  const [flipX, setFlipX] = useState(false);
 
   useLayoutEffect(() => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    if (rect.top < 8) setFlipY(true);
-    if (rect.right > window.innerWidth - 8) setFlipX(true);
+    const el = ref.current;
+    if (!el || !el.parentElement) return;
+    const anchor = el.parentElement.getBoundingClientRect();
+    const { width: pw, height: ph } = el.getBoundingClientRect();
+
+    // Vertical: prefer above the trigger; fall back to below
+    const top =
+      anchor.top - ph >= 8
+        ? anchor.top - ph - 4
+        : anchor.bottom + 4;
+
+    // Horizontal: prefer left-aligned with trigger; shift if it overflows
+    let left = anchor.left;
+    if (left + pw > window.innerWidth - 8) {
+      left = window.innerWidth - pw - 8;
+    }
+    if (left < 8) left = 8;
+
+    el.style.top = `${top}px`;
+    el.style.left = `${left}px`;
+    el.style.visibility = "visible";
   }, []);
 
   return (
     <div
       ref={ref}
-      style={{ zIndex }}
-      className={`absolute ${flipY ? "top-full mt-1" : "bottom-full mb-1"} ${flipX ? "right-0" : "left-0"}`}
+      style={{ position: "fixed", zIndex, visibility: "hidden" }}
     >
       {children}
     </div>
