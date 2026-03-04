@@ -42,6 +42,7 @@ export default async function SubTasksPage() {
     description: t.description,
     priority: t.priority,
     status: t.status,
+    declineReason: t.declineReason,
     deadline: t.deadline?.toISOString() || null,
     tags: t.tags,
     sub: t.sub,

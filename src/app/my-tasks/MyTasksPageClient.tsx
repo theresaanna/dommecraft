@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 
 type SerializedTask = {
@@ -9,6 +9,7 @@ type SerializedTask = {
   description: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   deadline: string | null;
   tags: string[];
   sub: { id: string; fullName: string };
@@ -86,8 +87,41 @@ function filterTasks(tasks: SerializedTask[], tab: FilterTab): SerializedTask[] 
   }
 }
 
+type ApiTask = {
+  id: string;
+  title: string;
+  description: string | null;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
+  deadline: string | null;
+  tags: string[];
+  sub: { id: string; fullName: string };
+  _count: { subtasks: number; proofs: number };
+  subtasks: { isCompleted: boolean }[];
+  createdAt: string;
+};
+
+function serializeApiTasks(apiTasks: ApiTask[]): SerializedTask[] {
+  return apiTasks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    priority: t.priority,
+    status: t.status,
+    declineReason: t.declineReason,
+    deadline: t.deadline,
+    tags: t.tags,
+    sub: t.sub,
+    subtaskCount: t._count.subtasks,
+    proofCount: t._count.proofs,
+    completedSubtasks: t.subtasks.filter((s) => s.isCompleted).length,
+    createdAt: t.createdAt,
+  }));
+}
+
 export default function MyTasksPageClient({
-  tasks,
+  tasks: initialTasks,
   hasLinkedProfile,
   title = "My Tasks",
   subtitle = "Assigned tasks from your Domme",
@@ -99,8 +133,40 @@ export default function MyTasksPageClient({
   subtitle?: string;
   basePath?: string;
 }) {
+  const [tasks, setTasks] = useState<SerializedTask[]>(initialTasks);
   const hasPending = tasks.some((t) => t.status === "PENDING");
   const [activeTab, setActiveTab] = useState<FilterTab>(hasPending ? "pending" : "active");
+
+  const fetchTasks = useCallback(async () => {
+    try {
+      const res = await fetch("/api/my-tasks");
+      if (!res.ok) return;
+      const data: ApiTask[] = await res.json();
+      setTasks(serializeApiTasks(data));
+    } catch {
+      // Silently ignore fetch errors
+    }
+  }, []);
+
+  useEffect(() => {
+    function handleVisibility() {
+      if (document.visibilityState === "visible") {
+        fetchTasks();
+      }
+    }
+
+    function handleRefresh() {
+      fetchTasks();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("notifications:refresh", handleRefresh);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("notifications:refresh", handleRefresh);
+    };
+  }, [fetchTasks]);
 
   if (!hasLinkedProfile) {
     return (
@@ -190,9 +256,15 @@ export default function MyTasksPageClient({
 
                     {/* Status badge */}
                     <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        task.status === "PENDING" && task.declineReason
+                          ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                          : STATUS_STYLES[task.status]
+                      }`}
                     >
-                      {STATUS_LABELS[task.status]}
+                      {task.status === "PENDING" && task.declineReason
+                        ? "Declined"
+                        : STATUS_LABELS[task.status]}
                     </span>
                   </div>
 

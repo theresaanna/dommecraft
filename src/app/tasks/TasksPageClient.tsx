@@ -24,6 +24,7 @@ export type SerializedTask = {
   deadline: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
   status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   completedAt: string | null;
   createdAt: string;
   sub: { id: string; fullName: string; color: string | null };

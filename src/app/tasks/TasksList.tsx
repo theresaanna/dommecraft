@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type { SerializedTask } from "./TasksPageClient";
-import { getSubRowClassName } from "@/lib/sub-colors";
 
 const PRIORITY_STYLES: Record<string, string> = {
   LOW: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
@@ -22,6 +21,15 @@ const STATUS_STYLES: Record<string, string> = {
   COMPLETED:
     "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
   ARCHIVED: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500",
+};
+
+const STATUS_ROW_STYLES: Record<string, string> = {
+  PENDING: "bg-violet-50/60 dark:bg-violet-950/20",
+  NOT_STARTED: "bg-zinc-50/60 dark:bg-zinc-900/20",
+  IN_PROGRESS: "bg-blue-50/60 dark:bg-blue-950/20",
+  SUBMITTED: "bg-amber-50/60 dark:bg-amber-950/20",
+  COMPLETED: "bg-emerald-50/60 dark:bg-emerald-950/20",
+  ARCHIVED: "bg-zinc-50/40 dark:bg-zinc-900/10",
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -126,7 +134,7 @@ export default function TasksList({
           return (
             <li
               key={task.id}
-              className={`flex items-start gap-3 px-4 py-3 ${getSubRowClassName(task.sub.color)}`}
+              className={`flex items-start gap-3 px-4 py-3 ${STATUS_ROW_STYLES[task.status] || ""}`}
             >
               <input
                 type="checkbox"
@@ -158,9 +166,15 @@ export default function TasksList({
 
                   {/* Status badge */}
                   <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
+                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      task.status === "PENDING" && task.declineReason
+                        ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        : STATUS_STYLES[task.status]
+                    }`}
                   >
-                    {STATUS_LABELS[task.status]}
+                    {task.status === "PENDING" && task.declineReason
+                      ? "Declined"
+                      : STATUS_LABELS[task.status]}
                   </span>
                 </div>
 

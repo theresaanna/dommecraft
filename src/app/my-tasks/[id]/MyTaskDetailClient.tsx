@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { triggerNotificationRefresh } from "@/components/providers/notification-provider";
 
 type Subtask = {
   id: string;
@@ -126,6 +127,7 @@ export default function MyTaskDetailClient({
         throw new Error(data.error || "Failed to accept task");
       }
 
+      triggerNotificationRefresh();
       router.push(backHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -155,6 +157,7 @@ export default function MyTaskDetailClient({
         throw new Error(data.error || "Failed to decline task");
       }
 
+      triggerNotificationRefresh();
       router.push(backHref);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -264,9 +267,15 @@ export default function MyTaskDetailClient({
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
+            className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+              task.status === "PENDING" && task.declineReason
+                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                : STATUS_STYLES[task.status]
+            }`}
           >
-            {STATUS_LABELS[task.status]}
+            {task.status === "PENDING" && task.declineReason
+              ? "Declined"
+              : STATUS_LABELS[task.status]}
           </span>
           <span
             className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
@@ -280,6 +289,84 @@ export default function MyTaskDetailClient({
       {error && (
         <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
           {error}
+        </div>
+      )}
+
+      {/* Pending: accept/decline at top */}
+      {task.status === "PENDING" && task.declineReason && (
+        <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/20">
+          <p className="text-sm font-medium text-red-700 dark:text-red-400">
+            You declined this task
+          </p>
+          <p className="mt-1 text-sm text-red-600 dark:text-red-300">
+            {task.declineReason}
+          </p>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+            Waiting for your Domme to respond.
+          </p>
+        </div>
+      )}
+
+      {task.status === "PENDING" && !task.declineReason && (
+        <div className="mb-6 space-y-4">
+          <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
+            This is a task request from your Domme. Accept or decline it below.
+          </div>
+
+          {!showDeclineForm ? (
+            <div className="flex gap-2">
+              <button
+                onClick={handleAcceptTask}
+                disabled={submitting}
+                className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+              >
+                {submitting ? "Accepting..." : "Accept Task"}
+              </button>
+              <button
+                onClick={() => setShowDeclineForm(true)}
+                className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                Decline
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <div>
+                <label
+                  htmlFor="decline-reason"
+                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                >
+                  Reason for declining
+                </label>
+                <textarea
+                  id="decline-reason"
+                  value={declineReasonInput}
+                  onChange={(e) => setDeclineReasonInput(e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                  placeholder="Explain why you're declining this task..."
+                />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleDeclineTask}
+                  disabled={declining || !declineReasonInput.trim()}
+                  className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
+                >
+                  {declining ? "Declining..." : "Submit Decline"}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowDeclineForm(false);
+                    setDeclineReasonInput("");
+                  }}
+                  className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -429,7 +516,9 @@ export default function MyTaskDetailClient({
 
           {/* Upload form (only when task is not completed) */}
           {task.status !== "COMPLETED" && (
-            <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+            <div className={`mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800 ${
+              task.status === "PENDING" ? "pointer-events-none opacity-40" : ""
+            }`}>
               <div className="space-y-3">
                 <div>
                   <label
@@ -443,6 +532,7 @@ export default function MyTaskDetailClient({
                     id="proof-file"
                     type="file"
                     accept="image/*,video/*"
+                    disabled={task.status === "PENDING"}
                     className="mt-1 block w-full text-sm text-zinc-700 file:mr-4 file:rounded-md file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-300 dark:file:bg-zinc-800 dark:file:text-zinc-300 dark:hover:file:bg-zinc-700"
                   />
                 </div>
@@ -459,6 +549,7 @@ export default function MyTaskDetailClient({
                     value={proofNotes}
                     onChange={(e) => setProofNotes(e.target.value)}
                     rows={2}
+                    disabled={task.status === "PENDING"}
                     className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
                     placeholder="Add any notes about this proof..."
                   />
@@ -466,7 +557,7 @@ export default function MyTaskDetailClient({
 
                 <button
                   onClick={handleUploadProof}
-                  disabled={uploading}
+                  disabled={uploading || task.status === "PENDING"}
                   className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
                 >
                   {uploading ? "Uploading..." : "Upload Proof"}
@@ -484,69 +575,6 @@ export default function MyTaskDetailClient({
 
         {/* Submit / Status section */}
         <div className="border-t border-zinc-200 pt-6 dark:border-zinc-800">
-          {task.status === "PENDING" && (
-            <div className="space-y-4">
-              <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
-                This is a task request from your Domme. Accept or decline it below.
-              </div>
-
-              {!showDeclineForm ? (
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleAcceptTask}
-                    disabled={submitting}
-                    className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
-                  >
-                    {submitting ? "Accepting..." : "Accept Task"}
-                  </button>
-                  <button
-                    onClick={() => setShowDeclineForm(true)}
-                    className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                  >
-                    Decline
-                  </button>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div>
-                    <label
-                      htmlFor="decline-reason"
-                      className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-                    >
-                      Reason for declining
-                    </label>
-                    <textarea
-                      id="decline-reason"
-                      value={declineReasonInput}
-                      onChange={(e) => setDeclineReasonInput(e.target.value)}
-                      rows={3}
-                      className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
-                      placeholder="Explain why you're declining this task..."
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleDeclineTask}
-                      disabled={declining || !declineReasonInput.trim()}
-                      className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
-                    >
-                      {declining ? "Declining..." : "Submit Decline"}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowDeclineForm(false);
-                        setDeclineReasonInput("");
-                      }}
-                      className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
           {(task.status === "NOT_STARTED" || task.status === "IN_PROGRESS") && (
             <button
               onClick={handleSubmitTask}
