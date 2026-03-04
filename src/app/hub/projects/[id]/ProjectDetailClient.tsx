@@ -7,6 +7,7 @@ import NotesList from "./NotesList";
 import NoteForm from "./NoteForm";
 import ProjectTaskForm from "./ProjectTaskForm";
 import ProjectTaskList from "./ProjectTaskList";
+import ProjectForm from "../../ProjectForm";
 
 type Project = {
   id: string;
@@ -50,6 +51,7 @@ export default function ProjectDetailClient({
   initialTasks: ProjectTask[];
 }) {
   const router = useRouter();
+  const [showEditForm, setShowEditForm] = useState(false);
   const [showNoteForm, setShowNoteForm] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -99,14 +101,35 @@ export default function ProjectDetailClient({
               Category: {project.category.name}
             </p>
           </div>
-          <button
-            onClick={handleDeleteProject}
-            className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
-          >
-            Delete Project
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowEditForm(!showEditForm)}
+              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            >
+              {showEditForm ? "Cancel" : "Edit Project"}
+            </button>
+            <button
+              onClick={handleDeleteProject}
+              className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
+
+      {showEditForm && (
+        <div className="mb-6">
+          <ProjectForm
+            categoryId={project.categoryId}
+            project={project}
+            onClose={() => {
+              setShowEditForm(false);
+              router.refresh();
+            }}
+          />
+        </div>
+      )}
 
       {/* Tasks Section */}
       <div className="mb-4 flex items-center justify-between">

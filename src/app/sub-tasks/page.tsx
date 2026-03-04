@@ -1,13 +1,13 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import MyTasksPageClient from "./MyTasksPageClient";
+import MyTasksPageClient from "../my-tasks/MyTasksPageClient";
 
-export default async function MyTasksPage() {
+export default async function SubTasksPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  if (session.user.role === "DOMME") redirect("/sub-tasks");
+  if (session.user.role !== "DOMME") redirect("/my-tasks");
 
   // Find SubProfiles linked to this user
   const linkedProfiles = await prisma.subProfile.findMany({
@@ -56,6 +56,9 @@ export default async function MyTasksPage() {
       <MyTasksPageClient
         tasks={serializedTasks}
         hasLinkedProfile={profileIds.length > 0}
+        title="Sub Tasks"
+        subtitle="Tasks assigned to your subs"
+        basePath="/sub-tasks"
       />
     </div>
   );

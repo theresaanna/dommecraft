@@ -83,9 +83,15 @@ function filterTasks(tasks: SerializedTask[], tab: FilterTab): SerializedTask[] 
 export default function MyTasksPageClient({
   tasks,
   hasLinkedProfile,
+  title = "My Tasks",
+  subtitle = "Assigned tasks from your Domme",
+  basePath = "/my-tasks",
 }: {
   tasks: SerializedTask[];
   hasLinkedProfile: boolean;
+  title?: string;
+  subtitle?: string;
+  basePath?: string;
 }) {
   const [activeTab, setActiveTab] = useState<FilterTab>("active");
 
@@ -93,7 +99,7 @@ export default function MyTasksPageClient({
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-          My Tasks
+          {title}
         </h1>
         <p className="mt-4 text-sm text-zinc-700 dark:text-zinc-300">
           Your account is not linked to any profile yet. Ask your Domme for an
@@ -115,10 +121,10 @@ export default function MyTasksPageClient({
     <>
       <div>
         <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-          My Tasks
+          {title}
         </h1>
         <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-          Assigned tasks from your Domme
+          {subtitle}
         </p>
       </div>
 
@@ -160,7 +166,7 @@ export default function MyTasksPageClient({
             return (
               <li key={task.id}>
                 <Link
-                  href={`/my-tasks/${task.id}`}
+                  href={`${basePath}/${task.id}`}
                   className="block px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
                 >
                   <div className="flex flex-wrap items-center gap-2">

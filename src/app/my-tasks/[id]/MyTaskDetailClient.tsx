@@ -84,7 +84,15 @@ function formatTimestamp(iso: string): string {
   });
 }
 
-export default function MyTaskDetailClient({ task }: { task: Task }) {
+export default function MyTaskDetailClient({
+  task,
+  backLabel = "Back to My Tasks",
+  backHref = "/my-tasks",
+}: {
+  task: Task;
+  backLabel?: string;
+  backHref?: string;
+}) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -182,10 +190,10 @@ export default function MyTaskDetailClient({ task }: { task: Task }) {
       {/* Back link */}
       <div className="mb-4">
         <Link
-          href="/my-tasks"
+          href={backHref}
           className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
-          &larr; Back to My Tasks
+          &larr; {backLabel}
         </Link>
       </div>
 
