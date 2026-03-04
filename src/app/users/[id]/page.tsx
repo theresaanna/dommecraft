@@ -57,7 +57,7 @@ export default async function UserProfilePage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-4xl space-y-8 px-4 py-16">
       <section className="flex items-center gap-4">
         {user.avatarUrl ? (
           <img

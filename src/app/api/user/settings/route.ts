@@ -25,6 +25,7 @@ export async function GET() {
         notificationSound: true,
         pushNotifications: true,
         currency: true,
+        bio: true,
       },
     });
 
@@ -106,6 +107,7 @@ export async function PATCH(request: Request) {
         ...(body.currency !== undefined && {
           currency: body.currency,
         }),
+        ...(body.bio !== undefined && { bio: body.bio }),
       },
       select: {
         name: true,
@@ -119,6 +121,7 @@ export async function PATCH(request: Request) {
         notificationSound: true,
         pushNotifications: true,
         currency: true,
+        bio: true,
       },
     });
 
