@@ -132,7 +132,7 @@ export default function NotificationsPageClient({
           <p>No notifications yet.</p>
         </div>
       ) : (
-        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/80">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {notifications.map((notification) => {
               const style = TYPE_STYLES[notification.type] || {

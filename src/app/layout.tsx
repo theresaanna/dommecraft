@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/session-provider";
 import { NotificationProvider } from "@/components/providers/notification-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
@@ -8,8 +8,8 @@ import BookmarkBanner from "@/components/BookmarkBanner";
 import GlobalHeader from "@/components/GlobalHeader";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
 });
 
@@ -38,7 +38,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${nunito.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
           <AblyProvider>

@@ -26,7 +26,7 @@ type Project = {
 export default function ProjectList({ projects }: { projects: Project[] }) {
   if (projects.length === 0) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/80">
+      <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           No projects yet. Create your first project to get started.
         </p>
@@ -35,7 +35,7 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
   }
 
   return (
-    <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/80">
+    <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
       {projects.map((project) => {
         const completedCount = project.tasks.filter((t) => t.completed).length;
         const totalCount = project.tasks.length;

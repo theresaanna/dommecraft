@@ -89,7 +89,7 @@ export default function ProjectForm({
   }
 
   return (
-    <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
+    <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
       <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
         {isEditing ? "Edit Project" : "New Project"}
       </h3>

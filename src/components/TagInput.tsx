@@ -149,7 +149,7 @@ export default function TagInput({
           {showDropdown && filtered.length > 0 && (
             <ul
               role="listbox"
-              className="absolute left-0 top-full z-10 mt-1 max-h-48 w-64 overflow-auto rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80"
+              className="absolute left-0 top-full z-10 mt-1 max-h-48 w-64 overflow-auto rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
             >
               {filtered.map((suggestion, i) => (
                 <li

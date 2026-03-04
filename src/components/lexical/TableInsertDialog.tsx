@@ -41,7 +41,7 @@ export default function TableInsertDialog({
   return (
     <div
       ref={dialogRef}
-      className="absolute left-0 top-full z-20 mt-1 w-56 rounded-md border border-zinc-200 bg-white/80 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80"
+      className="absolute left-0 top-full z-20 mt-1 w-56 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
     >
       <div className="mb-2">
         <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-400">

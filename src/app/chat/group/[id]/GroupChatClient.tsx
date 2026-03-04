@@ -870,7 +870,7 @@ export default function GroupChatClient({
                       {pickerOpenFor === msg.id && (
                         <div
                           data-testid="quick-reactions"
-                          className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800/80"
+                          className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800/60"
                         >
                           {EMOJI_OPTIONS.map((emoji) => (
                             <button

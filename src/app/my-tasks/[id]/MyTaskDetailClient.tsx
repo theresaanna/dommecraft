@@ -484,7 +484,7 @@ export default function MyTaskDetailClient({
               {task.proofs.map((proof) => (
                 <div
                   key={proof.id}
-                  className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80"
+                  className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
                   {proof.fileType === "image" ? (
                     <img
@@ -516,7 +516,7 @@ export default function MyTaskDetailClient({
 
           {/* Upload form (only when task is not completed) */}
           {task.status !== "COMPLETED" && (
-            <div className={`mt-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80 ${
+            <div className={`mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${
               task.status === "PENDING" ? "pointer-events-none opacity-40" : ""
             }`}>
               <div className="space-y-3">

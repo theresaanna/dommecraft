@@ -86,7 +86,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
     <div
       ref={pickerRef}
       data-testid="emoji-picker"
-      className="flex w-72 flex-col rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-800/80"
+      className="flex w-72 flex-col rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
     >
       {/* Search */}
       <div className="border-b border-zinc-200 p-2 dark:border-zinc-700">

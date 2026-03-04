@@ -79,7 +79,7 @@ export default function CalendarSettingsClient({
           return (
             <div
               key={provider.id}
-              className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80"
+              className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
             >
               <div className="flex items-center justify-between">
                 <div>

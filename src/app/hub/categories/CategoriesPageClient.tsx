@@ -101,7 +101,7 @@ export default function CategoriesPageClient({
       </div>
 
       {showForm && (
-        <div className="mb-4 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/80">
+        <div className="mb-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           {error && (
             <p className="mb-2 text-sm text-red-600 dark:text-red-400">
               {error}
@@ -127,7 +127,7 @@ export default function CategoriesPageClient({
       )}
 
       {initialCategories.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/80">
+        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             No categories yet. Visit the{" "}
             <Link
@@ -140,7 +140,7 @@ export default function CategoriesPageClient({
           </p>
         </div>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/80">
+        <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
           {initialCategories.map((category) => (
             <li
               key={category.id}
