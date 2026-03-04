@@ -24,6 +24,16 @@
   --bg-color: #162d50;
 }
 
+@media (max-width: 767px) {
+  :root {
+    --bg-image: url("/clouds-day-mobile.svg");
+  }
+
+  .dark {
+    --bg-image: url("/clouds-night-mobile.svg");
+  }
+}
+
 body {
   background: var(--bg-image) repeat-x bottom / contain, var(--bg-color);
   color: var(--foreground);
