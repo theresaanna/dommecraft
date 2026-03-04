@@ -1,8 +1,12 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { usePresence } from "@/hooks/use-presence";
+import {
+  useDrawerTyping,
+  type ConversationRef,
+} from "@/hooks/use-drawer-typing";
 
 type DMSummary = {
   id: string;
@@ -71,6 +75,17 @@ export default function ChatDrawer({
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const convRefs = useMemo<ConversationRef[]>(
+    () =>
+      conversations.map((c) => ({
+        id: c.id,
+        type: c.type,
+        otherName: c.type === "dm" ? c.other.name : undefined,
+      })),
+    [conversations]
+  );
+  const { getTypingDisplay } = useDrawerTyping(convRefs);
 
   const fetchConversations = useCallback(async () => {
     setLoading(true);
@@ -307,7 +322,23 @@ export default function ChatDrawer({
                             </span>
                           )}
                         </div>
-                        {renderLastMessage(conv)}
+                        {(() => {
+                          const typingText = getTypingDisplay(
+                            `${conv.type}-${conv.id}`
+                          );
+                          if (typingText) {
+                            return (
+                              <p
+                                data-testid={`drawer-typing-${conv.type}-${conv.id}`}
+                                className="truncate text-sm text-zinc-400 dark:text-zinc-500"
+                              >
+                                {typingText.replace("...", "")}
+                                <span className="animate-pulse">...</span>
+                              </p>
+                            );
+                          }
+                          return renderLastMessage(conv);
+                        })()}
                       </div>
                     </Link>
                   </li>

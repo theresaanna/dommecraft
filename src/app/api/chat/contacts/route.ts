@@ -40,7 +40,29 @@ export async function GET() {
     }
   }
 
-  // TODO: Add friends here when friend system is built
+  // Add accepted friends
+  const friendships = await prisma.friendship.findMany({
+    where: {
+      status: "ACCEPTED",
+      OR: [{ requesterId: userId }, { addresseeId: userId }],
+    },
+    select: {
+      requesterId: true,
+      addresseeId: true,
+      requester: { select: { id: true, name: true, avatarUrl: true } },
+      addressee: { select: { id: true, name: true, avatarUrl: true } },
+    },
+  });
+
+  for (const friendship of friendships) {
+    const other =
+      friendship.requesterId === userId
+        ? friendship.addressee
+        : friendship.requester;
+    if (!contactMap.has(other.id)) {
+      contactMap.set(other.id, other);
+    }
+  }
 
   return NextResponse.json(Array.from(contactMap.values()));
 }

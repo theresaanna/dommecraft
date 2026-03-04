@@ -29,6 +29,13 @@ vi.mock("@/hooks/use-presence", () => ({
   }),
 }));
 
+const mockGetTypingDisplay = vi.fn().mockReturnValue(null);
+vi.mock("@/hooks/use-drawer-typing", () => ({
+  useDrawerTyping: () => ({
+    getTypingDisplay: mockGetTypingDisplay,
+  }),
+}));
+
 type ConversationSummary = {
   id: string;
   other: { id: string; name: string | null; avatarUrl: string | null };
@@ -425,5 +432,38 @@ describe("ChatDrawer", () => {
       expect(screen.getByText("Check this out")).toBeInTheDocument();
     });
     expect(screen.queryByText("Picture message")).not.toBeInTheDocument();
+  });
+
+  it("shows typing indicator instead of last message when someone is typing", async () => {
+    mockGetTypingDisplay.mockImplementation((key: string) => {
+      if (key === "dm-conv-1") return "Bob is typing...";
+      return null;
+    });
+    mockFetchSuccess();
+    render(<ChatDrawer open={true} onClose={onClose} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Bob")).toBeInTheDocument();
+    });
+
+    const typingEl = screen.getByTestId("drawer-typing-dm-conv-1");
+    expect(typingEl).toBeInTheDocument();
+    // The "..." is in a separate animated span
+    expect(typingEl.textContent).toContain("Bob is typing");
+    expect(screen.queryByText("Hello!")).not.toBeInTheDocument();
+  });
+
+  it("shows last message when no one is typing", async () => {
+    mockGetTypingDisplay.mockReturnValue(null);
+    mockFetchSuccess();
+    render(<ChatDrawer open={true} onClose={onClose} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Hello!")).toBeInTheDocument();
+    });
+
+    expect(
+      screen.queryByTestId("drawer-typing-dm-conv-1")
+    ).not.toBeInTheDocument();
   });
 });
