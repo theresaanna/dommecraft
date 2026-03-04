@@ -13,7 +13,7 @@ function ParallaxCloudInner() {
     <div
       ref={ref}
       className="fixed pointer-events-none z-[1] w-[750px] max-w-[90vw]"
-      style={{ right: "-187px", bottom: "-40%" }}
+      style={{ right: "-187px", bottom: "-10%" }}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
