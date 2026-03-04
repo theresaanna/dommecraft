@@ -31,12 +31,6 @@ body {
   background-attachment: fixed;
 }
 
-@media (max-width: 767px) {
-  body {
-    background-attachment: scroll;
-  }
-}
-
 @media (max-width: 479px) {
   :root {
     --bg-image: url("/clouds-day-mobile.svg");
@@ -44,6 +38,11 @@ body {
 
   .dark {
     --bg-image: url("/clouds-night-mobile.svg");
+  }
+
+  body {
+    background: var(--bg-image) no-repeat center / cover, var(--bg-color);
+    background-attachment: fixed;
   }
 }
 
