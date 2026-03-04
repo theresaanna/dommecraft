@@ -57,7 +57,8 @@ type Task = {
   tags: string[];
   deadline: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
-  status: "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  declineReason: string | null;
   completedAt: string | null;
   recurrenceRule: string | null;
   recurrenceEndDate: string | null;
@@ -80,6 +81,8 @@ const PRIORITY_STYLES: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
+  PENDING:
+    "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400",
   NOT_STARTED: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
   IN_PROGRESS:
     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -91,6 +94,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, string> = {
+  PENDING: "Pending",
   NOT_STARTED: "Not Started",
   IN_PROGRESS: "In Progress",
   SUBMITTED: "Submitted",
@@ -360,6 +364,28 @@ export default function TaskDetailClient({
 
       {/* Status Action Buttons */}
       <div className="mt-6">
+        {task.status === "PENDING" && (
+          <div className="space-y-3">
+            {task.declineReason && (
+              <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/20">
+                <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                  Declined by sub
+                </p>
+                <p className="mt-1 text-sm text-red-600 dark:text-red-300">
+                  {task.declineReason}
+                </p>
+              </div>
+            )}
+            <button
+              onClick={() => handleStatusChange("PENDING")}
+              disabled={actionLoading}
+              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            >
+              {task.declineReason ? "Re-send Request" : "Awaiting Response"}
+            </button>
+          </div>
+        )}
+
         {task.status === "SUBMITTED" && (
           <div className="flex gap-2">
             <button

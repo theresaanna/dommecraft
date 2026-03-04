@@ -42,6 +42,7 @@ export default async function MyTaskDetailPage({
     description: task.description,
     priority: task.priority,
     status: task.status,
+    declineReason: task.declineReason,
     deadline: task.deadline?.toISOString() || null,
     tags: task.tags,
     sub: task.sub,

@@ -159,6 +159,7 @@ export async function POST(request: Request) {
         title: body.title.trim(),
         description: body.description || null,
         priority: body.priority || "MEDIUM",
+        status: "PENDING",
         projectId: body.projectId || null,
         deadline: body.deadline ? new Date(body.deadline) : null,
         tags: Array.isArray(body.tags) ? body.tags : [],
@@ -173,7 +174,7 @@ export async function POST(request: Request) {
         data: {
           userId: sub.linkedUserId,
           type: "TASK_ASSIGNED",
-          message: `New task assigned: ${body.title.trim()}`,
+          message: `New task request: ${body.title.trim()}`,
           linkUrl: `/my-tasks/${task.id}`,
           taskId: task.id,
         },

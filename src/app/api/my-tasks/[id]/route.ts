@@ -80,22 +80,80 @@ export async function PATCH(
 
     const body = await request.json();
 
-    // SUB can ONLY change status to "SUBMITTED"
-    if (body.status !== "SUBMITTED") {
+    const allowedStatuses = ["SUBMITTED", "NOT_STARTED"];
+    const isDeclining = body.status === "PENDING" && body.declineReason;
+
+    if (!allowedStatuses.includes(body.status) && !isDeclining) {
       return NextResponse.json(
-        { error: "Only status change to SUBMITTED is allowed" },
+        { error: "Invalid status change" },
         { status: 400 }
       );
     }
 
+    // Accept: PENDING → NOT_STARTED
+    if (body.status === "NOT_STARTED") {
+      if (task.status !== "PENDING") {
+        return NextResponse.json(
+          { error: "Can only accept a pending task request" },
+          { status: 400 }
+        );
+      }
+
+      const updatedTask = await prisma.task.update({
+        where: { id },
+        data: { status: "NOT_STARTED", declineReason: null },
+      });
+
+      if (task.userId) {
+        await prisma.notification.create({
+          data: {
+            userId: task.userId,
+            type: "TASK_UPDATED",
+            message: `Task request accepted: ${task.title}`,
+            linkUrl: `/tasks/${task.id}`,
+            taskId: task.id,
+          },
+        });
+      }
+
+      return NextResponse.json(updatedTask);
+    }
+
+    // Decline: set declineReason, keep status PENDING
+    if (isDeclining) {
+      if (task.status !== "PENDING") {
+        return NextResponse.json(
+          { error: "Can only decline a pending task request" },
+          { status: 400 }
+        );
+      }
+
+      const updatedTask = await prisma.task.update({
+        where: { id },
+        data: { declineReason: body.declineReason },
+      });
+
+      if (task.userId) {
+        await prisma.notification.create({
+          data: {
+            userId: task.userId,
+            type: "TASK_DECLINED",
+            message: `Task request declined: ${task.title}`,
+            linkUrl: `/tasks/${task.id}`,
+            taskId: task.id,
+          },
+        });
+      }
+
+      return NextResponse.json(updatedTask);
+    }
+
+    // Submit: existing flow
     const updatedTask = await prisma.task.update({
       where: { id },
-      data: {
-        status: "SUBMITTED",
-      },
+      data: { status: "SUBMITTED" },
     });
 
-    // Create notification for the DOMME
     if (task.userId) {
       await prisma.notification.create({
         data: {

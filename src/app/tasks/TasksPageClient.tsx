@@ -23,7 +23,7 @@ export type SerializedTask = {
   tags: string[];
   deadline: string | null;
   priority: "LOW" | "MEDIUM" | "HIGH";
-  status: "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
+  status: "PENDING" | "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
   completedAt: string | null;
   createdAt: string;
   sub: { id: string; fullName: string; color: string | null };

@@ -114,6 +114,10 @@ describe("FinancialsList", () => {
 
     render(<FinancialsList entries={mockEntries} currency="USD" />);
 
+    // Select an entry first (export buttons are disabled when none selected)
+    const csvCheckboxes = screen.getAllByRole("checkbox");
+    await user.click(csvCheckboxes[0]);
+
     await user.click(screen.getByText("Export CSV"));
 
     expect(mockFetch).toHaveBeenCalledWith("/api/financials/export", {
@@ -137,6 +141,10 @@ describe("FinancialsList", () => {
     });
 
     render(<FinancialsList entries={mockEntries} currency="USD" />);
+
+    // Select an entry first (export buttons are disabled when none selected)
+    const pdfCheckboxes = screen.getAllByRole("checkbox");
+    await user.click(pdfCheckboxes[0]);
 
     await user.click(screen.getByText("Export PDF"));
 

@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { FilterParams } from "./TasksPageClient";
 
 const STATUS_OPTIONS = [
+  { value: "PENDING", label: "Pending" },
   { value: "NOT_STARTED", label: "Not Started" },
   { value: "IN_PROGRESS", label: "In Progress" },
   { value: "SUBMITTED", label: "Submitted" },
