@@ -32,6 +32,7 @@ const mockProjects = [
     categoryId: "cat-1",
     category: { id: "cat-1", name: "Content Creation Ideas" },
     notesCount: 3,
+    tasks: [],
     createdAt: "2024-01-01T00:00:00.000Z",
     updatedAt: "2024-01-15T00:00:00.000Z",
   },

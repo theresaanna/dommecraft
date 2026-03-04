@@ -117,13 +117,13 @@ export default function StickyNotePlugin(): null {
     function handleDrop(e: DragEvent) {
       if (!isStickyDrag(e)) return;
       e.preventDefault();
-      hideDropLine();
 
       const nodeKey = e.dataTransfer?.getData(STICKY_NOTE_DRAG_TYPE);
-      if (!nodeKey) return;
-
       const targetInfo = dropTargetRef.current;
-      if (!targetInfo) return;
+
+      hideDropLine();
+
+      if (!nodeKey || !targetInfo) return;
 
       editor.update(() => {
         const stickyNode = $getNodeByKey(nodeKey);

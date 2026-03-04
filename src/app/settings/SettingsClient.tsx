@@ -16,6 +16,7 @@ type SettingsData = {
   showOnlineStatus: boolean;
   showReadReceipts: boolean;
   notificationSound: boolean;
+  pushNotifications: boolean;
 };
 
 export default function SettingsClient({
@@ -431,6 +432,27 @@ export default function SettingsClient({
           </label>
           <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
             Play a sound when you receive a new chat message.
+          </p>
+        </div>
+        <div className="mt-3">
+          <label className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              checked={settings.pushNotifications}
+              onChange={(e) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  pushNotifications: e.target.checked,
+                }))
+              }
+              className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-500 dark:border-zinc-700"
+            />
+            <span className="text-sm text-zinc-900 dark:text-zinc-50">
+              Push notifications
+            </span>
+          </label>
+          <p className="mt-1 ml-7 text-xs text-zinc-500 dark:text-zinc-400">
+            Show browser notifications when you receive new alerts.
           </p>
         </div>
       </div>

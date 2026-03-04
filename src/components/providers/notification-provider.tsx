@@ -86,6 +86,7 @@ export function NotificationProvider({
   const { play: playNotificationSound } = useNotificationSound(
     session?.user?.notificationSound ?? true
   );
+  const pushEnabled = session?.user?.pushNotifications ?? true;
 
   const dismissToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -161,7 +162,9 @@ export function NotificationProvider({
               },
             ]);
 
-            triggerOSNotification(n.message);
+            if (pushEnabled) {
+              triggerOSNotification(n.message);
+            }
           });
 
           // Play notification sound for chat messages when not on the chat screen

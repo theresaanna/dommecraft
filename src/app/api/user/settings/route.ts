@@ -23,6 +23,7 @@ export async function GET() {
         showOnlineStatus: true,
         showReadReceipts: true,
         notificationSound: true,
+        pushNotifications: true,
         currency: true,
       },
     });
@@ -99,6 +100,9 @@ export async function PATCH(request: Request) {
         ...(body.notificationSound !== undefined && {
           notificationSound: body.notificationSound,
         }),
+        ...(body.pushNotifications !== undefined && {
+          pushNotifications: body.pushNotifications,
+        }),
         ...(body.currency !== undefined && {
           currency: body.currency,
         }),
@@ -113,6 +117,7 @@ export async function PATCH(request: Request) {
         showOnlineStatus: true,
         showReadReceipts: true,
         notificationSound: true,
+        pushNotifications: true,
         currency: true,
       },
     });

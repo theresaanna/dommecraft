@@ -10,6 +10,7 @@ declare module "next-auth" {
       theme: Theme;
       showOnlineStatus: boolean;
       notificationSound: boolean;
+      pushNotifications: boolean;
     } & DefaultSession["user"];
   }
 }
