@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NotesList from "./NotesList";
 import NoteForm from "./NoteForm";
-import ProjectTaskForm from "./ProjectTaskForm";
-import ProjectTaskList from "./ProjectTaskList";
+import ProjectTodoForm from "./ProjectTodoForm";
+import ProjectTodoList from "./ProjectTodoList";
 import ProjectForm from "../../ProjectForm";
 
 type Project = {
@@ -30,7 +30,7 @@ type Note = {
   updatedAt: string;
 };
 
-type ProjectTask = {
+type ProjectTodo = {
   id: string;
   title: string;
   completed: boolean;
@@ -48,7 +48,7 @@ export default function ProjectDetailClient({
 }: {
   project: Project;
   initialNotes: Note[];
-  initialTasks: ProjectTask[];
+  initialTasks: ProjectTodo[];
 }) {
   const router = useRouter();
   const [showEditForm, setShowEditForm] = useState(false);
@@ -131,22 +131,22 @@ export default function ProjectDetailClient({
         </div>
       )}
 
-      {/* Tasks Section */}
+      {/* Todos Section */}
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Tasks
+          Todos
         </h2>
         <button
           onClick={() => setShowTaskForm(!showTaskForm)}
           className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          {showTaskForm ? "Cancel" : "New Task"}
+          {showTaskForm ? "Cancel" : "New Todo"}
         </button>
       </div>
 
       {showTaskForm && (
         <div className="mb-4">
-          <ProjectTaskForm
+          <ProjectTodoForm
             projectId={project.id}
             onCreated={() => {
               setShowTaskForm(false);
@@ -156,7 +156,7 @@ export default function ProjectDetailClient({
         </div>
       )}
 
-      <ProjectTaskList tasks={initialTasks} />
+      <ProjectTodoList tasks={initialTasks} />
 
       <div className="mt-10 mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">

@@ -13,7 +13,7 @@ type Category = {
   createdAt: string;
 };
 
-type ProjectTask = {
+type ProjectTodo = {
   id: string;
   title: string;
   completed: boolean;
@@ -28,7 +28,7 @@ type Project = {
   categoryId: string;
   category: { id: string; name: string };
   notesCount: number;
-  tasks: ProjectTask[];
+  tasks: ProjectTodo[];
   createdAt: string;
   updatedAt: string;
 };

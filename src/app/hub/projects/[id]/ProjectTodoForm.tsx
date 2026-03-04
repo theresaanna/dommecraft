@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function ProjectTaskForm({
+export default function ProjectTodoForm({
   projectId,
   onCreated,
 }: {
@@ -33,7 +33,7 @@ export default function ProjectTaskForm({
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.error || "Failed to add task");
+        setError(data.error || "Failed to add todo");
         return;
       }
 
@@ -41,7 +41,7 @@ export default function ProjectTaskForm({
       setDeadline("");
       onCreated();
     } catch {
-      setError("Failed to add task");
+      setError("Failed to add todo");
     } finally {
       setSubmitting(false);
     }
@@ -51,13 +51,13 @@ export default function ProjectTaskForm({
     <form onSubmit={handleSubmit} className="flex items-end gap-2">
       <div className="flex-1">
         <label
-          htmlFor="task-title"
+          htmlFor="todo-title"
           className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
         >
-          Task
+          Todo
         </label>
         <input
-          id="task-title"
+          id="todo-title"
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -67,13 +67,13 @@ export default function ProjectTaskForm({
       </div>
       <div>
         <label
-          htmlFor="task-deadline"
+          htmlFor="todo-deadline"
           className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
         >
           Deadline
         </label>
         <input
-          id="task-deadline"
+          id="todo-deadline"
           type="date"
           value={deadline}
           onChange={(e) => setDeadline(e.target.value)}
