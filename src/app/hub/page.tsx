@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import HubPageClient from "./HubPageClient";
+import { getLastActivityDate } from "./lastActivity";
 
 const DEFAULT_CATEGORIES = [
   { name: "Content Creation Ideas", sortOrder: 0 },
@@ -70,7 +71,11 @@ export default async function HubPage() {
           title: true,
           completed: true,
           deadline: true,
+          updatedAt: true,
         },
+      },
+      notes: {
+        select: { updatedAt: true },
       },
       _count: {
         select: { notes: true },
@@ -86,22 +91,30 @@ export default async function HubPage() {
     createdAt: c.createdAt.toISOString(),
   }));
 
-  const serializedProjects = projects.map((p: (typeof projects)[number]) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description,
-    categoryId: p.categoryId,
-    category: p.category,
-    notesCount: p._count.notes,
-    tasks: p.projectTasks.map((t: (typeof p.projectTasks)[number]) => ({
-      id: t.id,
-      title: t.title,
-      completed: t.completed,
-      deadline: t.deadline ? t.deadline.toISOString() : null,
-    })),
-    createdAt: p.createdAt.toISOString(),
-    updatedAt: p.updatedAt.toISOString(),
-  }));
+  const serializedProjects = projects.map((p: (typeof projects)[number]) => {
+    const lastActivity = getLastActivityDate(
+      p.updatedAt,
+      p.notes.map((n: (typeof p.notes)[number]) => n.updatedAt),
+      p.projectTasks.map((t: (typeof p.projectTasks)[number]) => t.updatedAt)
+    );
+
+    return {
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      categoryId: p.categoryId,
+      category: p.category,
+      notesCount: p._count.notes,
+      tasks: p.projectTasks.map((t: (typeof p.projectTasks)[number]) => ({
+        id: t.id,
+        title: t.title,
+        completed: t.completed,
+        deadline: t.deadline ? t.deadline.toISOString() : null,
+      })),
+      createdAt: p.createdAt.toISOString(),
+      updatedAt: lastActivity.toISOString(),
+    };
+  }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">

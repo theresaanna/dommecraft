@@ -107,7 +107,34 @@ export default function ProjectDetailClient({
         </div>
       </div>
 
+      {/* Tasks Section */}
       <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+          Tasks
+        </h2>
+        <button
+          onClick={() => setShowTaskForm(!showTaskForm)}
+          className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        >
+          {showTaskForm ? "Cancel" : "New Task"}
+        </button>
+      </div>
+
+      {showTaskForm && (
+        <div className="mb-4">
+          <ProjectTaskForm
+            projectId={project.id}
+            onCreated={() => {
+              setShowTaskForm(false);
+              router.refresh();
+            }}
+          />
+        </div>
+      )}
+
+      <ProjectTaskList tasks={initialTasks} />
+
+      <div className="mt-10 mb-4 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           Notes
         </h2>
@@ -144,33 +171,6 @@ export default function ProjectDetailClient({
           setShowNoteForm(false);
         }}
       />
-
-      {/* Tasks Section */}
-      <div className="mt-10 mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Tasks
-        </h2>
-        <button
-          onClick={() => setShowTaskForm(!showTaskForm)}
-          className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-        >
-          {showTaskForm ? "Cancel" : "New Task"}
-        </button>
-      </div>
-
-      {showTaskForm && (
-        <div className="mb-4">
-          <ProjectTaskForm
-            projectId={project.id}
-            onCreated={() => {
-              setShowTaskForm(false);
-              router.refresh();
-            }}
-          />
-        </div>
-      )}
-
-      <ProjectTaskList tasks={initialTasks} />
     </div>
   );
 }

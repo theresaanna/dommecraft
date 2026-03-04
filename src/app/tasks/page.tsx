@@ -77,7 +77,7 @@ export default async function TasksPage({
     orderBy: { [sortField]: sortOrder },
     include: {
       sub: {
-        select: { id: true, fullName: true },
+        select: { id: true, fullName: true, color: true },
       },
       project: {
         select: { id: true, name: true },
