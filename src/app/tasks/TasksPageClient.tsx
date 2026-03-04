@@ -26,7 +26,7 @@ export type SerializedTask = {
   status: "NOT_STARTED" | "IN_PROGRESS" | "SUBMITTED" | "COMPLETED" | "ARCHIVED";
   completedAt: string | null;
   createdAt: string;
-  sub: { id: string; fullName: string };
+  sub: { id: string; fullName: string; color: string | null };
   project: { id: string; name: string } | null;
   _count: { subtasks: number; proofs: number };
   subtasks: { isCompleted: boolean }[];

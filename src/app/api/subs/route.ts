@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { pickSubColor } from "@/lib/sub-colors";
 
 export async function GET(request: Request) {
   try {
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
         subType: true,
         timezone: true,
         tags: true,
+        color: true,
         expendableIncome: true,
         isArchived: true,
         createdAt: true,
@@ -120,10 +122,15 @@ export async function POST(request: Request) {
       );
     }
 
+    const existingCount = await prisma.subProfile.count({
+      where: { userId: session.user.id },
+    });
+
     const sub = await prisma.subProfile.create({
       data: {
         userId: session.user.id,
         fullName: fullName.trim(),
+        color: pickSubColor(existingCount),
         contactInfo: body.contactInfo || null,
         arrangementType: Array.isArray(body.arrangementType)
           ? body.arrangementType

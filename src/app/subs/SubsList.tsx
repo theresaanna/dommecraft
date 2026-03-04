@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { getSubRowClassName } from "@/lib/sub-colors";
 
 type Sub = {
   id: string;
@@ -10,6 +11,7 @@ type Sub = {
   arrangementType: string[];
   subType: string[];
   tags: string[];
+  color: string | null;
   createdAt: string;
 };
 
@@ -145,7 +147,7 @@ export default function SubsList({
       ) : (
         <ul className="mt-4 divide-y divide-zinc-200 dark:divide-zinc-800">
           {subs.map((sub) => (
-            <li key={sub.id} className="flex items-center gap-3">
+            <li key={sub.id} className={`flex items-center gap-3 ${getSubRowClassName(sub.color)}`}>
               <input
                 type="checkbox"
                 checked={selected.has(sub.id)}

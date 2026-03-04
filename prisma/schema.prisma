@@ -179,6 +179,7 @@ model SubProfile {
 
   // System fields
   avatarUrl    String?  @map("avatar_url")
+  color        String?
   tags         String[]
   privateNotes String?  @map("private_notes")
   isArchived   Boolean  @default(false) @map("is_archived")

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/currency";
 import type { CurrencyCode } from "@/lib/currency";
+import { getSubRowClassName } from "@/lib/sub-colors";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -27,6 +28,7 @@ export default async function DashboardPage() {
           fullName: true,
           subType: true,
           arrangementType: true,
+          color: true,
         },
       })
     : [];
@@ -107,7 +109,7 @@ export default async function DashboardPage() {
           priority: true,
           status: true,
           deadline: true,
-          sub: { select: { fullName: true } },
+          sub: { select: { fullName: true, color: true } },
         },
       })
     : [];
@@ -219,7 +221,7 @@ export default async function DashboardPage() {
           currency: true,
           category: true,
           date: true,
-          sub: { select: { fullName: true } },
+          sub: { select: { fullName: true, color: true } },
         },
       })
     : [];
@@ -233,7 +235,7 @@ export default async function DashboardPage() {
           id: true,
           title: true,
           completedAt: true,
-          sub: { select: { fullName: true } },
+          sub: { select: { fullName: true, color: true } },
         },
       })
     : [];
@@ -376,10 +378,10 @@ export default async function DashboardPage() {
           ) : (
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {subs.map((sub: (typeof subs)[number]) => (
-                <li key={sub.id}>
+                <li key={sub.id} className={getSubRowClassName(sub.color)}>
                   <Link
                     href={`/subs/${sub.id}`}
-                    className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                    className="flex items-center justify-between px-4 py-3"
                   >
                     <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                       {sub.fullName}
@@ -611,10 +613,10 @@ export default async function DashboardPage() {
             <>
               <ul className="divide-y divide-zinc-100 border-t border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800">
                 {dommeTasks.map((task: (typeof dommeTasks)[number]) => (
-                  <li key={task.id}>
+                  <li key={task.id} className={getSubRowClassName(task.sub.color)}>
                     <Link
                       href={`/tasks/${task.id}`}
-                      className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                      className="flex items-center justify-between px-4 py-3"
                     >
                       <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
                         {task.title}

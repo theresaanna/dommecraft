@@ -81,6 +81,7 @@ export default async function SubsPage({
       arrangementType: true,
       subType: true,
       tags: true,
+      color: true,
       expendableIncome: true,
       createdAt: true,
     },

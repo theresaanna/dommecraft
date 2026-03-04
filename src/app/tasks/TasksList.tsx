@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { SerializedTask } from "./TasksPageClient";
+import { getSubRowClassName } from "@/lib/sub-colors";
 
 const PRIORITY_STYLES: Record<string, string> = {
   LOW: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
@@ -122,7 +123,7 @@ export default function TasksList({
           return (
             <li
               key={task.id}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+              className={`flex items-start gap-3 px-4 py-3 ${getSubRowClassName(task.sub.color)}`}
             >
               <input
                 type="checkbox"

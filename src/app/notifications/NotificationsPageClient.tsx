@@ -15,41 +15,51 @@ type SerializedNotification = {
   createdAt: string;
 };
 
-const TYPE_STYLES: Record<string, { label: string; className: string }> = {
+const TYPE_STYLES: Record<
+  string,
+  { label: string; className: string; rowClassName: string }
+> = {
   TASK_ASSIGNED: {
     label: "Task",
     className:
       "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
+    rowClassName: "bg-blue-50/60 dark:bg-blue-950/20",
   },
   TASK_UPDATED: {
     label: "Update",
     className:
       "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    rowClassName: "bg-amber-50/60 dark:bg-amber-950/20",
   },
   TASK_SUBMITTED: {
     label: "Submitted",
     className:
       "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+    rowClassName: "bg-amber-50/60 dark:bg-amber-950/20",
   },
   TASK_COMPLETED: {
     label: "Complete",
     className:
       "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
+    rowClassName: "bg-emerald-50/60 dark:bg-emerald-950/20",
   },
   CALENDAR_REMINDER: {
     label: "Calendar",
     className:
       "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
+    rowClassName: "bg-purple-50/60 dark:bg-purple-950/20",
   },
   SUB_JOINED: {
     label: "New Sub",
     className:
       "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+    rowClassName: "bg-green-50/60 dark:bg-green-950/20",
   },
   CHAT_MESSAGE: {
     label: "Message",
     className:
       "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300",
+    rowClassName: "bg-sky-50/60 dark:bg-sky-950/20",
   },
 };
 
@@ -129,6 +139,7 @@ export default function NotificationsPageClient({
                 label: "Notification",
                 className:
                   "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+                rowClassName: "bg-zinc-50/60 dark:bg-zinc-900/20",
               };
 
               const content = (
@@ -177,10 +188,10 @@ export default function NotificationsPageClient({
 
               if (notification.linkUrl) {
                 return (
-                  <li key={notification.id}>
+                  <li key={notification.id} className={style.rowClassName}>
                     <Link
                       href={notification.linkUrl}
-                      className="block hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                      className="block"
                     >
                       {content}
                     </Link>
@@ -191,7 +202,7 @@ export default function NotificationsPageClient({
               return (
                 <li
                   key={notification.id}
-                  className="hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  className={style.rowClassName}
                 >
                   {content}
                 </li>

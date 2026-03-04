@@ -6,6 +6,7 @@ vi.mock("@/lib/prisma", () => ({
     subProfile: {
       findMany: vi.fn(),
       create: vi.fn(),
+      count: vi.fn(),
     },
   },
 }));
@@ -23,6 +24,7 @@ import { auth } from "@/auth";
 const mockAuth = vi.mocked(auth) as any;
 const mockFindMany = vi.mocked(prisma.subProfile.findMany);
 const mockCreate = vi.mocked(prisma.subProfile.create);
+const mockCount = vi.mocked(prisma.subProfile.count);
 
 function createRequest(body: Record<string, unknown>) {
   return new Request("http://localhost:3000/api/subs", {
@@ -484,6 +486,7 @@ describe("GET /api/subs", () => {
 describe("POST /api/subs", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockCount.mockResolvedValue(0 as never);
   });
 
   it("returns 401 when not authenticated", async () => {
