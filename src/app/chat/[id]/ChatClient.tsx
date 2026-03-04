@@ -759,7 +759,7 @@ export default function ChatClient({
                       <ReactionPopover zIndex={10}>
                       <div
                         data-testid="quick-reactions"
-                        className="flex items-center gap-1 rounded-lg border border-zinc-200 bg-white p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800"
+                        className="flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800/80"
                       >
                         {EMOJI_OPTIONS.map((emoji) => (
                           <button

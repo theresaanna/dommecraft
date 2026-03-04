@@ -115,7 +115,7 @@ export default function TaskDependencies({
             {dependsOn.map((dep) => (
               <li
                 key={dep.id}
-                className="flex items-center gap-3 rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-800"
+                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/80"
               >
                 <Link
                   href={`/tasks/${dep.dependsOn.id}`}
@@ -155,7 +155,7 @@ export default function TaskDependencies({
             {dependedOnBy.map((dep) => (
               <li
                 key={dep.id}
-                className="flex items-center gap-3 rounded-lg border border-zinc-200 px-3 py-2 dark:border-zinc-800"
+                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/80"
               >
                 <Link
                   href={`/tasks/${dep.task.id}`}

@@ -243,7 +243,7 @@ export default function TaskDetailClient({
       </div>
 
       {/* Task Info Section */}
-      <div className="mt-6 rounded-lg border border-zinc-200 p-6 dark:border-zinc-800">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm p-6 dark:border-zinc-800 dark:bg-zinc-900/80">
         <div className="flex flex-wrap items-center gap-3">
           {/* Status badge */}
           <span

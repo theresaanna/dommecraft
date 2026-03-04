@@ -132,7 +132,7 @@ export default function GlobalHeader() {
     "block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800";
 
   const dropdownMenuClass =
-    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900";
+    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80";
 
   return (
     <>
@@ -312,7 +312,7 @@ export default function GlobalHeader() {
                     New
                   </button>
                   {activeDropdown === "new" && (
-                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/80">
                       {QUICK_ACTIONS.map((action) => (
                         <Link
                           key={action.href}
