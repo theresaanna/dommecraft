@@ -50,7 +50,7 @@ export default function SettingsClient({
         return;
       }
       document.cookie = `theme=${settings.theme};path=/;max-age=${60 * 60 * 24 * 365}`;
-      await updateSession();
+      await updateSession({});
       setMessage("Settings saved");
     } catch {
       setMessage("Failed to save settings. Please try again.");
