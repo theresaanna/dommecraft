@@ -394,7 +394,7 @@ export default function GlobalHeader() {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ theme: newTheme }),
-                  }).then(() => updateSession());
+                  }).then(() => updateSession({}));
                 }}
                 className="flex h-9 w-9 items-center justify-center rounded-md text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-50"
                 title="Toggle theme"
