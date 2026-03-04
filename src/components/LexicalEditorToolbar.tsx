@@ -39,7 +39,7 @@ function ToolbarButton({
       aria-label={label}
       aria-pressed={active}
       disabled={disabled}
-      className={`rounded px-2 py-1 text-sm ${
+      className={`rounded px-2 py-1 text-base ${
         disabled
           ? "cursor-not-allowed text-zinc-400 dark:text-zinc-600"
           : active
@@ -163,13 +163,13 @@ export default function LexicalEditorToolbar() {
         label="Highlight"
         active={state.isHighlight}
       >
-        <span className="rounded bg-yellow-200 px-0.5 text-xs dark:bg-yellow-800">
+        <span className="rounded bg-yellow-200 px-0.5 text-sm dark:bg-yellow-800">
           H
         </span>
       </ToolbarButton>
       <ToolbarButton onClick={clearFormatting} label="Clear formatting">
-        <span className="text-xs">T</span>
-        <span className="text-[10px]">x</span>
+        <span className="text-sm">T</span>
+        <span className="text-xs">x</span>
       </ToolbarButton>
       <ToolbarDivider />
 
@@ -215,7 +215,7 @@ export default function LexicalEditorToolbar() {
       <ToolbarDivider />
 
       <ToolbarButton onClick={insertHorizontalRule} label="Horizontal rule">
-        <span className="text-xs">&#8213;</span>
+        <span className="text-sm">&#8213;</span>
       </ToolbarButton>
 
       <InsertDropdown />

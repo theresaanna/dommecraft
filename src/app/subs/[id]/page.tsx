@@ -47,11 +47,11 @@ export default async function SubDetailPage({
     <div className="space-y-8">
       {/* Account Linking */}
       <section>
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Account Link
         </h2>
         {sub.linkedUser ? (
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
             Linked to{" "}
             <span className="font-medium text-zinc-900 dark:text-zinc-50">
               {sub.linkedUser.name || sub.linkedUser.email || "Sub account"}
@@ -59,7 +59,7 @@ export default async function SubDetailPage({
           </p>
         ) : (
           <div className="mt-2">
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="text-base text-zinc-600 dark:text-zinc-400">
               Not linked to a sub account yet. Generate an invite code for your
               sub to link their account.
             </p>
@@ -70,7 +70,7 @@ export default async function SubDetailPage({
 
       {/* Main Fields */}
       <section>
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Details
         </h2>
         <dl className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -86,7 +86,7 @@ export default async function SubDetailPage({
 
       {/* Limits */}
       <section>
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Limits
         </h2>
         <dl className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -97,7 +97,7 @@ export default async function SubDetailPage({
 
       {/* Advanced */}
       <details className="group">
-        <summary className="cursor-pointer text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <summary className="cursor-pointer text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Advanced
         </summary>
         <dl className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -127,7 +127,7 @@ export default async function SubDetailPage({
       {/* Tags & Notes */}
       {(sub.tags.length > 0 || sub.privateNotes) && (
         <section>
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
             Notes & Tags
           </h2>
           {sub.tags.length > 0 && (
@@ -135,7 +135,7 @@ export default async function SubDetailPage({
               {sub.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                 >
                   #{tag}
                 </span>
@@ -143,7 +143,7 @@ export default async function SubDetailPage({
             </div>
           )}
           {sub.privateNotes && (
-            <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-600 dark:text-zinc-400">
+            <p className="mt-2 whitespace-pre-wrap text-base text-zinc-600 dark:text-zinc-400">
               {sub.privateNotes}
             </p>
           )}
@@ -152,7 +152,7 @@ export default async function SubDetailPage({
 
       {/* Linked Sections Summary */}
       <section>
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Linked Data
         </h2>
         <dl className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -179,10 +179,10 @@ function Field({
 }) {
   return (
     <div>
-      <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </dt>
-      <dd className="mt-1 text-sm text-zinc-900 dark:text-zinc-100">
+      <dd className="mt-1 text-base text-zinc-900 dark:text-zinc-100">
         {value || "—"}
       </dd>
     </div>
@@ -192,7 +192,7 @@ function Field({
 function TagField({ label, values }: { label: string; values: string[] }) {
   return (
     <div>
-      <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </dt>
       <dd className="mt-1 flex flex-wrap gap-1">
@@ -200,13 +200,13 @@ function TagField({ label, values }: { label: string; values: string[] }) {
           values.map((v) => (
             <span
               key={v}
-              className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+              className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
             >
               {v}
             </span>
           ))
         ) : (
-          <span className="text-sm text-zinc-400">—</span>
+          <span className="text-base text-zinc-400">—</span>
         )}
       </dd>
     </div>
@@ -222,10 +222,10 @@ function TextField({
 }) {
   return (
     <div>
-      <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+      <dt className="text-base font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </dt>
-      <dd className="mt-1 whitespace-pre-wrap text-sm text-zinc-900 dark:text-zinc-100">
+      <dd className="mt-1 whitespace-pre-wrap text-base text-zinc-900 dark:text-zinc-100">
         {value || "—"}
       </dd>
     </div>
@@ -235,10 +235,10 @@ function TextField({
 function CountCard({ label, count }: { label: string; count: number }) {
   return (
     <div className="rounded-md border border-zinc-200 p-3 dark:border-zinc-700">
-      <dt className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+      <dt className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
         {label}
       </dt>
-      <dd className="mt-1 text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+      <dd className="mt-1 text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
         {count}
       </dd>
     </div>

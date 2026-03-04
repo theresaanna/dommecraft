@@ -254,7 +254,7 @@ export default function MyTaskDetailClient({
       <div className="mb-4">
         <Link
           href={backHref}
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; {backLabel}
         </Link>
@@ -262,12 +262,12 @@ export default function MyTaskDetailClient({
 
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           {task.title}
         </h1>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+            className={`rounded-full px-2 py-0.5 text-sm font-medium ${
               task.status === "PENDING" && task.declineReason
                 ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
                 : STATUS_STYLES[task.status]
@@ -278,7 +278,7 @@ export default function MyTaskDetailClient({
               : STATUS_LABELS[task.status]}
           </span>
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
+            className={`rounded-full px-2 py-0.5 text-sm font-medium ${PRIORITY_STYLES[task.priority]}`}
           >
             {task.priority}
           </span>
@@ -287,7 +287,7 @@ export default function MyTaskDetailClient({
 
       {/* Error display */}
       {error && (
-        <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
+        <div className="mb-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-base text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </div>
       )}
@@ -295,13 +295,13 @@ export default function MyTaskDetailClient({
       {/* Pending: accept/decline at top */}
       {task.status === "PENDING" && task.declineReason && (
         <div className="mb-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-900/20">
-          <p className="text-sm font-medium text-red-700 dark:text-red-400">
+          <p className="text-base font-medium text-red-700 dark:text-red-400">
             You declined this task
           </p>
-          <p className="mt-1 text-sm text-red-600 dark:text-red-300">
+          <p className="mt-1 text-base text-red-600 dark:text-red-300">
             {task.declineReason}
           </p>
-          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
             Waiting for your Domme to respond.
           </p>
         </div>
@@ -309,7 +309,7 @@ export default function MyTaskDetailClient({
 
       {task.status === "PENDING" && !task.declineReason && (
         <div className="mb-6 space-y-4">
-          <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
+          <div className="rounded-md border border-violet-200 bg-violet-50 px-4 py-3 text-base text-violet-700 dark:border-violet-800 dark:bg-violet-900/20 dark:text-violet-400">
             This is a task request from your Domme. Accept or decline it below.
           </div>
 
@@ -318,13 +318,13 @@ export default function MyTaskDetailClient({
               <button
                 onClick={handleAcceptTask}
                 disabled={submitting}
-                className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                className="rounded-md bg-emerald-600 px-4 py-2 text-base font-medium text-white hover:bg-emerald-500 disabled:opacity-50 dark:bg-emerald-700 dark:hover:bg-emerald-600"
               >
                 {submitting ? "Accepting..." : "Accept Task"}
               </button>
               <button
                 onClick={() => setShowDeclineForm(true)}
-                className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
               >
                 Decline
               </button>
@@ -334,7 +334,7 @@ export default function MyTaskDetailClient({
               <div>
                 <label
                   htmlFor="decline-reason"
-                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                  className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
                 >
                   Reason for declining
                 </label>
@@ -343,7 +343,7 @@ export default function MyTaskDetailClient({
                   value={declineReasonInput}
                   onChange={(e) => setDeclineReasonInput(e.target.value)}
                   rows={3}
-                  className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                  className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
                   placeholder="Explain why you're declining this task..."
                 />
               </div>
@@ -351,7 +351,7 @@ export default function MyTaskDetailClient({
                 <button
                   onClick={handleDeclineTask}
                   disabled={declining || !declineReasonInput.trim()}
-                  className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
+                  className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-500 disabled:opacity-50 dark:bg-red-700 dark:hover:bg-red-600"
                 >
                   {declining ? "Declining..." : "Submit Decline"}
                 </button>
@@ -360,7 +360,7 @@ export default function MyTaskDetailClient({
                     setShowDeclineForm(false);
                     setDeclineReasonInput("");
                   }}
-                  className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 >
                   Cancel
                 </button>
@@ -375,10 +375,10 @@ export default function MyTaskDetailClient({
         {/* Description */}
         {task.description && (
           <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               Description
             </h2>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-300">
+            <p className="mt-2 whitespace-pre-wrap text-base text-zinc-700 dark:text-zinc-300">
               {task.description}
             </p>
           </div>
@@ -387,11 +387,11 @@ export default function MyTaskDetailClient({
         {/* Deadline */}
         {task.deadline && (
           <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               Deadline
             </h2>
             <p
-              className={`mt-1 text-sm ${
+              className={`mt-1 text-base ${
                 overdue
                   ? "font-medium text-red-600 dark:text-red-400"
                   : "text-zinc-700 dark:text-zinc-300"
@@ -406,14 +406,14 @@ export default function MyTaskDetailClient({
         {/* Tags */}
         {task.tags.length > 0 && (
           <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               Tags
             </h2>
             <div className="mt-2 flex flex-wrap gap-2">
               {task.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                  className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                 >
                   {tag}
                 </span>
@@ -425,10 +425,10 @@ export default function MyTaskDetailClient({
         {/* Subtasks */}
         {task.subtasks.length > 0 && (
           <div>
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               Subtasks
             </h2>
-            <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
               {completedSubtasks}/{task.subtasks.length} completed
             </p>
             <ul className="mt-3 space-y-2">
@@ -458,7 +458,7 @@ export default function MyTaskDetailClient({
                     )}
                   </span>
                   <span
-                    className={`text-sm ${
+                    className={`text-base ${
                       subtask.isCompleted
                         ? "text-zinc-400 line-through dark:text-zinc-500"
                         : "text-zinc-700 dark:text-zinc-300"
@@ -474,7 +474,7 @@ export default function MyTaskDetailClient({
 
         {/* Proof of Completion */}
         <div>
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
             Proof of Completion
           </h2>
 
@@ -484,7 +484,7 @@ export default function MyTaskDetailClient({
               {task.proofs.map((proof) => (
                 <div
                   key={proof.id}
-                  className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
+                  className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
                 >
                   {proof.fileType === "image" ? (
                     <img
@@ -502,11 +502,11 @@ export default function MyTaskDetailClient({
                     </video>
                   )}
                   {proof.notes && (
-                    <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
+                    <p className="mt-2 text-base text-zinc-700 dark:text-zinc-300">
                       {proof.notes}
                     </p>
                   )}
-                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                     Uploaded {formatTimestamp(proof.createdAt)}
                   </p>
                 </div>
@@ -516,14 +516,14 @@ export default function MyTaskDetailClient({
 
           {/* Upload form (only when task is not completed) */}
           {task.status !== "COMPLETED" && (
-            <div className={`mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${
+            <div className={`mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${
               task.status === "PENDING" ? "pointer-events-none opacity-40" : ""
             }`}>
               <div className="space-y-3">
                 <div>
                   <label
                     htmlFor="proof-file"
-                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
                   >
                     Upload file
                   </label>
@@ -533,14 +533,14 @@ export default function MyTaskDetailClient({
                     type="file"
                     accept="image/*,video/*"
                     disabled={task.status === "PENDING"}
-                    className="mt-1 block w-full text-sm text-zinc-700 file:mr-4 file:rounded-md file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-300 dark:file:bg-zinc-800 dark:file:text-zinc-300 dark:hover:file:bg-zinc-700"
+                    className="mt-1 block w-full text-base text-zinc-700 file:mr-4 file:rounded-md file:border-0 file:bg-zinc-100 file:px-4 file:py-2 file:text-base file:font-medium file:text-zinc-700 hover:file:bg-zinc-200 dark:text-zinc-300 dark:file:bg-zinc-800 dark:file:text-zinc-300 dark:hover:file:bg-zinc-700"
                   />
                 </div>
 
                 <div>
                   <label
                     htmlFor="proof-notes"
-                    className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                    className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
                   >
                     Notes (optional)
                   </label>
@@ -550,7 +550,7 @@ export default function MyTaskDetailClient({
                     onChange={(e) => setProofNotes(e.target.value)}
                     rows={2}
                     disabled={task.status === "PENDING"}
-                    className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                    className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
                     placeholder="Add any notes about this proof..."
                   />
                 </div>
@@ -558,7 +558,7 @@ export default function MyTaskDetailClient({
                 <button
                   onClick={handleUploadProof}
                   disabled={uploading || task.status === "PENDING"}
-                  className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                  className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
                 >
                   {uploading ? "Uploading..." : "Upload Proof"}
                 </button>
@@ -567,7 +567,7 @@ export default function MyTaskDetailClient({
           )}
 
           {task.proofs.length === 0 && task.status === "COMPLETED" && (
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 text-base text-zinc-500 dark:text-zinc-400">
               No proofs uploaded.
             </p>
           )}
@@ -579,20 +579,20 @@ export default function MyTaskDetailClient({
             <button
               onClick={handleSubmitTask}
               disabled={submitting}
-              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               {submitting ? "Submitting..." : "Submit as Done"}
             </button>
           )}
 
           {task.status === "SUBMITTED" && (
-            <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-400">
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-base text-amber-700 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-400">
               Awaiting review from your Domme.
             </div>
           )}
 
           {task.status === "COMPLETED" && (
-            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400">
+            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-base text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400">
               Task approved
               {task.completedAt &&
                 ` on ${formatDeadline(task.completedAt)}`}

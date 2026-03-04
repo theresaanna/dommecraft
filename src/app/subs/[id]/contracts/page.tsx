@@ -25,11 +25,11 @@ export default async function ContractsPage({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Contracts
       </h2>
       {contracts.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No contracts yet.
         </p>
       ) : (
@@ -44,7 +44,7 @@ export default async function ContractsPage({
                   {contract.title}
                 </h3>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  className={`rounded-full px-2 py-0.5 text-sm font-medium ${
                     contract.status === "ACTIVE"
                       ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                       : contract.status === "DRAFT"
@@ -58,7 +58,7 @@ export default async function ContractsPage({
                 </span>
               </div>
               {(contract.startDate || contract.endDate) && (
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                   {contract.startDate &&
                     `From ${contract.startDate.toLocaleDateString()}`}
                   {contract.startDate && contract.endDate && " "}
@@ -66,7 +66,7 @@ export default async function ContractsPage({
                     `to ${contract.endDate.toLocaleDateString()}`}
                 </p>
               )}
-              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
                 Created {contract.createdAt.toLocaleDateString()}
               </p>
             </li>

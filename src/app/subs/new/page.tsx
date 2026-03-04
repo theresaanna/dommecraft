@@ -93,17 +93,17 @@ export default function NewSubPage() {
       <div className="mb-4">
         <Link
           href="/subs"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; All Subs
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Add Sub
       </h1>
 
       {error && (
-        <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+        <p className="mt-4 rounded-md bg-red-50 p-3 text-base text-red-600 dark:bg-red-900/20 dark:text-red-400">
           {error}
         </p>
       )}
@@ -113,7 +113,7 @@ export default function NewSubPage() {
         <div>
           <label
             htmlFor="fullName"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Full Name *
           </label>
@@ -122,7 +122,7 @@ export default function NewSubPage() {
             name="fullName"
             type="text"
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -130,7 +130,7 @@ export default function NewSubPage() {
         <div>
           <label
             htmlFor="contactInfo"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Contact Info
           </label>
@@ -139,18 +139,18 @@ export default function NewSubPage() {
             name="contactInfo"
             type="text"
             placeholder="Phone, email, platform handle..."
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
         {/* Arrangement Type */}
         <fieldset>
-          <legend className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <legend className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             Arrangement Type
           </legend>
           <div className="mt-2 flex flex-wrap gap-3">
             {ARRANGEMENT_OPTIONS.map((option) => (
-              <label key={option} className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
+              <label key={option} className="flex items-center gap-1.5 text-base text-zinc-700 dark:text-zinc-300">
                 <input
                   type="checkbox"
                   name="arrangementType"
@@ -165,12 +165,12 @@ export default function NewSubPage() {
 
         {/* Sub Type */}
         <fieldset>
-          <legend className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <legend className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             Type of Submissive
           </legend>
           <div className="mt-2 flex flex-wrap gap-3">
             {SUB_TYPE_OPTIONS.map((option) => (
-              <label key={option} className="flex items-center gap-1.5 text-sm text-zinc-700 dark:text-zinc-300">
+              <label key={option} className="flex items-center gap-1.5 text-base text-zinc-700 dark:text-zinc-300">
                 <input
                   type="checkbox"
                   name="subType"
@@ -187,14 +187,14 @@ export default function NewSubPage() {
         <div>
           <label
             htmlFor="timezone"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Timezone
           </label>
           <select
             id="timezone"
             name="timezone"
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           >
             <option value="">Select timezone...</option>
             {Intl.supportedValuesOf("timeZone").map((tz) => (
@@ -239,7 +239,7 @@ export default function NewSubPage() {
         <div>
           <label
             htmlFor="privateNotes"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Private Notes
           </label>
@@ -247,14 +247,14 @@ export default function NewSubPage() {
             id="privateNotes"
             name="privateNotes"
             rows={3}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="w-full rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           {loading ? "Creating..." : "Create Sub"}
         </button>

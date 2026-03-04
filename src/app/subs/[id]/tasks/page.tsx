@@ -76,18 +76,18 @@ export default async function SubTasksPage({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Tasks
       </h2>
       {tasks.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No tasks assigned yet.
         </p>
       ) : (
         <div className="mt-4 space-y-6">
           {openTasks.length > 0 && (
             <section>
-              <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <h3 className="text-base font-medium text-zinc-500 dark:text-zinc-400">
                 Open
               </h3>
               <ul className="mt-2 space-y-3">
@@ -99,7 +99,7 @@ export default async function SubTasksPage({
           )}
           {closedTasks.length > 0 && (
             <section>
-              <h3 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <h3 className="text-base font-medium text-zinc-500 dark:text-zinc-400">
                 Closed
               </h3>
               <ul className="mt-2 space-y-3">
@@ -142,12 +142,12 @@ function TaskCard({ task }: { task: TaskWithRelations }) {
           {task.title}
         </Link>
         <span
-          className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_STYLES[task.priority]}`}
+          className={`rounded-full px-2 py-0.5 text-sm font-medium ${PRIORITY_STYLES[task.priority]}`}
         >
           {task.priority}
         </span>
         <span
-          className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+          className={`rounded-full px-2 py-0.5 text-sm font-medium ${
             task.status === "PENDING" && task.declineReason
               ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
               : STATUS_STYLES[task.status]
@@ -158,7 +158,7 @@ function TaskCard({ task }: { task: TaskWithRelations }) {
             : STATUS_LABELS[task.status]}
         </span>
       </div>
-      <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="mt-1 flex flex-wrap items-center gap-3 text-base text-zinc-500 dark:text-zinc-400">
         {task.deadline && (
           <span
             className={

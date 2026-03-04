@@ -39,7 +39,7 @@ export default function BookmarkBanner() {
 
   return (
     <>
-      <div className="fixed top-14 right-0 left-0 z-30 flex items-center justify-between overflow-hidden bg-zinc-100 px-4 py-2 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+      <div className="fixed top-14 right-0 left-0 z-30 flex items-center justify-between overflow-hidden bg-zinc-100 px-4 py-2 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
         <span className="min-w-0 truncate">{getBookmarkInstructions()}</span>
         <button
           type="button"

@@ -263,7 +263,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 pt-20 pb-16">
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Dashboard
       </h1>
       <p className="mt-2 text-zinc-600 dark:text-zinc-400">
@@ -273,9 +273,9 @@ export default async function DashboardPage() {
       <div className="mt-8 grid grid-cols-1 items-start gap-6 md:grid-cols-2">
 
       {isDomme && (recentFinancialEntries.length > 0 || recentCompletedTasks.length > 0 || recentNotes.length > 0) && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Recent Activity
             </h2>
           </div>
@@ -287,15 +287,15 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between px-4 py-3 bg-green-50 hover:bg-green-100/70 dark:bg-green-900/10 dark:hover:bg-green-900/20"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-900/30 dark:text-green-300">
                       Financial
                     </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base text-zinc-900 dark:text-zinc-50">
                       {entry.category}
                       {entry.sub ? ` - ${entry.sub.fullName}` : ""}
                     </span>
                   </div>
-                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                  <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                     {formatCurrency(entry.amount.toString(), userCurrency)}
                   </span>
                 </Link>
@@ -308,14 +308,14 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between px-4 py-3 bg-blue-50 hover:bg-blue-100/70 dark:bg-blue-900/10 dark:hover:bg-blue-900/20"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-sm text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
                       Task Done
                     </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base text-zinc-900 dark:text-zinc-50">
                       {task.title}
                     </span>
                   </div>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
                     {task.sub.fullName}
                   </span>
                 </Link>
@@ -328,14 +328,14 @@ export default async function DashboardPage() {
                   className="flex items-center justify-between px-4 py-3 bg-purple-50 hover:bg-purple-100/70 dark:bg-purple-900/10 dark:hover:bg-purple-900/20"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-sm text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
                       Note
                     </span>
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base text-zinc-900 dark:text-zinc-50">
                       {note.title || "Untitled"}
                     </span>
                   </div>
-                  <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
                     {note.project.name}
                   </span>
                 </Link>
@@ -345,7 +345,7 @@ export default async function DashboardPage() {
           <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
             <Link
               href="/activity"
-              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
             >
               View all activity &rarr;
             </Link>
@@ -354,20 +354,20 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               My Subs
             </h2>
             <Link
               href="/subs/new"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               Add Sub
             </Link>
           </div>
           {subs.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>No subs yet.</p>
               <Link
                 href="/subs/new"
@@ -384,14 +384,14 @@ export default async function DashboardPage() {
                     href={`/subs/${sub.id}`}
                     className="flex items-center justify-between px-4 py-3"
                   >
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                       {sub.fullName}
                     </span>
                     <div className="flex gap-1">
                       {sub.subType.slice(0, 2).map((type: string) => (
                         <span
                           key={type}
-                          className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                          className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                         >
                           {type}
                         </span>
@@ -406,7 +406,7 @@ export default async function DashboardPage() {
             <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
               <Link
                 href="/subs"
-                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 View all subs &rarr;
               </Link>
@@ -416,21 +416,21 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && financialTotals && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Financials
             </h2>
             <Link
               href="/financials/new"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               Add Entry
             </Link>
           </div>
 
           {financialTotals._count === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>No financial entries yet.</p>
               <Link
                 href="/financials"
@@ -443,24 +443,24 @@ export default async function DashboardPage() {
             <div className="px-4 py-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     All Time
                   </p>
-                  <p className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                  <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
                     {formatCurrency(financialTotals._sum.amount?.toString() || "0", userCurrency)}
                   </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {financialTotals._count} entries
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     Last 30 Days
                   </p>
-                  <p className="mt-1 text-xl font-bold text-zinc-900 dark:text-zinc-50">
+                  <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
                     {formatCurrency(financialRecent?._sum.amount?.toString() || "0", userCurrency)}
                   </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400">
                     {financialRecent?._count || 0} entries
                   </p>
                 </div>
@@ -468,14 +468,14 @@ export default async function DashboardPage() {
 
               {topEarners.length > 0 && (
                 <div className="mt-4 border-t border-zinc-100 pt-3 dark:border-zinc-800">
-                  <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     Top Earners
                   </p>
                   <ul className="mt-2 space-y-1">
                     {topEarners.map((entry: (typeof topEarners)[number]) => (
                       <li
                         key={entry.subId}
-                        className="flex items-center justify-between text-sm"
+                        className="flex items-center justify-between text-base"
                       >
                         <span className="text-zinc-700 dark:text-zinc-300">
                           {String(subNameMap.get(entry.subId!) || "Unknown")}
@@ -494,7 +494,7 @@ export default async function DashboardPage() {
           <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
             <Link
               href="/financials"
-              className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
             >
               View all financials &rarr;
             </Link>
@@ -503,20 +503,20 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Creation Hub
             </h2>
             <Link
               href="/hub"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               Open Hub
             </Link>
           </div>
           {recentProjects.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>No projects yet.</p>
               <Link
                 href="/hub"
@@ -533,14 +533,14 @@ export default async function DashboardPage() {
                     href={`/hub/projects/${project.id}`}
                     className="flex items-center justify-between px-4 py-3"
                   >
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                       {project.name}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                      <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                         {project.category.name}
                       </span>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400">
                         {project._count.notes}{" "}
                         {project._count.notes === 1 ? "note" : "notes"}
                       </span>
@@ -554,7 +554,7 @@ export default async function DashboardPage() {
             <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
               <Link
                 href="/hub"
-                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 View all projects &rarr;
               </Link>
@@ -564,47 +564,47 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Task Summary
             </h2>
             <Link
               href="/tasks"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               View Tasks
             </Link>
           </div>
           <div className="grid grid-cols-3 divide-x divide-zinc-100 dark:divide-zinc-800">
             <div className="px-4 py-4 text-center">
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+              <p className="text-3xl font-bold text-red-600 dark:text-red-400">
                 {overdueCount}
               </p>
-              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                 Overdue
               </p>
             </div>
             <div className="px-4 py-4 text-center">
-              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+              <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">
                 {inProgressCount}
               </p>
-              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                 In Progress
               </p>
             </div>
             <div className="px-4 py-4 text-center">
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                 {completedThisWeekCount}
               </p>
-              <p className="mt-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                 Done This Week
               </p>
             </div>
           </div>
           {submittedCount > 0 && (
             <div className="border-t border-zinc-100 px-4 py-2 dark:border-zinc-800">
-              <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+              <span className="text-sm font-medium text-amber-700 dark:text-amber-300">
                 {submittedCount} task{submittedCount === 1 ? "" : "s"} awaiting
                 review
               </span>
@@ -619,21 +619,21 @@ export default async function DashboardPage() {
                       href={`/tasks/${task.id}`}
                       className="flex items-center justify-between px-4 py-3"
                     >
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                         {task.title}
                       </span>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
                           {task.sub.fullName}
                         </span>
                         {task.status === "SUBMITTED" && (
-                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-sm text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                             Submitted
                           </span>
                         )}
                         {task.deadline && (
                           <span
-                            className={`text-xs ${
+                            className={`text-sm ${
                               new Date(task.deadline) < new Date() &&
                               task.status !== "COMPLETED"
                                 ? "text-red-600 dark:text-red-400"
@@ -651,7 +651,7 @@ export default async function DashboardPage() {
               <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
                 <Link
                   href="/tasks"
-                  className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                  className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
                 >
                   View all tasks &rarr;
                 </Link>
@@ -659,7 +659,7 @@ export default async function DashboardPage() {
             </>
           )}
           {dommeTasks.length === 0 && (
-            <div className="border-t border-zinc-200 px-4 py-4 text-center text-sm text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
+            <div className="border-t border-zinc-200 px-4 py-4 text-center text-base text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
               <p>No active tasks.</p>
             </div>
           )}
@@ -667,20 +667,20 @@ export default async function DashboardPage() {
       )}
 
       {isDomme && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               Calendar
             </h2>
             <Link
               href="/calendar"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               View Calendar
             </Link>
           </div>
           {upcomingEvents.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>No upcoming events this week.</p>
               <Link
                 href="/calendar"
@@ -708,11 +708,11 @@ export default async function DashboardPage() {
                           className="inline-block h-2.5 w-2.5 shrink-0 rounded-full"
                           style={{ backgroundColor: eventColor }}
                         />
-                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                        <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                           {event.title}
                         </span>
                       </div>
-                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400">
                         {event.isAllDay
                           ? new Date(event.startAt).toLocaleDateString()
                           : new Date(event.startAt).toLocaleString(undefined, {
@@ -732,7 +732,7 @@ export default async function DashboardPage() {
             <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
               <Link
                 href="/calendar"
-                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 View full calendar &rarr;
               </Link>
@@ -742,20 +742,20 @@ export default async function DashboardPage() {
       )}
 
       {!isDomme && (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
-            <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
               My Tasks
             </h2>
             <Link
               href="/my-tasks"
-              className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               View All
             </Link>
           </div>
           {subProfileIds.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>Your account is not linked yet.</p>
               <Link
                 href="/link"
@@ -765,7 +765,7 @@ export default async function DashboardPage() {
               </Link>
             </div>
           ) : subTasks.length === 0 ? (
-            <div className="px-4 py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <div className="px-4 py-8 text-center text-base text-zinc-500 dark:text-zinc-400">
               <p>No active tasks assigned.</p>
             </div>
           ) : (
@@ -776,12 +776,12 @@ export default async function DashboardPage() {
                     href={`/my-tasks/${task.id}`}
                     className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
                   >
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                       {task.title}
                     </span>
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs ${
+                        className={`rounded-full px-2 py-0.5 text-sm ${
                           task.priority === "HIGH"
                             ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
                             : task.priority === "MEDIUM"
@@ -793,7 +793,7 @@ export default async function DashboardPage() {
                       </span>
                       {task.deadline && (
                         <span
-                          className={`text-xs ${
+                          className={`text-sm ${
                             new Date(task.deadline) < new Date()
                               ? "text-red-600 dark:text-red-400"
                               : "text-zinc-500 dark:text-zinc-400"
@@ -812,7 +812,7 @@ export default async function DashboardPage() {
             <div className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800">
               <Link
                 href="/my-tasks"
-                className="text-xs text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 View all tasks &rarr;
               </Link>

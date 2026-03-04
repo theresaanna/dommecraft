@@ -39,8 +39,8 @@ export default function NotesList({
 
   if (notes.length === 0) {
     return (
-      <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
+        <p className="text-base text-zinc-500 dark:text-zinc-400">
           No notes yet. Create your first note to get started.
         </p>
       </div>
@@ -52,7 +52,7 @@ export default function NotesList({
       {notes.map((note) => (
         <li
           key={note.id}
-          className={`rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${editingNoteId === note.id ? "hidden" : ""}`}
+          className={`rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 ${editingNoteId === note.id ? "hidden" : ""}`}
         >
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">
@@ -65,7 +65,7 @@ export default function NotesList({
                 className="prose prose-sm prose-zinc mt-2 dark:prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: note.content }}
               />
-              <div className="mt-3 flex items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+              <div className="mt-3 flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
                 <span>
                   Updated {new Date(note.updatedAt).toLocaleDateString()}
                 </span>
@@ -83,13 +83,13 @@ export default function NotesList({
             <div className="ml-4 flex shrink-0 gap-2">
               <button
                 onClick={() => onEdit(note)}
-                className="text-sm text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                className="text-base text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
               >
                 Edit
               </button>
               <button
                 onClick={() => handleDelete(note.id)}
-                className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                className="text-base text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               >
                 Delete
               </button>

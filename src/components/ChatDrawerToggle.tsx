@@ -40,7 +40,7 @@ export default function ChatDrawerToggle() {
         {unreadChatCount > 0 && (
           <span
             data-testid="unread-chat-badge"
-            className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white"
+            className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white"
           >
             {unreadChatCount > 9 ? "9+" : unreadChatCount}
           </span>

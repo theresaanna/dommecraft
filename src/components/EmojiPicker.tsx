@@ -86,7 +86,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
     <div
       ref={pickerRef}
       data-testid="emoji-picker"
-      className="flex w-72 flex-col rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
+      className="flex w-72 flex-col rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
     >
       {/* Search */}
       <div className="border-b border-zinc-200 p-2 dark:border-zinc-700">
@@ -97,7 +97,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search emoji..."
           aria-label="Search emoji"
-          className="w-full rounded-md border border-zinc-300 bg-zinc-50 px-2 py-1.5 text-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50 dark:placeholder:text-zinc-400"
+          className="w-full rounded-md border border-zinc-300 bg-zinc-50 px-2 py-1.5 text-base focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50 dark:placeholder:text-zinc-400"
         />
       </div>
 
@@ -112,7 +112,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
               onClick={() => scrollToCategory("frequent")}
               aria-label="Frequently used"
               title="Frequently used"
-              className={`shrink-0 rounded p-1 text-sm ${
+              className={`shrink-0 rounded p-1 text-base ${
                 activeCategory === "frequent"
                   ? "bg-zinc-200 dark:bg-zinc-600"
                   : "hover:bg-zinc-100 dark:hover:bg-zinc-700"
@@ -127,7 +127,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
               onClick={() => scrollToCategory(cat.id)}
               aria-label={cat.name}
               title={cat.name}
-              className={`shrink-0 rounded p-1 text-sm ${
+              className={`shrink-0 rounded p-1 text-base ${
                 activeCategory === cat.id
                   ? "bg-zinc-200 dark:bg-zinc-600"
                   : "hover:bg-zinc-100 dark:hover:bg-zinc-700"
@@ -150,7 +150,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
         {isSearching ? (
           <>
             {searchResults.length === 0 ? (
-              <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
+              <p className="py-8 text-center text-base text-zinc-400 dark:text-zinc-500">
                 No emoji found
               </p>
             ) : (
@@ -161,7 +161,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                     onClick={() => handleEmojiClick(emoji)}
                     role="option"
                     aria-label={emoji}
-                    className="rounded p-1 text-center text-lg hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                    className="rounded p-1 text-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-700"
                   >
                     {emoji}
                   </button>
@@ -177,7 +177,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                 ref={(el) => { categoryRefs.current["frequent"] = el; }}
                 data-testid="frequent-category"
               >
-                <p className="px-1 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="px-1 py-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                   Frequently Used
                 </p>
                 <div className="grid grid-cols-8 gap-0.5">
@@ -187,7 +187,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                       onClick={() => handleEmojiClick(emoji)}
                       role="option"
                       aria-label={emoji}
-                      className="rounded p-1 text-center text-lg hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      className="rounded p-1 text-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-700"
                     >
                       {emoji}
                     </button>
@@ -203,7 +203,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                 ref={(el) => { categoryRefs.current[cat.id] = el; }}
                 data-testid={`category-${cat.id}`}
               >
-                <p className="px-1 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="px-1 py-1 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                   {cat.name}
                 </p>
                 <div className="grid grid-cols-8 gap-0.5">
@@ -213,7 +213,7 @@ export default function EmojiPicker({ onSelect, onClose }: EmojiPickerProps) {
                       onClick={() => handleEmojiClick(emoji)}
                       role="option"
                       aria-label={emoji}
-                      className="rounded p-1 text-center text-lg hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                      className="rounded p-1 text-center text-xl hover:bg-zinc-100 dark:hover:bg-zinc-700"
                     >
                       {emoji}
                     </button>

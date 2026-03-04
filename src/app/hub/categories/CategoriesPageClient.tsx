@@ -82,28 +82,28 @@ export default function CategoriesPageClient({
       <div className="mb-4">
         <Link
           href="/hub"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; Back to Hub
         </Link>
       </div>
 
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           Manage Categories
         </h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           {showForm ? "Cancel" : "New Category"}
         </button>
       </div>
 
       {showForm && (
-        <div className="mb-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mb-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           {error && (
-            <p className="mb-2 text-sm text-red-600 dark:text-red-400">
+            <p className="mb-2 text-base text-red-600 dark:text-red-400">
               {error}
             </p>
           )}
@@ -113,12 +113,12 @@ export default function CategoriesPageClient({
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
               placeholder="Category name"
-              className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
               disabled={submitting || !newCategoryName.trim()}
-              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               {submitting ? "Creating..." : "Create"}
             </button>
@@ -127,8 +127,8 @@ export default function CategoriesPageClient({
       )}
 
       {initialCategories.length === 0 ? (
-        <div className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 text-center dark:border-zinc-800 dark:bg-zinc-900/60">
+          <p className="text-base text-zinc-500 dark:text-zinc-400">
             No categories yet. Visit the{" "}
             <Link
               href="/hub"
@@ -140,7 +140,7 @@ export default function CategoriesPageClient({
           </p>
         </div>
       ) : (
-        <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
           {initialCategories.map((category) => (
             <li
               key={category.id}
@@ -150,7 +150,7 @@ export default function CategoriesPageClient({
                 <span className="font-medium text-zinc-900 dark:text-zinc-50">
                   {category.name}
                 </span>
-                <span className="ml-2 text-sm text-zinc-500 dark:text-zinc-400">
+                <span className="ml-2 text-base text-zinc-500 dark:text-zinc-400">
                   ({category.projectCount}{" "}
                   {category.projectCount === 1 ? "project" : "projects"})
                 </span>
@@ -163,7 +163,7 @@ export default function CategoriesPageClient({
                     category.projectCount
                   )
                 }
-                className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                className="text-base text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               >
                 Delete
               </button>

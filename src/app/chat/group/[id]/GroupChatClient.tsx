@@ -575,20 +575,20 @@ export default function GroupChatClient({
         <header className="flex items-center gap-3 border-b border-zinc-200 px-4 py-3 dark:border-zinc-800">
           <Link
             href="/chat"
-            className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+            className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
           >
             &larr; Back
           </Link>
-          <span className="flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-50">
+          <span className="flex items-center gap-2 text-base font-medium text-zinc-900 dark:text-zinc-50">
             {localGroupName}
-            <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
+            <span className="text-sm font-normal text-zinc-500 dark:text-zinc-400">
               {members.length} {members.length === 1 ? "member" : "members"}
             </span>
           </span>
           <button
             onClick={() => setShowInfoPanel((prev) => !prev)}
             aria-label="Toggle group info"
-            className="ml-auto rounded-md border border-zinc-300 px-2 py-1 text-xs text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+            className="ml-auto rounded-md border border-zinc-300 px-2 py-1 text-sm text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
           >
             {showInfoPanel ? "Hide Info" : "Group Info"}
           </button>
@@ -597,7 +597,7 @@ export default function GroupChatClient({
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-4">
           {messages.length === 0 && (
-            <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-center text-base text-zinc-500 dark:text-zinc-400">
               No messages yet. Say hello!
             </p>
           )}
@@ -632,7 +632,7 @@ export default function GroupChatClient({
                           unoptimized
                         />
                       ) : (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-xs font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
                           {getInitials(msg.senderName)}
                         </div>
                       )}
@@ -640,7 +640,7 @@ export default function GroupChatClient({
                   )}
                   <div className="max-w-[75%]">
                     <div
-                      className={`rounded-lg px-3 py-2 text-sm ${
+                      className={`rounded-lg px-3 py-2 text-base ${
                         isMine
                           ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
                           : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
@@ -648,7 +648,7 @@ export default function GroupChatClient({
                     >
                       {/* Sender name for other users */}
                       {!isMine && (
-                        <p className="mb-0.5 flex items-center gap-1 text-xs font-bold text-zinc-600 dark:text-zinc-400">
+                        <p className="mb-0.5 flex items-center gap-1 text-sm font-bold text-zinc-600 dark:text-zinc-400">
                           {msg.senderName || "Unknown"}
                           {senderMember && (
                             <RoleBadge role={senderMember.userRole} />
@@ -660,7 +660,7 @@ export default function GroupChatClient({
                       {msg.replyTo && (
                         <div
                           data-testid="reply-preview"
-                          className={`mb-1 border-l-2 pl-2 text-xs ${
+                          className={`mb-1 border-l-2 pl-2 text-sm ${
                             isMine
                               ? "border-zinc-500 text-zinc-300 dark:border-zinc-400 dark:text-zinc-500"
                               : "border-zinc-400 text-zinc-500 dark:border-zinc-500 dark:text-zinc-400"
@@ -719,7 +719,7 @@ export default function GroupChatClient({
                             data-testid="edit-input"
                             value={editInput}
                             onChange={(e) => setEditInput(e.target.value)}
-                            className="rounded border border-zinc-400 bg-white px-2 py-1 text-sm text-zinc-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+                            className="rounded border border-zinc-400 bg-white px-2 py-1 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === "Escape") handleEditCancel();
@@ -728,14 +728,14 @@ export default function GroupChatClient({
                           <div className="flex gap-1">
                             <button
                               type="submit"
-                              className="text-xs text-blue-500 hover:text-blue-700 dark:text-blue-400"
+                              className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400"
                             >
                               Save
                             </button>
                             <button
                               type="button"
                               onClick={handleEditCancel}
-                              className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                              className="text-sm text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                             >
                               Cancel
                             </button>
@@ -748,7 +748,7 @@ export default function GroupChatClient({
                               {msg.content}
                             </p>
                           )}
-                          <span className="mt-1 flex items-center gap-1 text-xs opacity-60">
+                          <span className="mt-1 flex items-center gap-1 text-sm opacity-60">
                             <time>
                               {new Date(msg.createdAt).toLocaleTimeString([], {
                                 hour: "numeric",
@@ -811,7 +811,7 @@ export default function GroupChatClient({
                                 key={emoji}
                                 onClick={() => handleReaction(msg.id, emoji)}
                                 aria-label={emoji}
-                                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs ${
+                                className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-sm ${
                                   iReacted
                                     ? "border-blue-300 bg-blue-100 dark:border-blue-700 dark:bg-blue-900"
                                     : "border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800"
@@ -853,7 +853,7 @@ export default function GroupChatClient({
                         <button
                           onClick={() => handleReplyStart(msg)}
                           aria-label="reply to message"
-                          className="mt-1 text-xs text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
+                          className="mt-1 text-sm text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
                         >
                           Reply
                         </button>
@@ -862,7 +862,7 @@ export default function GroupChatClient({
                         <button
                           onClick={() => handleEditStart(msg)}
                           aria-label="edit message"
-                          className="mt-1 text-xs text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
+                          className="mt-1 text-sm text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100 focus:opacity-100"
                         >
                           Edit
                         </button>
@@ -870,14 +870,14 @@ export default function GroupChatClient({
                       {pickerOpenFor === msg.id && (
                         <div
                           data-testid="quick-reactions"
-                          className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800/60"
+                          className="absolute bottom-full left-0 z-10 mb-1 flex items-center gap-1 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-1 shadow-md dark:border-zinc-700 dark:bg-zinc-800/60"
                         >
                           {EMOJI_OPTIONS.map((emoji) => (
                             <button
                               key={emoji}
                               onClick={() => handleReaction(msg.id, emoji)}
                               aria-label={emoji}
-                              className="rounded p-1 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700"
+                              className="rounded p-1 text-base hover:bg-zinc-100 dark:hover:bg-zinc-700"
                             >
                               {emoji}
                             </button>
@@ -890,7 +890,7 @@ export default function GroupChatClient({
                             }}
                             aria-label="open emoji menu"
                             title="Browse all emoji"
-                            className="rounded p-1 text-sm text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
+                            className="rounded p-1 text-base text-zinc-400 hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-700 dark:hover:text-zinc-300"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -932,7 +932,7 @@ export default function GroupChatClient({
                           unoptimized
                         />
                       ) : (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-[10px] font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-zinc-300 text-xs font-medium text-zinc-700 dark:bg-zinc-600 dark:text-zinc-200">
                           {getInitials(currentUserName)}
                         </div>
                       )}
@@ -948,7 +948,7 @@ export default function GroupChatClient({
         {/* Typing indicator */}
         {typingCount > 0 && (
           <div data-testid="typing-indicator" className="px-4 py-1">
-            <p className="mx-auto max-w-2xl text-xs text-zinc-400 dark:text-zinc-500">
+            <p className="mx-auto max-w-2xl text-sm text-zinc-400 dark:text-zinc-500">
               {typingDisplay}
             </p>
           </div>
@@ -961,14 +961,14 @@ export default function GroupChatClient({
             className="border-t border-zinc-200 px-4 py-2 dark:border-zinc-800"
           >
             <div className="mx-auto flex max-w-2xl items-center gap-2">
-              <span className="truncate text-sm text-zinc-600 dark:text-zinc-400">
+              <span className="truncate text-base text-zinc-600 dark:text-zinc-400">
                 {selectedFile.name} ({formatFileSize(selectedFile.size)})
               </span>
               <button
                 type="button"
                 onClick={clearSelectedFile}
                 aria-label="Remove file"
-                className="text-sm text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                className="text-base text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
                 &times;
               </button>
@@ -982,7 +982,7 @@ export default function GroupChatClient({
             data-testid="upload-error"
             className="border-t border-red-200 bg-red-50 px-4 py-2 dark:border-red-900 dark:bg-red-950"
           >
-            <p className="mx-auto max-w-2xl text-sm text-red-600 dark:text-red-400">
+            <p className="mx-auto max-w-2xl text-base text-red-600 dark:text-red-400">
               {uploadError}
             </p>
           </div>
@@ -996,15 +996,15 @@ export default function GroupChatClient({
           >
             <div className="mx-auto flex max-w-2xl items-center gap-2">
               <div className="min-w-0 flex-1">
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                <span className="text-base text-zinc-500 dark:text-zinc-400">
                   Replying to{" "}
                 </span>
-                <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                <span className="text-base font-medium text-zinc-700 dark:text-zinc-300">
                   {replyingToMessage.senderId === currentUserId
                     ? "yourself"
                     : replyingToMessage.senderName || "Unknown"}
                 </span>
-                <p className="truncate text-xs text-zinc-400 dark:text-zinc-500">
+                <p className="truncate text-sm text-zinc-400 dark:text-zinc-500">
                   {replyingToMessage.content
                     ? replyingToMessage.content.length > 80
                       ? replyingToMessage.content.slice(0, 80) + "..."
@@ -1018,7 +1018,7 @@ export default function GroupChatClient({
                 type="button"
                 onClick={handleReplyCancel}
                 aria-label="Cancel reply"
-                className="text-sm text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+                className="text-base text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               >
                 &times;
               </button>
@@ -1044,7 +1044,7 @@ export default function GroupChatClient({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               aria-label="Attach file"
-              className="rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+              className="rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1067,12 +1067,12 @@ export default function GroupChatClient({
                 onKeyStroke();
               }}
               placeholder="Type a message..."
-              className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-base focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
               disabled={sending || (!input.trim() && !selectedFile)}
-              className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className="rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
             >
               Send
             </button>

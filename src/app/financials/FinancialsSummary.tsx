@@ -47,33 +47,33 @@ export default function FinancialsSummary({
       {/* Stat cards */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Total Earnings
           </p>
-          <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <p className="mt-1 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             {formatCurrency(summary.total, currency)}
           </p>
         </div>
         <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Average per Entry
           </p>
-          <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <p className="mt-1 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             {formatCurrency(summary.average, currency)}
           </p>
         </div>
         <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-          <p className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <p className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
             Entry Count
           </p>
-          <p className="mt-1 text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <p className="mt-1 text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             {summary.count}
           </p>
         </div>
       </div>
 
       {summary.count === 0 && (
-        <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-center text-base text-zinc-500 dark:text-zinc-400">
           No financial data to display.
         </p>
       )}
@@ -81,21 +81,21 @@ export default function FinancialsSummary({
       {/* Top earners */}
       {summary.perSub.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <h3 className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             Top Earners
           </h3>
           <ul className="mt-2 space-y-1">
             {summary.perSub.slice(0, 5).map((entry, i) => (
               <li
                 key={entry.subId || `unlinked-${i}`}
-                className="flex items-center justify-between text-sm"
+                className="flex items-center justify-between text-base"
               >
                 <span className="text-zinc-700 dark:text-zinc-300">
                   {entry.subName}
                 </span>
                 <span className="font-medium text-zinc-900 dark:text-zinc-50">
                   {formatCurrency(entry.total, currency)}{" "}
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-sm text-zinc-400">
                     ({entry.count})
                   </span>
                 </span>
@@ -108,7 +108,7 @@ export default function FinancialsSummary({
       {/* Category breakdown */}
       {summary.byCategory.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <h3 className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             By Category
           </h3>
           <div className="mt-2 space-y-2">
@@ -123,7 +123,7 @@ export default function FinancialsSummary({
 
               return (
                 <div key={cat.category}>
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-base">
                     <span className="text-zinc-600 dark:text-zinc-400">
                       {cat.category}
                     </span>

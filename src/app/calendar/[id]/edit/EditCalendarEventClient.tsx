@@ -49,12 +49,12 @@ export default function EditCalendarEventClient({
       <div className="mb-4">
         <Link
           href="/calendar"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; Calendar
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         Edit Event
       </h1>
       <div className="mt-6">
@@ -65,7 +65,7 @@ export default function EditCalendarEventClient({
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="mt-4 text-sm text-red-600 hover:text-red-700 disabled:opacity-50 dark:text-red-400 dark:hover:text-red-300"
+          className="mt-4 text-base text-red-600 hover:text-red-700 disabled:opacity-50 dark:text-red-400 dark:hover:text-red-300"
         >
           {deleting ? "Deleting..." : "Delete this event"}
         </button>

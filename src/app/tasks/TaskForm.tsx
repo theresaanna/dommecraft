@@ -110,12 +110,12 @@ export default function TaskForm({
 
   return (
     <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-      <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+      <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
         {isEditing ? "Edit Task" : "New Task"}
       </h3>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-base text-red-600 dark:text-red-400">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
@@ -123,7 +123,7 @@ export default function TaskForm({
         <div>
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Title *
           </label>
@@ -133,7 +133,7 @@ export default function TaskForm({
             name="title"
             defaultValue={task?.title || ""}
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -141,7 +141,7 @@ export default function TaskForm({
         <div>
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Description
           </label>
@@ -150,7 +150,7 @@ export default function TaskForm({
             name="description"
             rows={3}
             defaultValue={task?.description || ""}
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -160,7 +160,7 @@ export default function TaskForm({
             <div>
               <label
                 htmlFor="subId"
-                className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+                className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
               >
                 Sub *
               </label>
@@ -169,7 +169,7 @@ export default function TaskForm({
                 name="subId"
                 required
                 defaultValue=""
-                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               >
                 <option value="">Select a sub...</option>
                 {availableSubs.map((sub) => (
@@ -185,7 +185,7 @@ export default function TaskForm({
           <div>
             <label
               htmlFor="priority"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Priority
             </label>
@@ -193,7 +193,7 @@ export default function TaskForm({
               id="priority"
               name="priority"
               defaultValue={task?.priority || "MEDIUM"}
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="LOW">Low</option>
               <option value="MEDIUM">Medium</option>
@@ -207,7 +207,7 @@ export default function TaskForm({
           <div>
             <label
               htmlFor="projectId"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Project
             </label>
@@ -215,7 +215,7 @@ export default function TaskForm({
               id="projectId"
               name="projectId"
               defaultValue={task?.projectId || ""}
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="">None</option>
               {availableProjects.map((project) => (
@@ -230,7 +230,7 @@ export default function TaskForm({
           <div>
             <label
               htmlFor="deadline"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Deadline
             </label>
@@ -243,7 +243,7 @@ export default function TaskForm({
                   ? new Date(task.deadline).toISOString().slice(0, 16)
                   : ""
               }
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -263,14 +263,14 @@ export default function TaskForm({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {submitting
               ? "Saving..."

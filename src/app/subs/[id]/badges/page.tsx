@@ -25,11 +25,11 @@ export default async function BadgesPage({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Badges
       </h2>
       {badges.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No badges yet.
         </p>
       ) : (
@@ -40,17 +40,17 @@ export default async function BadgesPage({
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"
             >
               <div className="flex items-center gap-2">
-                {badge.icon && <span className="text-xl">{badge.icon}</span>}
+                {badge.icon && <span className="text-2xl">{badge.icon}</span>}
                 <h3 className="font-medium text-zinc-900 dark:text-zinc-50">
                   {badge.name}
                 </h3>
               </div>
               {badge.description && (
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
                   {badge.description}
                 </p>
               )}
-              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
                 Earned {badge.earnedAt.toLocaleDateString()}
               </p>
             </li>

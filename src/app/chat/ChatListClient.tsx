@@ -189,7 +189,7 @@ export default function ChatListClient({
         <button
           onClick={handleNewChat}
           disabled={loadingContacts}
-          className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+          className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-base font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
         >
           {loadingContacts
             ? "Loading..."
@@ -200,7 +200,7 @@ export default function ChatListClient({
         <button
           onClick={handleNewGroup}
           disabled={loadingGroupContacts}
-          className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-sm font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
+          className="flex-1 rounded-lg border border-zinc-200 px-4 py-3 text-center text-base font-medium text-zinc-900 hover:bg-zinc-50 disabled:opacity-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900/50"
         >
           {loadingGroupContacts
             ? "Loading..."
@@ -214,11 +214,11 @@ export default function ChatListClient({
       {showContacts && (
         <div className="mt-4">
           {contacts.length === 0 ? (
-            <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-center text-base text-zinc-500 dark:text-zinc-400">
               No new contacts available.
             </p>
           ) : (
-            <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
+            <ul className="divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60">
               {contacts.map((contact) => (
                 <li key={contact.id}>
                   <button
@@ -233,15 +233,15 @@ export default function ChatListClient({
                         className="h-8 w-8 rounded-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-200 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                         {getInitials(contact.name)}
                       </span>
                     )}
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                       {contact.name || "Unknown"}
                     </span>
                     {starting === contact.id && (
-                      <span className="ml-auto text-xs text-zinc-500">
+                      <span className="ml-auto text-sm text-zinc-500">
                         Starting...
                       </span>
                     )}
@@ -255,19 +255,19 @@ export default function ChatListClient({
 
       {/* New Group form */}
       {showGroupForm && (
-        <div className="mt-4 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mt-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           <input
             type="text"
             placeholder="Group name"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            className="mb-3 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mb-3 w-full rounded-md border border-zinc-300 px-3 py-2 text-base focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
-          <p className="mb-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mb-2 text-sm text-zinc-500 dark:text-zinc-400">
             Select members:
           </p>
           {groupContacts.length === 0 ? (
-            <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-center text-base text-zinc-500 dark:text-zinc-400">
               No contacts available.
             </p>
           ) : (
@@ -288,11 +288,11 @@ export default function ChatListClient({
                         className="h-6 w-6 rounded-full object-cover"
                       />
                     ) : (
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-xs font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                         {getInitials(contact.name)}
                       </span>
                     )}
-                    <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base text-zinc-900 dark:text-zinc-50">
                       {contact.name || "Unknown"}
                     </span>
                   </label>
@@ -307,7 +307,7 @@ export default function ChatListClient({
               !groupName.trim() ||
               selectedGroupMembers.size === 0
             }
-            className="w-full rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="w-full rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
           >
             {creatingGroup ? "Creating..." : "Create Group"}
           </button>
@@ -316,7 +316,7 @@ export default function ChatListClient({
 
       {/* Conversation list */}
       {conversations.length === 0 && !showContacts && !showGroupForm ? (
-        <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-8 text-center text-base text-zinc-500 dark:text-zinc-400">
           No conversations yet.
         </p>
       ) : (
@@ -337,7 +337,7 @@ export default function ChatListClient({
                           className="h-10 w-10 rounded-full object-cover"
                         />
                       ) : (
-                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-sm font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-zinc-200 text-base font-medium text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300">
                           {getInitials(conv.other.name)}
                         </span>
                       )}
@@ -352,17 +352,17 @@ export default function ChatListClient({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline justify-between gap-2">
-                        <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                        <span className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
                           {conv.other.name || "Unknown"}
                         </span>
                         {conv.lastMessage && (
-                          <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
+                          <span className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
                             {formatTime(conv.lastMessage.createdAt)}
                           </span>
                         )}
                       </div>
                       {conv.lastMessage && (
-                        <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+                        <p className="truncate text-base text-zinc-500 dark:text-zinc-400">
                           {conv.lastMessage.content}
                         </p>
                       )}
@@ -379,30 +379,30 @@ export default function ChatListClient({
                   href={`/chat/group/${conv.id}`}
                   className="flex items-center gap-3 px-2 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-base font-medium text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                     {getInitials(conv.name)}
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                      <span className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
                         {conv.name}
                       </span>
                       {conv.lastMessage && (
-                        <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
+                        <span className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
                           {formatTime(conv.lastMessage.createdAt)}
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-1">
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                      <span className="text-sm text-zinc-400 dark:text-zinc-500">
                         {conv.memberCount} members
                       </span>
                       {conv.lastMessage && (
                         <>
-                          <span className="text-xs text-zinc-300 dark:text-zinc-600">
+                          <span className="text-sm text-zinc-300 dark:text-zinc-600">
                             &middot;
                           </span>
-                          <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
+                          <p className="truncate text-base text-zinc-500 dark:text-zinc-400">
                             {conv.lastMessage.senderName
                               ? `${conv.lastMessage.senderName}: `
                               : ""}

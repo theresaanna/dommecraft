@@ -103,11 +103,11 @@ export default function TaskDependencies({
     <div className="space-y-6">
       {/* Blocked By (dependsOn) */}
       <div>
-        <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <h3 className="text-base font-medium text-zinc-700 dark:text-zinc-300">
           Blocked By
         </h3>
         {dependsOn.length === 0 ? (
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">
             No blocking dependencies.
           </p>
         ) : (
@@ -115,22 +115,22 @@ export default function TaskDependencies({
             {dependsOn.map((dep) => (
               <li
                 key={dep.id}
-                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
+                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
               >
                 <Link
                   href={`/tasks/${dep.dependsOn.id}`}
-                  className="flex-1 text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+                  className="flex-1 text-base font-medium text-zinc-900 hover:underline dark:text-zinc-50"
                 >
                   {dep.dependsOn.title}
                 </Link>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[dep.dependsOn.status] || ""}`}
+                  className={`rounded-full px-2 py-0.5 text-sm font-medium ${STATUS_STYLES[dep.dependsOn.status] || ""}`}
                 >
                   {STATUS_LABELS[dep.dependsOn.status] || dep.dependsOn.status}
                 </span>
                 <button
                   onClick={() => handleRemoveDependency(dep.id)}
-                  className="text-sm text-zinc-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400"
+                  className="text-base text-zinc-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400"
                   aria-label={`Remove dependency: ${dep.dependsOn.title}`}
                 >
                   &times;
@@ -143,11 +143,11 @@ export default function TaskDependencies({
 
       {/* Blocks (dependedOnBy) */}
       <div>
-        <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <h3 className="text-base font-medium text-zinc-700 dark:text-zinc-300">
           Blocks
         </h3>
         {dependedOnBy.length === 0 ? (
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">
             No tasks depend on this task.
           </p>
         ) : (
@@ -155,16 +155,16 @@ export default function TaskDependencies({
             {dependedOnBy.map((dep) => (
               <li
                 key={dep.id}
-                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
+                className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
               >
                 <Link
                   href={`/tasks/${dep.task.id}`}
-                  className="flex-1 text-sm font-medium text-zinc-900 hover:underline dark:text-zinc-50"
+                  className="flex-1 text-base font-medium text-zinc-900 hover:underline dark:text-zinc-50"
                 >
                   {dep.task.title}
                 </Link>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[dep.task.status] || ""}`}
+                  className={`rounded-full px-2 py-0.5 text-sm font-medium ${STATUS_STYLES[dep.task.status] || ""}`}
                 >
                   {STATUS_LABELS[dep.task.status] || dep.task.status}
                 </span>
@@ -177,14 +177,14 @@ export default function TaskDependencies({
       {/* Add Dependency */}
       {filteredTasks.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <h3 className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             Add Dependency
           </h3>
           <form onSubmit={handleAddDependency} className="mt-2 flex gap-2">
             <select
               value={selectedTaskId}
               onChange={(e) => setSelectedTaskId(e.target.value)}
-              className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="flex-1 rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="">Select a task...</option>
               {filteredTasks.map((t) => (
@@ -196,7 +196,7 @@ export default function TaskDependencies({
             <button
               type="submit"
               disabled={adding || !selectedTaskId}
-              className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+              className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
               Add
             </button>

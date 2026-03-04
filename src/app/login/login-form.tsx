@@ -36,7 +36,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
   return (
     <div className="space-y-6">
       {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-950 dark:text-red-400">
+        <div className="rounded-md bg-red-50 p-3 text-base text-red-600 dark:bg-red-950 dark:text-red-400">
           {error}
         </div>
       )}
@@ -44,13 +44,13 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
       <div className="space-y-3">
         <button
           onClick={() => signIn("discord", { callbackUrl })}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
           Continue with Discord
         </button>
         <button
           onClick={() => signIn("twitter", { callbackUrl })}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2.5 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
           Continue with X
         </button>
@@ -60,7 +60,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-zinc-200 dark:border-zinc-800" />
         </div>
-        <div className="relative flex justify-center text-sm">
+        <div className="relative flex justify-center text-base">
           <span className="bg-white px-2 text-zinc-500 dark:bg-zinc-950 dark:text-zinc-400">
             or
           </span>
@@ -71,7 +71,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Email
           </label>
@@ -80,13 +80,13 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
             name="email"
             type="email"
             required
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Password
           </label>
@@ -95,13 +95,13 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
             name="password"
             type="password"
             required
-            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+            className="mt-1 block w-full rounded-md border border-zinc-300 px-3 py-2 text-base shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
           />
         </div>
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
           {isLoading ? "Signing in..." : "Sign in"}
         </button>

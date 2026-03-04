@@ -28,12 +28,12 @@ export default function NewTaskPageClient({
       <div className="mb-4">
         <Link
           href="/tasks"
-          className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
         >
           &larr; All Tasks
         </Link>
       </div>
-      <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         New Task
       </h1>
       <div className="mt-6">

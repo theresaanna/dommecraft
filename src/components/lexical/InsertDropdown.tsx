@@ -73,13 +73,13 @@ export default function InsertDropdown() {
           setSubDialog(null);
         }}
         aria-label="Insert"
-        className="rounded px-2 py-1 text-sm text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
+        className="rounded px-2 py-1 text-base text-zinc-700 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-700"
       >
         +
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 top-full z-20 mt-1 w-52 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60">
+        <div className="absolute left-0 top-full z-20 mt-1 w-52 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60">
           <MenuItem label="Image" onClick={() => handleSelect("image")} />
           <MenuItem label="Table" onClick={() => handleSelect("table")} />
           <div className="my-1 border-t border-zinc-100 dark:border-zinc-700" />
@@ -97,7 +97,7 @@ export default function InsertDropdown() {
             onClick={() => handleSelect("collapsible")}
           />
           <div className="my-1 border-t border-zinc-100 dark:border-zinc-700" />
-          <div className="px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+          <div className="px-3 py-1 text-xs font-medium uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
             Sticky Note
           </div>
           <div className="flex gap-1 px-3 py-1">
@@ -145,7 +145,7 @@ function MenuItem({
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center px-3 py-1.5 text-left text-xs text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-700"
+      className="flex w-full items-center px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-700"
     >
       {label}
     </button>

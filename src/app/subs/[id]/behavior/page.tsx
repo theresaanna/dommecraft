@@ -25,11 +25,11 @@ export default async function BehaviorPage({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Behavior Scores
       </h2>
       {scores.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No behavior scores yet.
         </p>
       ) : (
@@ -40,10 +40,10 @@ export default async function BehaviorPage({
               className="rounded-md border border-zinc-200 p-4 dark:border-zinc-700"
             >
               <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                <span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
                   {score.overall}
                 </span>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                <span className="text-sm text-zinc-400 dark:text-zinc-500">
                   {score.scoredAt.toLocaleDateString()}
                 </span>
               </div>
@@ -54,7 +54,7 @@ export default async function BehaviorPage({
                   ).map(([key, value]) => (
                     <span
                       key={key}
-                      className="text-xs text-zinc-600 dark:text-zinc-400"
+                      className="text-sm text-zinc-600 dark:text-zinc-400"
                     >
                       {key}: {value}
                     </span>
@@ -62,7 +62,7 @@ export default async function BehaviorPage({
                 </div>
               )}
               {score.notes && (
-                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400">
                   {score.notes}
                 </p>
               )}

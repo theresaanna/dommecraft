@@ -23,7 +23,7 @@ function formatDate(iso: string): string {
 export default function TaskProofs({ proofs }: { proofs: Proof[] }) {
   if (proofs.length === 0) {
     return (
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-base text-zinc-500 dark:text-zinc-400">
         No proofs submitted yet.
       </p>
     );
@@ -34,7 +34,7 @@ export default function TaskProofs({ proofs }: { proofs: Proof[] }) {
       {proofs.map((proof) => (
         <div
           key={proof.id}
-          className="rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
+          className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60"
         >
           {/* Media preview */}
           {proof.fileType.startsWith("image") ? (
@@ -54,7 +54,7 @@ export default function TaskProofs({ proofs }: { proofs: Proof[] }) {
               href={proof.fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-50 dark:hover:text-zinc-300"
+              className="text-base font-medium text-zinc-900 underline hover:text-zinc-700 dark:text-zinc-50 dark:hover:text-zinc-300"
             >
               View File
             </a>
@@ -62,13 +62,13 @@ export default function TaskProofs({ proofs }: { proofs: Proof[] }) {
 
           {/* Notes */}
           {proof.notes && (
-            <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">
+            <p className="mt-2 text-base text-zinc-700 dark:text-zinc-300">
               {proof.notes}
             </p>
           )}
 
           {/* Timestamp */}
-          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
             {formatDate(proof.createdAt)}
           </p>
         </div>

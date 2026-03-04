@@ -140,13 +140,13 @@ export default function ContextMenuPlugin({
     <div
       ref={menuRef}
       data-testid="context-menu"
-      className="fixed z-50 w-52 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
+      className="fixed z-50 w-52 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
       style={{ left: menuState.x, top: menuState.y }}
     >
       {feedback ? (
         <div
           data-testid="context-menu-feedback"
-          className={`px-3 py-2 text-sm ${
+          className={`px-3 py-2 text-base ${
             feedback.type === "success"
               ? "text-green-600 dark:text-green-400"
               : "text-red-500 dark:text-red-400"
@@ -163,7 +163,7 @@ export default function ContextMenuPlugin({
           <button
             data-testid="add-task-button"
             onClick={() => setShowSubmenu(!showSubmenu)}
-            className="flex w-full items-center justify-between px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="flex w-full items-center justify-between px-3 py-1.5 text-left text-base text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Add as Task
             <svg
@@ -182,7 +182,7 @@ export default function ContextMenuPlugin({
           {showSubmenu && (
             <div
               data-testid="project-submenu"
-              className="absolute left-full top-0 ml-0.5 w-48 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
+              className="absolute left-full top-0 ml-0.5 w-48 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60"
             >
               {/* Current project first */}
               {projects
@@ -194,7 +194,7 @@ export default function ContextMenuPlugin({
                   <button
                     key={project.id}
                     onClick={() => handleAddTask(project.id)}
-                    className={`block w-full truncate px-3 py-1.5 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
+                    className={`block w-full truncate px-3 py-1.5 text-left text-base hover:bg-zinc-100 dark:hover:bg-zinc-800 ${
                       project.id === projectId
                         ? "font-medium text-zinc-900 dark:text-zinc-50"
                         : "text-zinc-700 dark:text-zinc-300"
@@ -210,7 +210,7 @@ export default function ContextMenuPlugin({
         <button
           data-testid="add-task-button"
           onClick={() => handleAddTask(projectId)}
-          className="flex w-full items-center px-3 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="flex w-full items-center px-3 py-1.5 text-left text-base text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
           Add as Task
         </button>

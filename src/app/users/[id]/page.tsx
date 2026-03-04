@@ -68,15 +68,15 @@ export default async function UserProfilePage({
             className="h-16 w-16 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-200 text-xl font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-200 text-2xl font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
             {(user.name || "?")[0].toUpperCase()}
           </div>
         )}
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
             {user.name || "Unnamed User"}
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="text-base text-zinc-500 dark:text-zinc-400">
             {user.role} · Joined{" "}
             {user.createdAt.toLocaleDateString("en-US", {
               month: "long",
@@ -96,13 +96,13 @@ export default async function UserProfilePage({
       {user.bio && (
         <section>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               About
             </h2>
             {isOwnProfile && (
               <Link
                 href="/settings"
-                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+                className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
               >
                 Edit bio &rarr;
               </Link>
@@ -119,7 +119,7 @@ export default async function UserProfilePage({
         <section>
           <Link
             href="/settings"
-            className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+            className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
           >
             Add a bio &rarr;
           </Link>

@@ -25,11 +25,11 @@ export default async function MediaPage({
 
   return (
     <div>
-      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Media
       </h2>
       {mediaItems.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No media items yet.
         </p>
       ) : (
@@ -42,12 +42,12 @@ export default async function MediaPage({
               <h3 className="font-medium text-zinc-900 dark:text-zinc-50">
                 {item.title || "Untitled"}
               </h3>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
                 {item.fileType}
                 {item.fileSize && ` · ${Math.round(item.fileSize / 1024)} KB`}
               </p>
               {item.description && (
-                <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="mt-1 text-base text-zinc-600 dark:text-zinc-400">
                   {item.description}
                 </p>
               )}
@@ -56,14 +56,14 @@ export default async function MediaPage({
                   {item.tags.map((tag: string) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                      className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               )}
-              <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+              <p className="mt-2 text-sm text-zinc-400 dark:text-zinc-500">
                 {item.createdAt.toLocaleDateString()}
               </p>
             </li>

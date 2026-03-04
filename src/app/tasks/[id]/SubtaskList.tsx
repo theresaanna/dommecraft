@@ -52,7 +52,7 @@ export default function SubtaskList({
 
   if (subtasks.length === 0) {
     return (
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-base text-zinc-500 dark:text-zinc-400">
         No subtasks yet.
       </p>
     );
@@ -66,7 +66,7 @@ export default function SubtaskList({
       {subtasks.map((subtask) => (
         <li
           key={subtask.id}
-          className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
+          className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm px-3 py-2 dark:border-zinc-800 dark:bg-zinc-900/60"
         >
           <input
             type="checkbox"
@@ -75,7 +75,7 @@ export default function SubtaskList({
             className="rounded border-zinc-300 dark:border-zinc-600"
           />
           <span
-            className={`flex-1 text-sm ${
+            className={`flex-1 text-base ${
               subtask.isCompleted
                 ? "text-zinc-400 line-through dark:text-zinc-500"
                 : "text-zinc-900 dark:text-zinc-50"
@@ -85,7 +85,7 @@ export default function SubtaskList({
           </span>
           <button
             onClick={() => handleDelete(subtask.id)}
-            className="text-sm text-zinc-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400"
+            className="text-base text-zinc-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400"
             aria-label={`Delete subtask: ${subtask.title}`}
           >
             &times;

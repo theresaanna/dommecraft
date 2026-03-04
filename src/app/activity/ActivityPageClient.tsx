@@ -56,17 +56,17 @@ export default function ActivityPageClient({
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           Activity
         </h1>
       </div>
 
       {items.length === 0 ? (
-        <div className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="mt-8 text-center text-base text-zinc-500 dark:text-zinc-400">
           <p>No activity yet.</p>
         </div>
       ) : (
-        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60">
           <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
             {items.map((item) => {
               const style = TYPE_STYLES[item.type];
@@ -78,26 +78,26 @@ export default function ActivityPageClient({
                   >
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-full px-2 py-0.5 text-xs ${style.className}`}
+                        className={`rounded-full px-2 py-0.5 text-sm ${style.className}`}
                       >
                         {style.label}
                       </span>
-                      <span className="text-sm text-zinc-900 dark:text-zinc-50">
+                      <span className="text-base text-zinc-900 dark:text-zinc-50">
                         {item.title}
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
                       {item.amount && (
-                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                        <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                           {item.amount}
                         </span>
                       )}
                       {item.subtitle && (
-                        <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400">
                           {item.subtitle}
                         </span>
                       )}
-                      <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                      <span className="text-sm text-zinc-400 dark:text-zinc-500">
                         {timeAgo(item.date)}
                       </span>
                     </div>

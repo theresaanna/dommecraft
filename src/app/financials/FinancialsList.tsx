@@ -95,7 +95,7 @@ export default function FinancialsList({
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
             onClick={toggleAll}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {selected.size === entries.length ? "Deselect All" : "Select All"}
           </button>
@@ -105,14 +105,14 @@ export default function FinancialsList({
           <button
             onClick={() => handleExport("csv")}
             disabled={selected.size === 0 || exporting !== null}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {exporting === "csv" ? "Exporting..." : "Export CSV"}
           </button>
           <button
             onClick={() => handleExport("pdf")}
             disabled={selected.size === 0 || exporting !== null}
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             {exporting === "pdf" ? "Exporting..." : "Export PDF"}
           </button>
@@ -122,7 +122,7 @@ export default function FinancialsList({
               <div className="h-4 w-px bg-zinc-200 dark:bg-zinc-700" />
               <button
                 onClick={handleDelete}
-                className="rounded-md border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
+                className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
               >
                 Delete ({selected.size})
               </button>
@@ -130,7 +130,7 @@ export default function FinancialsList({
           )}
 
           {selected.size > 0 && (
-            <span className="ml-auto text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="ml-auto text-sm text-zinc-500 dark:text-zinc-400">
               {selected.size} selected
             </span>
           )}
@@ -154,23 +154,23 @@ export default function FinancialsList({
               <div className="flex-1 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
                       {formatCurrency(entry.amount, currency)}
                     </span>
-                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                    <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-sm text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
                       {entry.category}
                     </span>
                     {entry.isInApp && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                         In-app
                       </span>
                     )}
                   </div>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                  <span className="text-base text-zinc-500 dark:text-zinc-400">
                     {new Date(entry.date).toLocaleDateString()}
                   </span>
                 </div>
-                <div className="mt-1 flex items-center gap-3 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="mt-1 flex items-center gap-3 text-base text-zinc-500 dark:text-zinc-400">
                   <span>{entry.sub?.fullName || "Unlinked"}</span>
                   {entry.paymentMethod && (
                     <>

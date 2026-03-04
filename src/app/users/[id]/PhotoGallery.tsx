@@ -112,7 +112,7 @@ export default function PhotoGallery({
   return (
     <section className="mt-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
           Photos
         </h2>
         {canUpload && (
@@ -120,7 +120,7 @@ export default function PhotoGallery({
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
-            className="rounded-md bg-zinc-800 px-3 py-1.5 text-xs font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {uploading ? "Uploading..." : "Upload Photo"}
           </button>
@@ -138,11 +138,11 @@ export default function PhotoGallery({
       </div>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-base text-red-600 dark:text-red-400">{error}</p>
       )}
 
       {photos.length === 0 ? (
-        <p className="mt-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="mt-4 text-base text-zinc-500 dark:text-zinc-400">
           No photos yet.
         </p>
       ) : (
@@ -161,7 +161,7 @@ export default function PhotoGallery({
                 <button
                   type="button"
                   onClick={() => handleDelete(photo.id)}
-                  className="absolute top-2 right-2 rounded-full bg-black/50 px-2 py-1 text-xs text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
+                  className="absolute top-2 right-2 rounded-full bg-black/50 px-2 py-1 text-sm text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100"
                 >
                   Delete
                 </button>

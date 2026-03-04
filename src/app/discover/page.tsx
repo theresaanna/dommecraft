@@ -33,7 +33,7 @@ export default async function DiscoverPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 pt-16 pb-40">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           Discover
         </h1>
       </div>
@@ -42,7 +42,7 @@ export default async function DiscoverPage() {
       </p>
 
       {photos.length === 0 ? (
-        <div className="mt-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="mt-12 text-center text-base text-zinc-500 dark:text-zinc-400">
           No photos yet.
         </div>
       ) : (
@@ -54,7 +54,7 @@ export default async function DiscoverPage() {
             return (
               <div
                 key={photo.id}
-                className="overflow-hidden rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60"
+                className="overflow-hidden rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60"
               >
                 <img
                   src={photo.fileUrl}
@@ -73,15 +73,15 @@ export default async function DiscoverPage() {
                         className="h-5 w-5 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 text-[10px] font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
+                      <div className="flex h-5 w-5 items-center justify-center rounded-full bg-zinc-200 text-xs font-semibold text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300">
                         {(photo.user.name || "?")[0].toUpperCase()}
                       </div>
                     )}
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                    <span className="text-base font-medium text-zinc-900 dark:text-zinc-50">
                       {photo.user.name || "Unnamed"}
                     </span>
                   </Link>
-                  <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">
                     {new Date(photo.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",

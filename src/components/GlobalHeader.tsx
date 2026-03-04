@@ -122,28 +122,28 @@ export default function GlobalHeader() {
   }
 
   const navLinkClass = (active: boolean) =>
-    `rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+    `rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
       active
         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
         : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
     }`;
 
   const dropdownItemClass =
-    "block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800";
+    "block px-4 py-2 text-base text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800";
 
   const dropdownMenuClass =
-    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60";
+    "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60";
 
   return (
     <>
-      <header className="fixed top-0 right-0 left-0 z-40 border-b border-zinc-200 bg-white/60 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/60">
+      <header className="fixed top-0 right-0 left-0 z-40 border-b border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/60">
         <div className="mx-auto max-w-5xl px-4">
           <div className="flex h-14 items-center justify-between">
             {/* Left: Brand + Nav */}
             <div className="flex items-center gap-6">
               <Link
                 href="/dashboard"
-                className="text-base font-bold text-zinc-900 dark:text-zinc-50"
+                className="text-lg font-bold text-zinc-900 dark:text-zinc-50"
               >
                 DommeCraft
               </Link>
@@ -165,7 +165,7 @@ export default function GlobalHeader() {
                     <div ref={subsRef} className="relative">
                       <button
                         onClick={() => toggleDropdown("subs")}
-                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
                           isActive("/subs") || isActive("/tasks")
                             ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                             : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
@@ -217,7 +217,7 @@ export default function GlobalHeader() {
                     <div ref={hubRef} className="relative">
                       <button
                         onClick={() => toggleDropdown("hub")}
-                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
                           isActive("/hub")
                             ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                             : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
@@ -247,7 +247,7 @@ export default function GlobalHeader() {
                             onClick={() =>
                               setHubProjectsExpanded(!hubProjectsExpanded)
                             }
-                            className="flex w-full items-center justify-between px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            className="flex w-full items-center justify-between px-4 py-2 text-base text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800"
                           >
                             Projects
                             <ChevronDown
@@ -259,7 +259,7 @@ export default function GlobalHeader() {
                           {hubProjectsExpanded && (
                             <div className="max-h-48 overflow-y-auto">
                               {hubProjects.length === 0 ? (
-                                <span className="block px-6 py-2 text-sm text-zinc-400 dark:text-zinc-500">
+                                <span className="block px-6 py-2 text-base text-zinc-400 dark:text-zinc-500">
                                   No projects yet
                                 </span>
                               ) : (
@@ -268,7 +268,7 @@ export default function GlobalHeader() {
                                     key={project.id}
                                     href={`/hub/projects/${project.id}`}
                                     onClick={closeDropdown}
-                                    className="block truncate px-6 py-1.5 text-sm text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                                    className="block truncate px-6 py-1.5 text-base text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800"
                                   >
                                     {project.name}
                                   </Link>
@@ -299,7 +299,7 @@ export default function GlobalHeader() {
                 <div ref={newRef} className="relative hidden md:block">
                   <button
                     onClick={() => toggleDropdown("new")}
-                    className="flex h-9 items-center gap-1 rounded-md bg-zinc-800 px-3 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                    className="flex h-9 items-center gap-1 rounded-md bg-zinc-800 px-3 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -312,7 +312,7 @@ export default function GlobalHeader() {
                     New
                   </button>
                   {activeDropdown === "new" && (
-                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white/60 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60">
+                    <div className="absolute right-0 mt-1 w-44 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60">
                       {QUICK_ACTIONS.map((action) => (
                         <Link
                           key={action.href}
@@ -347,7 +347,7 @@ export default function GlobalHeader() {
                   />
                 </svg>
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -376,7 +376,7 @@ export default function GlobalHeader() {
                   />
                 </svg>
                 {unreadChatCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-amber-500 px-1 text-xs font-bold text-white">
                     {unreadChatCount > 9 ? "9+" : unreadChatCount}
                   </span>
                 )}
@@ -457,7 +457,7 @@ export default function GlobalHeader() {
               <Link
                 href="/discover"
                 onClick={closeMobile}
-                className={`rounded-md px-3 py-2 text-sm font-medium ${
+                className={`rounded-md px-3 py-2 text-base font-medium ${
                   isActive("/discover")
                     ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                     : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -474,7 +474,7 @@ export default function GlobalHeader() {
                   <Link
                     href="/tasks"
                     onClick={closeMobile}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2 text-base font-medium ${
                       isActive("/tasks")
                         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                         : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -485,7 +485,7 @@ export default function GlobalHeader() {
                   <Link
                     href="/subs"
                     onClick={closeMobile}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2 text-base font-medium ${
                       isActive("/subs")
                         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                         : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -500,7 +500,7 @@ export default function GlobalHeader() {
                   <Link
                     href="/financials"
                     onClick={closeMobile}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2 text-base font-medium ${
                       isActive("/financials")
                         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                         : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -511,7 +511,7 @@ export default function GlobalHeader() {
                   <Link
                     href="/calendar"
                     onClick={closeMobile}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2 text-base font-medium ${
                       isActive("/calendar")
                         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                         : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -522,7 +522,7 @@ export default function GlobalHeader() {
                   <Link
                     href="/hub"
                     onClick={closeMobile}
-                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                    className={`rounded-md px-3 py-2 text-base font-medium ${
                       isActive("/hub")
                         ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                         : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
@@ -539,7 +539,7 @@ export default function GlobalHeader() {
                       key={action.href}
                       href={action.href}
                       onClick={closeMobile}
-                      className="rounded-md px-3 py-2 text-sm text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                      className="rounded-md px-3 py-2 text-base text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
                     >
                       + {action.label}
                     </Link>
@@ -549,7 +549,7 @@ export default function GlobalHeader() {
                 <Link
                   href="/my-tasks"
                   onClick={closeMobile}
-                  className={`rounded-md px-3 py-2 text-sm font-medium ${
+                  className={`rounded-md px-3 py-2 text-base font-medium ${
                     isActive("/my-tasks")
                       ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
                       : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"

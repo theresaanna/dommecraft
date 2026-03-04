@@ -59,9 +59,9 @@ export default function LinkDialog({
   return (
     <div
       ref={dialogRef}
-      className="absolute left-0 top-full z-20 mt-1 w-72 rounded-md border border-zinc-200 bg-white/60 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
+      className="absolute left-0 top-full z-20 mt-1 w-72 rounded-md border border-zinc-200 bg-white/40 backdrop-blur-sm p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-800/60"
     >
-      <label className="block text-xs font-medium text-zinc-600 dark:text-zinc-400">
+      <label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
         URL
       </label>
       <input
@@ -76,14 +76,14 @@ export default function LinkDialog({
         }}
         placeholder="https://example.com"
         autoFocus
-        className="mt-1 w-full rounded border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
+        className="mt-1 w-full rounded border border-zinc-300 px-2 py-1 text-base dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-50"
       />
       <div className="mt-2 flex justify-end gap-2">
         {isLink && (
           <button
             type="button"
             onClick={handleRemove}
-            className="text-xs text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
           >
             Remove
           </button>
@@ -91,7 +91,7 @@ export default function LinkDialog({
         <button
           type="button"
           onClick={handleApply}
-          className="rounded bg-zinc-800 px-2 py-1 text-xs text-white hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="rounded bg-zinc-800 px-2 py-1 text-sm text-white hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
           Apply
         </button>

@@ -112,12 +112,12 @@ export default function FinancialEntryForm({
 
   return (
     <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
-      <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+      <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
         {isEditing ? "Edit Entry" : "New Entry"}
       </h3>
 
       {error && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="mt-2 text-base text-red-600 dark:text-red-400">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
@@ -125,7 +125,7 @@ export default function FinancialEntryForm({
         <div>
           <label
             htmlFor="amount"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Amount *
           </label>
@@ -137,7 +137,7 @@ export default function FinancialEntryForm({
             min="0.01"
             defaultValue={entry?.amount || ""}
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -146,7 +146,7 @@ export default function FinancialEntryForm({
           <div>
             <label
               htmlFor="category"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Category *
             </label>
@@ -155,7 +155,7 @@ export default function FinancialEntryForm({
               name="category"
               defaultValue={entry?.category || ""}
               required
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="">Select...</option>
               {CATEGORY_OPTIONS.map((c) => (
@@ -170,7 +170,7 @@ export default function FinancialEntryForm({
           <div>
             <label
               htmlFor="paymentMethod"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Payment Method
             </label>
@@ -178,7 +178,7 @@ export default function FinancialEntryForm({
               id="paymentMethod"
               name="paymentMethod"
               defaultValue={entry?.paymentMethod || ""}
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="">None</option>
               {PAYMENT_METHOD_OPTIONS.map((m) => (
@@ -195,7 +195,7 @@ export default function FinancialEntryForm({
           <div>
             <label
               htmlFor="subId"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Sub
             </label>
@@ -203,7 +203,7 @@ export default function FinancialEntryForm({
               id="subId"
               name="subId"
               defaultValue={entry?.subId || ""}
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             >
               <option value="">Unlinked</option>
               {subs.map((sub) => (
@@ -218,7 +218,7 @@ export default function FinancialEntryForm({
           <div>
             <label
               htmlFor="date"
-              className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+              className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
             >
               Date
             </label>
@@ -231,7 +231,7 @@ export default function FinancialEntryForm({
                   ? new Date(entry.date).toISOString().split("T")[0]
                   : today
               }
-              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
         </div>
@@ -247,7 +247,7 @@ export default function FinancialEntryForm({
           />
           <label
             htmlFor="isInApp"
-            className="text-sm text-zinc-700 dark:text-zinc-300"
+            className="text-base text-zinc-700 dark:text-zinc-300"
           >
             In-app transaction
           </label>
@@ -257,7 +257,7 @@ export default function FinancialEntryForm({
         <div>
           <label
             htmlFor="notes"
-            className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            className="block text-base font-medium text-zinc-700 dark:text-zinc-300"
           >
             Notes
           </label>
@@ -266,7 +266,7 @@ export default function FinancialEntryForm({
             name="notes"
             rows={2}
             defaultValue={entry?.notes || ""}
-            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
         </div>
 
@@ -275,14 +275,14 @@ export default function FinancialEntryForm({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="rounded-md border border-zinc-300 px-4 py-2 text-base font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-md bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
           >
             {submitting
               ? "Saving..."

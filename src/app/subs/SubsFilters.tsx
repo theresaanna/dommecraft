@@ -127,7 +127,7 @@ export default function SubsFilters({
             onChange={(e) => {
               if (e.target.value === "") applyFilters({ q: "" });
             }}
-            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder-zinc-400"
+            className="w-full rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 placeholder-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder-zinc-400"
           />
         </form>
 
@@ -135,7 +135,7 @@ export default function SubsFilters({
           value={currentParams.sort}
           onChange={(e) => applyFilters({ sort: e.target.value })}
           aria-label="Sort by"
-          className="rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -152,7 +152,7 @@ export default function SubsFilters({
             })
           }
           aria-label={`Sort ${currentParams.order === "asc" ? "descending" : "ascending"}`}
-          className="rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+          className="rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
         >
           {currentParams.order === "asc" ? "\u2191" : "\u2193"}
         </button>
@@ -162,7 +162,7 @@ export default function SubsFilters({
           onClick={() => setShowFilters(!showFilters)}
           aria-label="Toggle filters"
           aria-expanded={showFilters}
-          className={`rounded-md border px-3 py-2 text-sm font-medium ${
+          className={`rounded-md border px-3 py-2 text-base font-medium ${
             hasActiveFilters
               ? "border-zinc-800 bg-zinc-800 text-zinc-50 dark:border-zinc-200 dark:bg-zinc-200 dark:text-zinc-900"
               : "border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
@@ -177,7 +177,7 @@ export default function SubsFilters({
         <div className="space-y-4 rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
           {/* Sub Type */}
           <fieldset>
-            <legend className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <legend className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Type of Submissive
             </legend>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -186,7 +186,7 @@ export default function SubsFilters({
                   key={option}
                   type="button"
                   onClick={() => toggleArrayValue("sub_type", option)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                     currentParams.sub_type.includes(option)
                       ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
                       : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
@@ -200,7 +200,7 @@ export default function SubsFilters({
 
           {/* Arrangement Type */}
           <fieldset>
-            <legend className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <legend className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Arrangement Type
             </legend>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -209,7 +209,7 @@ export default function SubsFilters({
                   key={option}
                   type="button"
                   onClick={() => toggleArrayValue("arrangement_type", option)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                     currentParams.arrangement_type.includes(option)
                       ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
                       : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
@@ -224,7 +224,7 @@ export default function SubsFilters({
           {/* Tags */}
           {availableTags.length > 0 && (
             <fieldset>
-              <legend className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              <legend className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                 Tags
               </legend>
               <div className="mt-2 flex flex-wrap gap-2">
@@ -233,7 +233,7 @@ export default function SubsFilters({
                     key={tag}
                     type="button"
                     onClick={() => toggleArrayValue("tags", tag)}
-                    className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                    className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       currentParams.tags.includes(tag)
                         ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
                         : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
@@ -248,7 +248,7 @@ export default function SubsFilters({
 
           {/* Financial Range */}
           <fieldset>
-            <legend className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            <legend className="text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Financial Contribution Range
             </legend>
             <div className="mt-2 flex items-center gap-2">
@@ -267,9 +267,9 @@ export default function SubsFilters({
                     });
                   }
                 }}
-                className="w-28 rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="w-28 rounded-md border border-zinc-300 px-3 py-1.5 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
-              <span className="text-sm text-zinc-400">&ndash;</span>
+              <span className="text-base text-zinc-400">&ndash;</span>
               <input
                 type="number"
                 placeholder="Max"
@@ -285,7 +285,7 @@ export default function SubsFilters({
                     });
                   }
                 }}
-                className="w-28 rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+                className="w-28 rounded-md border border-zinc-300 px-3 py-1.5 text-base text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
               />
             </div>
           </fieldset>
@@ -295,7 +295,7 @@ export default function SubsFilters({
             <button
               type="button"
               onClick={clearFilters}
-              className="text-xs font-medium text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              className="text-sm font-medium text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
             >
               Clear all filters
             </button>
