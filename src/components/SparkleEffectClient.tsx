@@ -7,27 +7,45 @@ export default function SparkleEffectClient() {
   const instanceRef = useRef<SparkleFall | null>(null);
 
   useEffect(() => {
-    try {
-      const instance = new SparkleFall({
-        interval: 100,
-        wind: 0,
-        maxSparkles: 100,
-        minSize: 2,
-        maxSize: 4,
-        minDuration: 1,
-        maxDuration: 2,
-        sparkles: ["\u00b7"],
-        colors: ["rgba(255,255,255,0.8)"],
-      });
-      instanceRef.current = instance;
-
-      return () => {
-        instance.destroy();
+    function update() {
+      const isDark = document.documentElement.classList.contains("dark");
+      if (isDark && !instanceRef.current) {
+        try {
+          instanceRef.current = new SparkleFall({
+            interval: 100,
+            wind: 0,
+            maxSparkles: 100,
+            minSize: 10,
+            maxSize: 20,
+            minDuration: 2,
+            maxDuration: 5,
+            sparkles: ["·"],
+            colors: ["rgba(255,255,255,0.8)"],
+          });
+        } catch {
+          // sparklefall init failed, ignore
+        }
+      } else if (!isDark && instanceRef.current) {
+        instanceRef.current.destroy();
         instanceRef.current = null;
-      };
-    } catch {
-      // sparklefall init failed, ignore
+      }
     }
+
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      observer.disconnect();
+      if (instanceRef.current) {
+        instanceRef.current.destroy();
+        instanceRef.current = null;
+      }
+    };
   }, []);
 
   return null;
