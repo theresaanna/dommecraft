@@ -84,6 +84,7 @@ describe("GET /api/user/settings", () => {
       showOnlineStatus: true,
       showReadReceipts: true,
       notificationSound: true,
+      pushNotifications: true,
     } as never);
 
     const res = await GET();
@@ -101,6 +102,7 @@ describe("GET /api/user/settings", () => {
       showOnlineStatus: true,
       showReadReceipts: true,
       notificationSound: true,
+      pushNotifications: true,
     });
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { id: "user-1" },
@@ -115,6 +117,7 @@ describe("GET /api/user/settings", () => {
         showOnlineStatus: true,
         showReadReceipts: true,
         notificationSound: true,
+        pushNotifications: true,
       },
     });
   });
@@ -166,6 +169,7 @@ describe("PATCH /api/user/settings", () => {
         showOnlineStatus: true,
         showReadReceipts: true,
         notificationSound: true,
+        pushNotifications: true,
       },
     });
   });

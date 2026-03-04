@@ -36,6 +36,7 @@ const defaultSettings = {
   showOnlineStatus: true,
   showReadReceipts: true,
   notificationSound: true,
+  pushNotifications: true,
 };
 
 describe("SettingsClient", () => {

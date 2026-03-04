@@ -54,6 +54,7 @@ const authenticatedSession = {
       theme: "SYSTEM" as const,
       showOnlineStatus: true,
       notificationSound: true,
+      pushNotifications: true,
     },
     expires: "2099-01-01",
   },
