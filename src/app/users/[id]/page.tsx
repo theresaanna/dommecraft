@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import UserProfileClient from "./UserProfileClient";
 import PhotoGallery from "./PhotoGallery";
 
@@ -23,6 +24,7 @@ export default async function UserProfilePage({
       name: true,
       avatarUrl: true,
       role: true,
+      bio: true,
       createdAt: true,
     },
   });
@@ -57,7 +59,7 @@ export default async function UserProfilePage({
   });
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto max-w-4xl space-y-8 px-4 py-16">
       <section className="flex items-center gap-4">
         {user.avatarUrl ? (
           <img
@@ -89,6 +91,39 @@ export default async function UserProfilePage({
           targetUserId={id}
           targetUserName={user.name || "User"}
         />
+      )}
+
+      {user.bio && (
+        <section>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              About
+            </h2>
+            {isOwnProfile && (
+              <Link
+                href="/settings"
+                className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+              >
+                Edit bio &rarr;
+              </Link>
+            )}
+          </div>
+          <div
+            className="prose prose-sm prose-zinc mt-2 dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: user.bio }}
+          />
+        </section>
+      )}
+
+      {!user.bio && isOwnProfile && (
+        <section>
+          <Link
+            href="/settings"
+            className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"
+          >
+            Add a bio &rarr;
+          </Link>
+        </section>
       )}
 
       <PhotoGallery

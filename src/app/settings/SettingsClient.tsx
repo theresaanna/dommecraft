@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { CURRENCY_OPTIONS } from "@/lib/currency";
+import LexicalEditor from "@/components/LexicalEditor";
 
 type SettingsData = {
   name: string;
@@ -17,6 +18,7 @@ type SettingsData = {
   showReadReceipts: boolean;
   notificationSound: boolean;
   pushNotifications: boolean;
+  bio: string;
 };
 
 export default function SettingsClient({
@@ -216,6 +218,24 @@ export default function SettingsClient({
               className="mt-1 w-full rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Bio Section */}
+      <div className="mt-4 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
+        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+          Bio
+        </h2>
+        <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+          Tell others about yourself. This will appear on your profile page.
+        </p>
+        <div className="mt-3">
+          <LexicalEditor
+            initialContent={initialSettings.bio || undefined}
+            onChange={(html) =>
+              setSettings((prev) => ({ ...prev, bio: html }))
+            }
+          />
         </div>
       </div>
 
