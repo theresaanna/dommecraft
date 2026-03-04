@@ -1,9 +1,9 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import MyTaskDetailClient from "./MyTaskDetailClient";
+import MyTaskDetailClient from "../../my-tasks/[id]/MyTaskDetailClient";
 
-export default async function MyTaskDetailPage({
+export default async function SubTaskDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -11,9 +11,12 @@ export default async function MyTaskDetailPage({
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const { id } = await params;
+  if (session.user.role !== "DOMME") {
+    const { id } = await params;
+    redirect(`/my-tasks/${id}`);
+  }
 
-  if (session.user.role === "DOMME") redirect(`/sub-tasks/${id}`);
+  const { id } = await params;
 
   // Find linked profiles
   const linkedProfiles = await prisma.subProfile.findMany({
@@ -32,7 +35,7 @@ export default async function MyTaskDetailPage({
   });
 
   if (!task || !profileIds.includes(task.subId)) {
-    redirect("/my-tasks");
+    redirect("/sub-tasks");
   }
 
   // Serialize
@@ -66,7 +69,11 @@ export default async function MyTaskDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-16">
-      <MyTaskDetailClient task={serializedTask} />
+      <MyTaskDetailClient
+        task={serializedTask}
+        backLabel="Back to Sub Tasks"
+        backHref="/sub-tasks"
+      />
     </div>
   );
 }
