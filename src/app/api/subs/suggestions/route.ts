@@ -10,6 +10,7 @@ export async function GET() {
     }
 
     const subs = await prisma.subProfile.findMany({
+      where: { userId: session.user.id },
       select: {
         tags: true,
         softLimits: true,

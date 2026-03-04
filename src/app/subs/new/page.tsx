@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import TagInput from "@/components/TagInput";
+import { useTagSuggestions } from "@/hooks/use-tag-suggestions";
 
 const ARRANGEMENT_OPTIONS = [
   "Online",
@@ -26,34 +27,15 @@ const SUB_TYPE_OPTIONS = [
   "Switch",
 ];
 
-type Suggestions = {
-  tags: string[];
-  softLimits: string[];
-  hardLimits: string[];
-};
-
 export default function NewSubPage() {
   const router = useRouter();
   const { status, data: session } = useSession();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<Suggestions>({
-    tags: [],
-    softLimits: [],
-    hardLimits: [],
-  });
+  const tagSuggestions = useTagSuggestions();
   const [tags, setTags] = useState<string[]>([]);
   const [softLimits, setSoftLimits] = useState<string[]>([]);
   const [hardLimits, setHardLimits] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetch("/api/subs/suggestions")
-        .then((r) => r.json())
-        .then((data) => setSuggestions(data))
-        .catch(() => {});
-    }
-  }, [status]);
 
   if (status === "unauthenticated") {
     router.push("/login");
@@ -228,7 +210,7 @@ export default function NewSubPage() {
           label="Soft Limits"
           name="softLimits"
           placeholder="Type and press Enter or comma to add..."
-          suggestions={suggestions.softLimits}
+          suggestions={tagSuggestions}
           value={softLimits}
           onChange={setSoftLimits}
         />
@@ -238,7 +220,7 @@ export default function NewSubPage() {
           label="Hard Limits"
           name="hardLimits"
           placeholder="Type and press Enter or comma to add..."
-          suggestions={suggestions.hardLimits}
+          suggestions={tagSuggestions}
           value={hardLimits}
           onChange={setHardLimits}
         />
@@ -248,7 +230,7 @@ export default function NewSubPage() {
           label="Tags"
           name="tags"
           placeholder="Type and press Enter or comma to add..."
-          suggestions={suggestions.tags}
+          suggestions={tagSuggestions}
           value={tags}
           onChange={setTags}
         />
