@@ -14,9 +14,11 @@ type Note = {
 
 export default function NotesList({
   notes,
+  editingNoteId,
   onEdit,
 }: {
   notes: Note[];
+  editingNoteId: string | null;
   onEdit: (note: Note) => void;
 }) {
   const router = useRouter();
@@ -50,7 +52,7 @@ export default function NotesList({
       {notes.map((note) => (
         <li
           key={note.id}
-          className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800"
+          className={`rounded-lg border border-zinc-200 p-4 dark:border-zinc-800 ${editingNoteId === note.id ? "hidden" : ""}`}
         >
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1">

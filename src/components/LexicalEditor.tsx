@@ -72,9 +72,9 @@ const theme = {
   table:
     "border-collapse w-full my-2 border border-zinc-300 dark:border-zinc-600",
   tableCell:
-    "border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600",
+    "relative align-top outline-none border border-zinc-300 px-2 py-1 text-sm dark:border-zinc-600",
   tableCellHeader:
-    "border border-zinc-300 bg-zinc-100 px-2 py-1 text-sm font-semibold dark:border-zinc-600 dark:bg-zinc-800",
+    "relative align-top outline-none border border-zinc-300 bg-zinc-100 px-2 py-1 text-sm font-semibold dark:border-zinc-600 dark:bg-zinc-800",
   image: "my-2",
 };
 

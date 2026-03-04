@@ -281,7 +281,7 @@ export default async function DashboardPage() {
               <li key={`fin-${entry.id}`}>
                 <Link
                   href="/financials"
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  className="flex items-center justify-between px-4 py-3 bg-green-50 hover:bg-green-100/70 dark:bg-green-900/10 dark:hover:bg-green-900/20"
                 >
                   <div className="flex items-center gap-2">
                     <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
@@ -302,7 +302,7 @@ export default async function DashboardPage() {
               <li key={`task-${task.id}`}>
                 <Link
                   href={`/tasks/${task.id}`}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  className="flex items-center justify-between px-4 py-3 bg-blue-50 hover:bg-blue-100/70 dark:bg-blue-900/10 dark:hover:bg-blue-900/20"
                 >
                   <div className="flex items-center gap-2">
                     <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
@@ -322,7 +322,7 @@ export default async function DashboardPage() {
               <li key={`note-${note.id}`}>
                 <Link
                   href={`/hub/projects/${note.project.id}`}
-                  className="flex items-center justify-between px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+                  className="flex items-center justify-between px-4 py-3 bg-purple-50 hover:bg-purple-100/70 dark:bg-purple-900/10 dark:hover:bg-purple-900/20"
                 >
                   <div className="flex items-center gap-2">
                     <span className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
@@ -690,7 +690,7 @@ export default async function DashboardPage() {
             <ul className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {upcomingEvents.map((event: (typeof upcomingEvents)[number]) => {
                 const eventColor =
-                  event.color || EVENT_SOURCE_COLORS[event.sourceType] || "#3b82f6";
+                  event.color || EVENT_SOURCE_COLORS[event.sourceType] || "#8b5cf6";
                 return (
                   <li
                     key={event.id}
