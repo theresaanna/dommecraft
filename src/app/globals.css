@@ -27,6 +27,10 @@ body {
   background-attachment: fixed;
 }
 
+.dark body {
+  background: url("/clouds-night.svg") repeat-x bottom / contain, #162d50;
+}
+
 .sx-react-calendar-wrapper {
   width: 100%;
   height: 800px;
