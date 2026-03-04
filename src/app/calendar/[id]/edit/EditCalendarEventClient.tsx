@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import CalendarEventForm from "../../CalendarEventForm";
@@ -24,6 +24,10 @@ export default function EditCalendarEventClient({
 }) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    document.body.style.cursor = "";
+  }, []);
 
   async function handleDelete() {
     if (!confirm("Delete this event? This cannot be undone.")) return;

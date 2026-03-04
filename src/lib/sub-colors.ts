@@ -1,6 +1,6 @@
 /**
- * Sub color palette — matches the calendar event color options.
- * Each sub is auto-assigned a color when created.
+ * Shared color palette — matches the calendar event color options.
+ * Used for subs (auto-assigned) and projects (user-picked).
  */
 
 export const SUB_COLORS = [
@@ -10,6 +10,16 @@ export const SUB_COLORS = [
   "#8b5cf6", // Purple
   "#f97316", // Orange
   "#ec4899", // Pink
+] as const;
+
+export const COLOR_OPTIONS = [
+  { label: "None", value: "" },
+  { label: "Blue", value: "#3b82f6" },
+  { label: "Red", value: "#ef4444" },
+  { label: "Green", value: "#22c55e" },
+  { label: "Purple", value: "#8b5cf6" },
+  { label: "Orange", value: "#f97316" },
+  { label: "Pink", value: "#ec4899" },
 ] as const;
 
 /**
@@ -27,10 +37,13 @@ const COLOR_ROW_STYLES: Record<string, { row: string; dark: string }> = {
 
 const DEFAULT_ROW_STYLE = { row: "bg-zinc-50/60", dark: "dark:bg-zinc-900/20" };
 
-export function getSubRowClassName(color: string | null | undefined): string {
+export function getRowClassName(color: string | null | undefined): string {
   const style = color ? COLOR_ROW_STYLES[color] || DEFAULT_ROW_STYLE : DEFAULT_ROW_STYLE;
   return `${style.row} ${style.dark}`;
 }
+
+/** @deprecated Use getRowClassName instead */
+export const getSubRowClassName = getRowClassName;
 
 /**
  * Pick the next color for a new sub by cycling through the palette,

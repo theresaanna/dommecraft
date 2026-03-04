@@ -29,6 +29,7 @@ const mockProjects = [
     id: "proj-1",
     name: "Test Project",
     description: "A test project",
+    color: "#3b82f6",
     categoryId: "cat-1",
     category: { id: "cat-1", name: "Content Creation Ideas" },
     notesCount: 3,

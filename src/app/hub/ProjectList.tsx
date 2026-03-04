@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { getRowClassName } from "@/lib/sub-colors";
 
 type ProjectTask = {
   id: string;
@@ -13,6 +14,7 @@ type Project = {
   id: string;
   name: string;
   description: string | null;
+  color: string | null;
   categoryId: string;
   category: { id: string; name: string };
   notesCount: number;
@@ -39,10 +41,10 @@ export default function ProjectList({ projects }: { projects: Project[] }) {
         const totalCount = project.tasks.length;
 
         return (
-          <li key={project.id}>
+          <li key={project.id} className={getRowClassName(project.color)}>
             <Link
               href={`/hub/projects/${project.id}`}
-              className="block px-4 py-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/50"
+              className="block px-4 py-4"
             >
               <h3 className="font-medium text-zinc-900 dark:text-zinc-50">
                 {project.name}

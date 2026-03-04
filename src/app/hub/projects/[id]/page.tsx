@@ -66,6 +66,7 @@ export default async function ProjectDetailPage({
           id: project.id,
           name: project.name,
           description: project.description,
+          color: project.color,
           categoryId: project.categoryId,
           category: project.category,
           createdAt: project.createdAt.toISOString(),

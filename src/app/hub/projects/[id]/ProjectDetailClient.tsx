@@ -12,6 +12,7 @@ type Project = {
   id: string;
   name: string;
   description: string | null;
+  color: string | null;
   categoryId: string;
   category: { id: string; name: string };
   createdAt: string;
