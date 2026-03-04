@@ -134,7 +134,11 @@ export default function TasksList({
           return (
             <li
               key={task.id}
-              className={`flex items-start gap-3 px-4 py-3 ${STATUS_ROW_STYLES[task.status] || ""}`}
+              className={`flex items-start gap-3 px-4 py-3 ${
+                task.status === "PENDING" && task.declineReason
+                  ? "bg-red-50/60 dark:bg-red-950/20"
+                  : STATUS_ROW_STYLES[task.status] || ""
+              }`}
             >
               <input
                 type="checkbox"
