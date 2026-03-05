@@ -114,7 +114,7 @@ export default function UserProfileClient({
         <button
           onClick={sendRequest}
           disabled={acting}
-          className="rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] disabled:opacity-50 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
         >
           Send Friend Request
         </button>
@@ -134,7 +134,7 @@ export default function UserProfileClient({
           <button
             onClick={() => respond("accept")}
             disabled={acting}
-            className="rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] disabled:opacity-50 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
           >
             Accept Request
           </button>
@@ -159,7 +159,7 @@ export default function UserProfileClient({
           </button>
           <button
             onClick={openChat}
-            className="rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+            className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
           >
             Message {targetUserName}
           </button>
