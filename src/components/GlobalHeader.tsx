@@ -138,16 +138,16 @@ export default function GlobalHeader() {
     <>
       <header className="fixed top-0 right-0 left-0 z-40 border-b border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-950/60">
         <div className="mx-auto max-w-5xl px-4">
-          <div className="flex h-14 items-center justify-between">
+          <div className="flex h-14 items-center justify-between gap-4">
             {/* Left: Brand + Nav */}
-            <div className="flex items-center gap-6">
+            <div className="flex min-w-0 items-center gap-6">
               <Link
                 href="/dashboard"
                 className="text-lg font-bold text-zinc-900 dark:text-zinc-50"
               >
                 DommeCraft
               </Link>
-              <nav className="hidden items-center gap-1 md:flex">
+              <nav className="hidden min-w-0 items-center gap-1 md:flex">
                 {/* Discover (subs) / Gallery (dommes) */}
                 <Link
                   href="/discover"
@@ -293,7 +293,7 @@ export default function GlobalHeader() {
             </div>
 
             {/* Right: Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               {/* New button with dropdown (Domme only) */}
               {isDomme && (
                 <div ref={newRef} className="relative hidden md:block">

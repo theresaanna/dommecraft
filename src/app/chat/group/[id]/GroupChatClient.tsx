@@ -1029,9 +1029,9 @@ export default function GroupChatClient({
         {/* Input */}
         <form
           onSubmit={handleSend}
-          className="relative z-[1] border-t border-zinc-200 px-4 py-3 dark:border-zinc-800"
+          className="relative z-[1] border-t border-zinc-200 px-2 py-3 sm:px-4 dark:border-zinc-800"
         >
-          <div className="mx-auto flex max-w-2xl gap-2">
+          <div className="mx-auto flex max-w-2xl gap-1.5 sm:gap-2">
             <input
               ref={fileInputRef}
               type="file"
@@ -1044,7 +1044,7 @@ export default function GroupChatClient({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               aria-label="Attach file"
-              className="rounded-md border border-zinc-300 px-3 py-2 text-base text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+              className="shrink-0 rounded-md border border-zinc-300 px-2 py-2 text-base text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 sm:px-3 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1067,12 +1067,12 @@ export default function GroupChatClient({
                 onKeyStroke();
               }}
               placeholder="Type a message..."
-              className="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-base focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+              className="min-w-0 flex-1 rounded-md border border-zinc-300 px-3 py-2 text-base focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
             />
             <button
               type="submit"
               disabled={sending || (!input.trim() && !selectedFile)}
-              className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] disabled:opacity-50 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
+              className="shrink-0 rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-3 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] disabled:opacity-50 sm:px-4 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
             >
               Send
             </button>
