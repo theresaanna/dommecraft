@@ -914,7 +914,7 @@ export default function ChatClient({
       {/* Input */}
       <form
         onSubmit={handleSend}
-        className="border-t border-zinc-200 px-4 py-3 dark:border-zinc-800"
+        className="relative z-[1] border-t border-zinc-200 px-4 py-3 dark:border-zinc-800"
       >
         <div className="mx-auto flex max-w-2xl gap-2">
           <input
