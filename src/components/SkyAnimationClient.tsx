@@ -31,8 +31,8 @@ function injectStyles() {
       z-index: 9998;
     }
     @keyframes sky-fly-diagonal-down {
-      from { transform: translate(calc(100vw + 150px), -150px) rotate(315deg); }
-      to { transform: translate(-150px, calc(100vh + 150px)) rotate(315deg); }
+      from { transform: translate(calc(100vw + 150px), -150px) rotate(270deg); }
+      to { transform: translate(-150px, calc(100vh + 150px)) rotate(270deg); }
     }
     @keyframes sky-rise {
       from { transform: translateY(calc(100vh + 100px)); }
