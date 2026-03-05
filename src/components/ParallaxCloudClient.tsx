@@ -12,7 +12,7 @@ function ParallaxCloudInner() {
   return (
     <div
       ref={ref}
-      className="fixed pointer-events-none z-[1] w-[750px] max-w-[90vw]"
+      className="fixed pointer-events-none z-0 w-[750px] max-w-[90vw]"
       style={{ right: "-227px", bottom: "calc(-10% - 50px)" }}
     >
       {/* Large clouds for desktop */}
