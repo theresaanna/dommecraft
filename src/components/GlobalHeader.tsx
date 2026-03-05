@@ -299,7 +299,7 @@ export default function GlobalHeader() {
                 <div ref={newRef} className="relative hidden md:block">
                   <button
                     onClick={() => toggleDropdown("new")}
-                    className="flex h-9 items-center gap-1 rounded-md bg-zinc-800 px-3 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+                    className="flex h-9 items-center gap-1 rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-3 text-base font-medium text-sky-900 hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] transition-all dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

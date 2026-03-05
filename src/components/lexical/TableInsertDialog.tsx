@@ -73,7 +73,7 @@ export default function TableInsertDialog({
         <button
           type="button"
           onClick={handleInsert}
-          className="rounded bg-zinc-800 px-2 py-1 text-sm text-white hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="rounded bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-2 py-1 text-sm text-sky-900 hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] transition-all dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
         >
           Insert Table
         </button>
