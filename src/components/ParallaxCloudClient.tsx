@@ -74,11 +74,71 @@ function ParallaxCloudSmall() {
   );
 }
 
+function ParallaxCloudTopRight() {
+  const { ref } = useParallax<HTMLDivElement>({
+    translateY: [10, -10],
+    startScroll: 0,
+    endScroll: 2000,
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="fixed pointer-events-none z-0 w-[350px] max-w-[40vw]"
+      style={{ right: "-5%", top: "4rem" }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-day-cloud-small.svg"
+        className="dark:hidden w-full"
+        alt=""
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-night-cloud-small.svg"
+        className="hidden dark:block w-full"
+        alt=""
+      />
+    </div>
+  );
+}
+
+function ParallaxCloudTopLeft() {
+  const { ref } = useParallax<HTMLDivElement>({
+    translateY: [10, -10],
+    startScroll: 0,
+    endScroll: 2000,
+  });
+
+  return (
+    <div
+      ref={ref}
+      className="fixed pointer-events-none z-0 w-[350px] max-w-[40vw]"
+      style={{ left: "-25%", top: "calc(3.5rem + 20%)" }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-day-cloud-small.svg"
+        className="dark:hidden w-full"
+        alt=""
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/single-night-cloud-small.svg"
+        className="hidden dark:block w-full"
+        alt=""
+      />
+    </div>
+  );
+}
+
 export default function ParallaxCloudClient() {
   return (
     <ParallaxProvider>
       <ParallaxCloudLarge />
       <ParallaxCloudSmall />
+      <ParallaxCloudTopRight />
+      <ParallaxCloudTopLeft />
     </ParallaxProvider>
   );
 }
