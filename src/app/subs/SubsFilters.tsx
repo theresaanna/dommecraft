@@ -164,7 +164,7 @@ export default function SubsFilters({
           aria-expanded={showFilters}
           className={`rounded-md border px-3 py-2 text-base font-medium ${
             hasActiveFilters
-              ? "border-zinc-800 bg-zinc-800 text-zinc-50 dark:border-zinc-200 dark:bg-zinc-200 dark:text-zinc-900"
+              ? "border-sky-400/30 bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
               : "border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
           }`}
         >
@@ -188,7 +188,7 @@ export default function SubsFilters({
                   onClick={() => toggleArrayValue("sub_type", option)}
                   className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                     currentParams.sub_type.includes(option)
-                      ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
+                      ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
                       : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                   }`}
                 >
@@ -211,7 +211,7 @@ export default function SubsFilters({
                   onClick={() => toggleArrayValue("arrangement_type", option)}
                   className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                     currentParams.arrangement_type.includes(option)
-                      ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
+                      ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
                       : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                   }`}
                 >
@@ -235,7 +235,7 @@ export default function SubsFilters({
                     onClick={() => toggleArrayValue("tags", tag)}
                     className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                       currentParams.tags.includes(tag)
-                        ? "bg-zinc-800 text-zinc-50 dark:bg-zinc-200 dark:text-zinc-900"
+                        ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
                         : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                     }`}
                   >
