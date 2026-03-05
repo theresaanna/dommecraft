@@ -20,7 +20,7 @@ export default function NewCalendarEventPageClient() {
       <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
         New Event
       </h1>
-      <div className="mt-6">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
         <CalendarEventForm onClose={() => router.push("/calendar")} />
       </div>
     </>

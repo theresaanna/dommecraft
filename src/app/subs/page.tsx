@@ -127,21 +127,23 @@ export default async function SubsPage({
         </Link>
       </div>
 
-      <SubsFilters
-        currentParams={{
-          q: q || "",
-          sub_type: subType,
-          arrangement_type: arrangementType,
-          tags,
-          financial_min: financialMin || "",
-          financial_max: financialMax || "",
-          sort: sortField,
-          order: sortOrder,
-        }}
-        availableTags={allTags}
-      />
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <SubsFilters
+          currentParams={{
+            q: q || "",
+            sub_type: subType,
+            arrangement_type: arrangementType,
+            tags,
+            financial_min: financialMin || "",
+            financial_max: financialMax || "",
+            sort: sortField,
+            order: sortOrder,
+          }}
+          availableTags={allTags}
+        />
 
-      <SubsList subs={serialized} query={q} />
+        <SubsList subs={serialized} query={q} />
+      </div>
     </div>
   );
 }

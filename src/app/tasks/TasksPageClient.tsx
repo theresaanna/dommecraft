@@ -124,7 +124,7 @@ export default function TasksPageClient({
           href="/tasks/new"
           className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          New Task
+          New Sub Task
         </Link>
       </div>
 

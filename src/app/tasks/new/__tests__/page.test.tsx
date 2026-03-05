@@ -44,7 +44,7 @@ describe("NewTaskPageClient", () => {
     expect(backLink).toHaveAttribute("href", "/tasks");
   });
 
-  it("renders 'New Task' heading", () => {
+  it("renders 'New Sub Task' heading", () => {
     render(
       <NewTaskPageClient
         availableSubs={mockSubs}
@@ -53,7 +53,7 @@ describe("NewTaskPageClient", () => {
     );
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "New Task" })
+      screen.getByRole("heading", { level: 1, name: "New Sub Task" })
     ).toBeInTheDocument();
   });
 

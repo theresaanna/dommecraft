@@ -111,7 +111,7 @@ export default function TaskForm({
   return (
     <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
       <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
-        {isEditing ? "Edit Task" : "New Task"}
+        {isEditing ? "Edit Sub Task" : "New Sub Task"}
       </h3>
 
       {error && (

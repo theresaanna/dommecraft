@@ -425,7 +425,7 @@ export default async function DashboardPage() {
               href="/financials/new"
               className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
             >
-              Add Entry
+              New Send
             </Link>
           </div>
 

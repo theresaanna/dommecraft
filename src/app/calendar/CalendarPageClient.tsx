@@ -196,6 +196,43 @@ export default function CalendarPageClient({
     }
   }, [calendar, fetchEvents]);
 
+  // Scroll week/day time grid to the current hour whenever it appears
+  const calendarContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const container = calendarContainerRef.current;
+    if (!container) return;
+
+    function scrollToCurrentTime() {
+      const currentHour = new Date().getHours();
+      const hourElements = container!.querySelectorAll(".sx__week-grid__hour");
+      const targetIndex = Math.max(0, currentHour - 1);
+      const target = hourElements[targetIndex];
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    // Watch for the time grid appearing (view switches to week/day)
+    let hasScrolled = false;
+    const observer = new MutationObserver(() => {
+      const timeGrid = container.querySelector(".sx__week-grid");
+      if (timeGrid && !hasScrolled) {
+        hasScrolled = true;
+        setTimeout(scrollToCurrentTime, 100);
+      } else if (!timeGrid) {
+        // Reset when leaving week/day view so next entry scrolls again
+        hasScrolled = false;
+      }
+    });
+
+    observer.observe(container, { childList: true, subtree: true });
+
+    // Initial scroll if already in week/day view
+    setTimeout(scrollToCurrentTime, 300);
+
+    return () => observer.disconnect();
+  }, [calendar]);
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -212,7 +249,7 @@ export default function CalendarPageClient({
         </Link>
       </div>
 
-      <div className="sx-react-calendar mt-6">
+      <div ref={calendarContainerRef} className="sx-react-calendar mt-6">
         <ScheduleXCalendar calendarApp={calendar} />
       </div>
     </>

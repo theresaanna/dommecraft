@@ -43,11 +43,11 @@ describe("DashboardPage quick action links", () => {
     });
   });
 
-  it("links 'Add Entry' to /financials/new", async () => {
+  it("links 'New Send' to /financials/new", async () => {
     const page = await DashboardPage();
     render(page);
 
-    const link = screen.getByRole("link", { name: /add entry/i });
+    const link = screen.getByRole("link", { name: /new send/i });
     expect(link).toHaveAttribute("href", "/financials/new");
   });
 
