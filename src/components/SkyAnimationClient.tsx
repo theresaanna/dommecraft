@@ -30,10 +30,6 @@ function injectStyles() {
       overflow: hidden;
       z-index: 9998;
     }
-    @keyframes sky-fly-diagonal-up {
-      from { transform: translate(-150px, calc(100vh + 150px)) rotate(0deg); }
-      to { transform: translate(calc(100vw + 150px), -150px) rotate(0deg); }
-    }
     @keyframes sky-fly-diagonal-down {
       from { transform: translate(calc(100vw + 150px), -150px) rotate(315deg); }
       to { transform: translate(-150px, calc(100vh + 150px)) rotate(315deg); }
@@ -99,9 +95,8 @@ function spawnAnimation(container: HTMLDivElement) {
     el.style.width = "50px";
     el.style.left = "0";
     el.style.top = "0";
-    const goingUp = Math.random() > 0.5;
     const duration = 20 + Math.random() * 8;
-    el.style.animation = `${goingUp ? "sky-fly-diagonal-up" : "sky-fly-diagonal-down"} ${duration}s linear forwards`;
+    el.style.animation = `sky-fly-diagonal-down ${duration}s linear forwards`;
     container.appendChild(el);
     setTimeout(() => el.remove(), duration * 1000);
   }
