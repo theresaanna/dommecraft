@@ -125,21 +125,23 @@ export default async function TasksPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
-      <TasksPageClient
-        initialTasks={serializedTasks}
-        availableSubs={availableSubs}
-        availableProjects={availableProjects}
-        currentParams={{
-          status,
-          priority,
-          sub_id: subId,
-          project_id: projectId,
-          deadline_from: deadlineFrom,
-          deadline_to: deadlineTo,
-          sort: sortField,
-          order: sortOrder,
-        }}
-      />
+      <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 dark:border-zinc-800 dark:bg-zinc-950/60">
+        <TasksPageClient
+          initialTasks={serializedTasks}
+          availableSubs={availableSubs}
+          availableProjects={availableProjects}
+          currentParams={{
+            status,
+            priority,
+            sub_id: subId,
+            project_id: projectId,
+            deadline_from: deadlineFrom,
+            deadline_to: deadlineTo,
+            sort: sortField,
+            order: sortOrder,
+          }}
+        />
+      </div>
     </div>
   );
 }

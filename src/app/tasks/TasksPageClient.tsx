@@ -114,7 +114,7 @@ export default function TasksPageClient({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-            Tasks
+            Sub Tasks
           </h1>
           <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">
             Assign and track tasks for your subs.
