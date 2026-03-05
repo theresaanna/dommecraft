@@ -41,9 +41,9 @@ describe("RegisterForm", () => {
   it("defaults to Domme role", () => {
     render(<RegisterForm />);
 
-    // Domme button should have the active styling (bg-zinc-900)
+    // Domme button should have the active styling (frosted sky blue)
     const dommeButton = screen.getByRole("button", { name: "Domme" });
-    expect(dommeButton.className).toContain("bg-zinc-900");
+    expect(dommeButton.className).toContain("bg-sky-300/30");
   });
 
   it("renders create account button", () => {

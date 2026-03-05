@@ -642,8 +642,8 @@ export default function GroupChatClient({
                     <div
                       className={`rounded-lg px-3 py-2 text-base ${
                         isMine
-                          ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                          : "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
+                          ? "bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:border-[rgba(55,113,200,0.35)] dark:text-blue-100"
+                          : "bg-white/40 backdrop-blur-sm border border-zinc-200 text-zinc-900 dark:bg-zinc-900/60 dark:border-zinc-800 dark:text-zinc-50"
                       }`}
                     >
                       {/* Sender name for other users */}
@@ -662,8 +662,8 @@ export default function GroupChatClient({
                           data-testid="reply-preview"
                           className={`mb-1 border-l-2 pl-2 text-sm ${
                             isMine
-                              ? "border-zinc-500 text-zinc-300 dark:border-zinc-400 dark:text-zinc-500"
-                              : "border-zinc-400 text-zinc-500 dark:border-zinc-500 dark:text-zinc-400"
+                              ? "border-sky-400/50 text-sky-700 dark:border-blue-400/50 dark:text-blue-300"
+                              : "border-zinc-300 text-zinc-500 dark:border-zinc-600 dark:text-zinc-400"
                           }`}
                         >
                           <span className="font-medium">
@@ -1072,7 +1072,7 @@ export default function GroupChatClient({
             <button
               type="submit"
               disabled={sending || (!input.trim() && !selectedFile)}
-              className="rounded-md bg-zinc-900 px-4 py-2 text-base font-medium text-white hover:bg-zinc-800 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 transition-all hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] disabled:opacity-50 dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
             >
               Send
             </button>
