@@ -60,7 +60,7 @@ export default async function UserProfilePage({
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-4 py-16">
-      <section className="flex items-center gap-4">
+      <section className="flex items-center gap-4 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
         {user.avatarUrl ? (
           <img
             src={user.avatarUrl}
@@ -94,7 +94,7 @@ export default async function UserProfilePage({
       )}
 
       {user.bio && (
-        <section>
+        <section className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
               About
@@ -116,7 +116,7 @@ export default async function UserProfilePage({
       )}
 
       {!user.bio && isOwnProfile && (
-        <section>
+        <section className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           <Link
             href="/settings"
             className="text-base text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-300"

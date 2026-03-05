@@ -33,7 +33,7 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-20 pb-16">
+    <div className="mx-auto max-w-2xl px-4 pt-24 pb-16">
       <SettingsClient
         userId={session.user.id}
         initialSettings={{
