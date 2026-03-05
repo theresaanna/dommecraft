@@ -122,14 +122,14 @@ export default function GlobalHeader() {
   }
 
   const navLinkClass = (active: boolean) =>
-    `rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
+    `rounded-md px-3 py-1.5 text-base font-medium transition-all ${
       active
-        ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-        : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+        ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
+        : "text-zinc-600 hover:bg-sky-300/30 hover:text-sky-900 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100 dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
     }`;
 
   const dropdownItemClass =
-    "block px-4 py-2 text-base text-zinc-700 hover:bg-zinc-50 dark:text-zinc-300 dark:hover:bg-zinc-800";
+    "block px-4 py-2 text-base text-zinc-700 transition-all hover:bg-sky-300/30 hover:text-sky-900 dark:text-zinc-300 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100";
 
   const dropdownMenuClass =
     "absolute left-0 mt-1 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-900/60";
@@ -165,10 +165,10 @@ export default function GlobalHeader() {
                     <div ref={subsRef} className="relative">
                       <button
                         onClick={() => toggleDropdown("subs")}
-                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
+                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-all ${
                           isActive("/subs") || isActive("/tasks")
-                            ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                            : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+                            ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
+                            : "text-zinc-600 hover:bg-sky-300/30 hover:text-sky-900 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100 dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
                         }`}
                       >
                         Subs
@@ -217,10 +217,10 @@ export default function GlobalHeader() {
                     <div ref={hubRef} className="relative">
                       <button
                         onClick={() => toggleDropdown("hub")}
-                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-colors ${
+                        className={`flex items-center gap-1 rounded-md px-3 py-1.5 text-base font-medium transition-all ${
                           isActive("/hub")
-                            ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                            : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+                            ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
+                            : "text-zinc-600 hover:bg-sky-300/30 hover:text-sky-900 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100 dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
                         }`}
                       >
                         Hub
@@ -459,8 +459,8 @@ export default function GlobalHeader() {
                 onClick={closeMobile}
                 className={`rounded-md px-3 py-2 text-base font-medium ${
                   isActive("/discover")
-                    ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                    : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                    ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
+                    : "text-zinc-600 hover:bg-sky-300/30 hover:text-sky-900 dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100"
                 }`}
               >
                 {isDomme ? "Domme Gallery" : "Discover"}
@@ -539,7 +539,7 @@ export default function GlobalHeader() {
                       key={action.href}
                       href={action.href}
                       onClick={closeMobile}
-                      className="rounded-md px-3 py-2 text-base text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                      className="rounded-md px-3 py-2 text-base text-zinc-600 transition-all hover:bg-sky-300/30 hover:text-sky-900 dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100"
                     >
                       + {action.label}
                     </Link>
@@ -551,8 +551,8 @@ export default function GlobalHeader() {
                   onClick={closeMobile}
                   className={`rounded-md px-3 py-2 text-base font-medium ${
                     isActive("/my-tasks")
-                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                      : "text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                      ? "bg-sky-300/30 backdrop-blur-sm text-sky-900 dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100"
+                      : "text-zinc-600 hover:bg-sky-300/30 hover:text-sky-900 dark:text-zinc-400 dark:hover:bg-[rgba(55,113,200,0.25)] dark:hover:text-blue-100"
                   }`}
                 >
                   Tasks
