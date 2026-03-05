@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import TasksPageClient from "./TasksPageClient";
@@ -125,6 +126,22 @@ export default async function TasksPage({
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-16">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            Sub Tasks
+          </h1>
+          <p className="mt-1 text-base text-zinc-500 dark:text-zinc-400">
+            Assign and track tasks for your subs.
+          </p>
+        </div>
+        <Link
+          href="/tasks/new"
+          className="rounded-md bg-sky-300/30 backdrop-blur-sm border border-sky-400/30 px-4 py-2 text-base font-medium text-sky-900 hover:bg-sky-300/45 hover:shadow-[0_0_20px_rgba(56,189,248,0.5)] transition-all dark:border-[rgba(55,113,200,0.35)] dark:bg-[rgba(55,113,200,0.25)] dark:text-blue-100 dark:hover:bg-[rgba(55,113,200,0.4)] dark:hover:shadow-[0_0_20px_rgba(55,113,200,0.5)]"
+        >
+          New Sub Task
+        </Link>
+      </div>
       <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-8 dark:border-zinc-800 dark:bg-zinc-950/60">
         <TasksPageClient
           initialTasks={serializedTasks}

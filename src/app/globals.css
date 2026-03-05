@@ -72,7 +72,7 @@ body {
   --sx-color-surface-container: rgba(24, 24, 27, 0.5);
   --sx-color-surface-container-low: rgba(18, 18, 21, 0.5);
   --sx-color-surface-container-high: rgba(39, 39, 42, 0.6);
-  --sx-color-on-surface: #f4f4f5;
+  --sx-color-on-surface: #e2e8f0;
   --sx-color-primary: #d0bcff;
   --sx-color-on-primary: #371e73;
   --sx-color-primary-container: #4f378b;
@@ -82,15 +82,102 @@ body {
   --sx-color-secondary-container: #4a4458;
   --sx-color-on-secondary-container: #e8def8;
   --sx-color-surface-tint: #d0bcff;
-  --sx-color-outline: rgba(161, 161, 170, 0.5);
-  --sx-color-outline-variant: rgba(113, 113, 122, 0.4);
+  --sx-color-outline: rgba(148, 163, 194, 0.45);
+  --sx-color-outline-variant: rgba(148, 163, 194, 0.3);
   --sx-color-neutral: var(--sx-color-outline);
   --sx-color-neutral-variant: var(--sx-color-outline-variant);
-  --sx-internal-color-text: #fff;
-  --sx-internal-color-gray-ripple-background: rgba(63, 63, 70, 0.5);
-  --sx-internal-color-light-gray: rgba(39, 39, 42, 0.4);
-  --sx-border: 1px solid var(--sx-color-outline-variant);
-  border-color: rgba(63, 63, 70, 0.8);
+  --sx-internal-color-text: #e2e8f0;
+  --sx-internal-color-gray-ripple-background: rgba(55, 113, 200, 0.2);
+  --sx-internal-color-light-gray: rgba(55, 113, 200, 0.15);
+  --sx-border: 1px solid rgba(148, 163, 194, 0.25);
+  border-color: rgba(55, 113, 200, 0.35);
+}
+
+/* Dark mode calendar buttons — frosted night-blue style */
+.dark .sx-react-calendar-wrapper .sx__today-button {
+  background: rgba(55, 113, 200, 0.25) !important;
+  border: 1px solid rgba(55, 113, 200, 0.35) !important;
+  color: #dbeafe !important;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s;
+}
+.dark .sx-react-calendar-wrapper .sx__today-button:hover {
+  background: rgba(55, 113, 200, 0.4) !important;
+  box-shadow: 0 0 20px rgba(55, 113, 200, 0.5);
+}
+
+.dark .sx-react-calendar-wrapper .sx__chevron-wrapper {
+  background: rgba(55, 113, 200, 0.25) !important;
+  border: 1px solid rgba(55, 113, 200, 0.35) !important;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s;
+}
+.dark .sx-react-calendar-wrapper .sx__chevron-wrapper:hover {
+  background: rgba(55, 113, 200, 0.4) !important;
+  box-shadow: 0 0 20px rgba(55, 113, 200, 0.5);
+}
+.dark .sx-react-calendar-wrapper .sx__chevron-wrapper svg {
+  color: #dbeafe !important;
+  fill: #dbeafe !important;
+  stroke: #dbeafe !important;
+}
+
+/* View selector and date input */
+.dark .sx-react-calendar-wrapper .sx__view-selection,
+.dark .sx-react-calendar-wrapper .sx__date-input {
+  background: rgba(55, 113, 200, 0.25) !important;
+  border: 1px solid rgba(55, 113, 200, 0.35) !important;
+  color: #dbeafe !important;
+  backdrop-filter: blur(4px);
+}
+
+.dark .sx-react-calendar-wrapper .sx__view-selection select,
+.dark .sx-react-calendar-wrapper .sx__date-input input {
+  color: #dbeafe !important;
+}
+
+/* Range heading (month/year) */
+.dark .sx-react-calendar-wrapper .sx__range-heading {
+  color: #e2e8f0 !important;
+}
+
+/* Day names and date numbers in week/day view */
+.dark .sx-react-calendar-wrapper .sx__week-grid__day-name {
+  color: #cbd5e1 !important;
+}
+.dark .sx-react-calendar-wrapper .sx__week-grid__date {
+  color: #e2e8f0 !important;
+}
+.dark .sx-react-calendar-wrapper .sx__week-grid__date.sx__week-grid__date--is-today {
+  color: #dbeafe !important;
+  background: rgba(55, 113, 200, 0.4) !important;
+}
+
+/* Time labels on the left */
+.dark .sx-react-calendar-wrapper .sx__week-grid__hour {
+  color: #94a3b8 !important;
+  border-color: rgba(148, 163, 194, 0.2) !important;
+}
+
+/* Grid lines */
+.dark .sx-react-calendar-wrapper .sx__week-grid__hour-line,
+.dark .sx-react-calendar-wrapper .sx__week-grid__day {
+  border-color: rgba(148, 163, 194, 0.2) !important;
+}
+
+/* Month grid day names and cells */
+.dark .sx-react-calendar-wrapper .sx__month-grid-day__header-day-name {
+  color: #cbd5e1 !important;
+}
+.dark .sx-react-calendar-wrapper .sx__month-grid-day__header-date {
+  color: #e2e8f0 !important;
+}
+
+/* Labels above view/date selectors */
+.dark .sx-react-calendar-wrapper .sx__view-selection-label,
+.dark .sx-react-calendar-wrapper .sx__date-input-label,
+.dark .sx-react-calendar-wrapper label {
+  color: #94a3b8 !important;
 }
 
 /* Undo Tailwind preflight resets inside Schedule-X calendar */

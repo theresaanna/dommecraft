@@ -31,7 +31,7 @@ export default async function DiscoverPage() {
   });
 
   return (
-    <div className="mx-auto max-w-2xl px-4 pt-16 pb-40">
+    <div className="mx-auto max-w-5xl px-4 pt-16 pb-40">
       <div>
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
           Discover
