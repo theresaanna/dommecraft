@@ -50,6 +50,41 @@ body {
   width: 100%;
   height: 800px;
   max-height: 80vh;
+
+  /* Frosted translucent light mode */
+  --sx-color-background: rgba(255, 255, 255, 0.4);
+  --sx-color-surface: rgba(255, 255, 255, 0.4);
+  --sx-color-surface-dim: rgba(228, 228, 231, 0.5);
+  --sx-color-surface-bright: rgba(255, 255, 255, 0.5);
+  --sx-color-surface-container: rgba(244, 244, 245, 0.5);
+  --sx-color-surface-container-low: rgba(250, 250, 250, 0.4);
+  --sx-color-surface-container-high: rgba(228, 228, 231, 0.5);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(228, 228, 231, 0.8);
+}
+
+.dark .sx-react-calendar-wrapper {
+  --sx-color-background: rgba(9, 9, 11, 0.6);
+  --sx-color-surface: rgba(9, 9, 11, 0.6);
+  --sx-color-surface-dim: rgba(24, 24, 27, 0.6);
+  --sx-color-surface-bright: rgba(39, 39, 42, 0.6);
+  --sx-color-surface-container: rgba(24, 24, 27, 0.5);
+  --sx-color-surface-container-low: rgba(18, 18, 21, 0.5);
+  --sx-color-surface-container-high: rgba(39, 39, 42, 0.6);
+  --sx-color-on-surface: #e6e1e5;
+  --sx-color-primary: #d0bcff;
+  --sx-color-on-primary: #371e73;
+  --sx-color-primary-container: #4f378b;
+  --sx-color-on-primary-container: #eaddff;
+  --sx-color-secondary: #ccc2dc;
+  --sx-color-on-secondary: #332d41;
+  --sx-color-secondary-container: #4a4458;
+  --sx-color-on-secondary-container: #e8def8;
+  --sx-color-surface-tint: #d0bcff;
+  --sx-color-outline-variant: #49454e;
+  --sx-border: 1px solid var(--sx-color-outline-variant);
+  border-color: rgba(63, 63, 70, 0.8);
 }
 
 /* Undo Tailwind preflight resets inside Schedule-X calendar */

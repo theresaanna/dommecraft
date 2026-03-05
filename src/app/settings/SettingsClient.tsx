@@ -22,9 +22,11 @@ type SettingsData = {
 };
 
 export default function SettingsClient({
+  userId,
   initialSettings,
   userRole,
 }: {
+  userId: string;
   initialSettings: SettingsData;
   userRole: "DOMME" | "SUB";
 }) {
@@ -117,9 +119,17 @@ export default function SettingsClient({
 
   return (
     <>
-      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-        Settings
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+          Settings
+        </h1>
+        <Link
+          href={`/users/${userId}`}
+          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        >
+          View Profile
+        </Link>
+      </div>
 
       {message && (
         <p className="mt-4 rounded-md bg-zinc-100 px-3 py-2 text-base text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
@@ -477,18 +487,16 @@ export default function SettingsClient({
         </div>
       </div>
 
-      {/* Save Button */}
-      <button
-        type="button"
-        onClick={handleSave}
-        disabled={saving}
-        className="mt-6 rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-      >
-        {saving ? "Saving..." : "Save Settings"}
-      </button>
-
-      {/* Sign Out */}
-      <div className="mt-12 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+      {/* Action Buttons */}
+      <div className="mt-6 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={saving}
+          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        >
+          {saving ? "Saving..." : "Save Settings"}
+        </button>
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/login" })}
@@ -496,48 +504,45 @@ export default function SettingsClient({
         >
           Sign out
         </button>
+        {userRole === "DOMME" && !showDeleteConfirm && (
+          <button
+            type="button"
+            onClick={() => setShowDeleteConfirm(true)}
+            className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700"
+          >
+            Delete Account
+          </button>
+        )}
       </div>
 
-      {/* Delete Account (dommes only) */}
-      {userRole === "DOMME" && (
-        <div className="mt-8 border-t border-zinc-200 pt-6 dark:border-zinc-800">
-          {!showDeleteConfirm ? (
+      {/* Delete Account Confirmation */}
+      {userRole === "DOMME" && showDeleteConfirm && (
+        <div className="mt-4 rounded-lg border border-red-300 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
+          <p className="text-base font-medium text-red-800 dark:text-red-200">
+            Are you sure you want to delete your account?
+          </p>
+          <p className="mt-1 text-base text-red-700 dark:text-red-300">
+            This action cannot be reversed. Your subs will keep their task
+            history but will no longer be associated with you.
+          </p>
+          <div className="mt-4 flex gap-3">
             <button
               type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700"
+              onClick={() => setShowDeleteConfirm(false)}
+              disabled={deleting}
+              className="rounded-md bg-zinc-200 px-4 py-2 text-base font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
             >
-              Delete Account
+              Cancel
             </button>
-          ) : (
-            <div className="rounded-lg border border-red-300 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950">
-              <p className="text-base font-medium text-red-800 dark:text-red-200">
-                Are you sure you want to delete your account?
-              </p>
-              <p className="mt-1 text-base text-red-700 dark:text-red-300">
-                This action cannot be reversed. Your subs will keep their task
-                history but will no longer be associated with you.
-              </p>
-              <div className="mt-4 flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowDeleteConfirm(false)}
-                  disabled={deleting}
-                  className="rounded-md bg-zinc-200 px-4 py-2 text-base font-medium text-zinc-800 hover:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDeleteAccount}
-                  disabled={deleting}
-                  className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700 disabled:opacity-50"
-                >
-                  {deleting ? "Deleting..." : "Yes, Delete My Account"}
-                </button>
-              </div>
-            </div>
-          )}
+            <button
+              type="button"
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="rounded-md bg-red-600 px-4 py-2 text-base font-medium text-white hover:bg-red-700 disabled:opacity-50"
+            >
+              {deleting ? "Deleting..." : "Yes, Delete My Account"}
+            </button>
+          </div>
         </div>
       )}
     </>

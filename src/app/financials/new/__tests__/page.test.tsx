@@ -35,11 +35,11 @@ describe("NewFinancialEntryPageClient", () => {
     expect(backLink).toHaveAttribute("href", "/financials");
   });
 
-  it("renders 'New Entry' heading", () => {
+  it("renders 'New Send' heading", () => {
     render(<NewFinancialEntryPageClient availableSubs={mockSubs} />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "New Entry" })
+      screen.getByRole("heading", { level: 1, name: "New Send" })
     ).toBeInTheDocument();
   });
 

@@ -74,20 +74,20 @@ describe("SettingsClient", () => {
   });
 
   it("renders the page heading", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Settings")).toBeInTheDocument();
   });
 
   it("renders back link to dashboard", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const link = screen.getByRole("link", { name: /dashboard/i });
     expect(link).toHaveAttribute("href", "/dashboard");
   });
 
   it("renders all section headings", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Avatar")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
@@ -101,27 +101,27 @@ describe("SettingsClient", () => {
   });
 
   it("displays initial name and email values", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Display Name")).toHaveValue("Test User");
     expect(screen.getByLabelText("Email")).toHaveValue("test@test.com");
   });
 
   it("displays initial theme value", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Theme")).toHaveValue("SYSTEM");
   });
 
   it("displays initial calendar default view value", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Default View")).toHaveValue("MONTH");
   });
 
   it("updates name field on input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Display Name");
     await user.clear(input);
@@ -132,7 +132,7 @@ describe("SettingsClient", () => {
 
   it("updates email field on input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Email");
     await user.clear(input);
@@ -143,7 +143,7 @@ describe("SettingsClient", () => {
 
   it("changes theme select", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.selectOptions(screen.getByLabelText("Theme"), "DARK");
 
@@ -152,7 +152,7 @@ describe("SettingsClient", () => {
 
   it("changes calendar default view select", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.selectOptions(screen.getByLabelText("Default View"), "WEEK");
 
@@ -167,7 +167,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -194,7 +194,7 @@ describe("SettingsClient", () => {
       })
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -207,7 +207,7 @@ describe("SettingsClient", () => {
     const user = userEvent.setup();
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network")));
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -230,7 +230,7 @@ describe("SettingsClient", () => {
       )
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     await user.click(screen.getByText("Save Settings"));
 
@@ -246,6 +246,7 @@ describe("SettingsClient", () => {
   it("shows avatar image when avatarUrl is provided", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
@@ -259,7 +260,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows initials fallback when no avatarUrl", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("T")).toBeInTheDocument();
   });
@@ -267,6 +268,7 @@ describe("SettingsClient", () => {
   it("shows Remove button when avatar exists", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
@@ -279,7 +281,7 @@ describe("SettingsClient", () => {
   });
 
   it("does not show Remove button when no avatar", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.queryByText("Remove")).not.toBeInTheDocument();
   });
@@ -288,6 +290,7 @@ describe("SettingsClient", () => {
     const user = userEvent.setup();
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{
           ...defaultSettings,
           avatarUrl: "https://blob.test/avatar.png",
@@ -313,7 +316,7 @@ describe("SettingsClient", () => {
       });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const file = new File(["avatar"], "avatar.png", { type: "image/png" });
     const input = screen.getByTestId("avatar-file-input");
@@ -346,7 +349,7 @@ describe("SettingsClient", () => {
       })
     );
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const file = new File(["avatar"], "avatar.png", { type: "image/png" });
     const input = screen.getByTestId("avatar-file-input");
@@ -360,7 +363,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows link to external calendar sync settings", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const link = screen.getByRole("link", {
       name: /external calendar sync/i,
@@ -369,7 +372,7 @@ describe("SettingsClient", () => {
   });
 
   it("includes all theme options", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const themeSelect = screen.getByLabelText("Theme");
     const options = themeSelect.querySelectorAll("option");
@@ -379,7 +382,7 @@ describe("SettingsClient", () => {
   });
 
   it("includes all calendar view options", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const viewSelect = screen.getByLabelText("Default View");
     const options = viewSelect.querySelectorAll("option");
@@ -389,20 +392,20 @@ describe("SettingsClient", () => {
   });
 
   it("renders slug input with initial value", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByLabelText("Custom URL")).toHaveValue("test-user-a1b2");
   });
 
   it("shows /u/ prefix next to slug input", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("/u/")).toBeInTheDocument();
   });
 
   it("updates slug field on input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Custom URL");
     await user.clear(input);
@@ -413,7 +416,7 @@ describe("SettingsClient", () => {
 
   it("strips invalid characters from slug input", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const input = screen.getByLabelText("Custom URL");
     await user.clear(input);
@@ -424,7 +427,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows slug format help text", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(
       screen.getByText(/3-30 characters.*lowercase letters, numbers, and hyphens/i)
@@ -432,7 +435,7 @@ describe("SettingsClient", () => {
   });
 
   it("renders show online status checkbox checked when true", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /show online status/i,
@@ -443,6 +446,7 @@ describe("SettingsClient", () => {
   it("renders show online status checkbox unchecked when false", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{ ...defaultSettings, showOnlineStatus: false }}
         userRole="DOMME"
       />
@@ -456,7 +460,7 @@ describe("SettingsClient", () => {
 
   it("toggles show online status checkbox", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /show online status/i,
@@ -469,7 +473,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows privacy description text", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(
       screen.getByText(/when disabled, you will always appear offline/i)
@@ -484,7 +488,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     // Uncheck the checkbox first
     const checkbox = screen.getByRole("checkbox", {
@@ -508,7 +512,7 @@ describe("SettingsClient", () => {
   });
 
   it("renders show read receipts checkbox checked when true", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /show read receipts/i,
@@ -519,6 +523,7 @@ describe("SettingsClient", () => {
   it("renders show read receipts checkbox unchecked when false", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{ ...defaultSettings, showReadReceipts: false }}
         userRole="DOMME"
       />
@@ -532,7 +537,7 @@ describe("SettingsClient", () => {
 
   it("toggles show read receipts checkbox", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /show read receipts/i,
@@ -545,7 +550,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows read receipts description text", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(
       screen.getByText(/won't send read receipts/i)
@@ -560,7 +565,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     // Uncheck the checkbox first
     const checkbox = screen.getByRole("checkbox", {
@@ -583,13 +588,13 @@ describe("SettingsClient", () => {
   });
 
   it("renders Notifications section heading", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Notifications")).toBeInTheDocument();
   });
 
   it("renders notification sound checkbox checked when true", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /message notification sound/i,
@@ -600,6 +605,7 @@ describe("SettingsClient", () => {
   it("renders notification sound checkbox unchecked when false", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{ ...defaultSettings, notificationSound: false }}
         userRole="DOMME"
       />
@@ -613,7 +619,7 @@ describe("SettingsClient", () => {
 
   it("toggles notification sound checkbox", async () => {
     const user = userEvent.setup();
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     const checkbox = screen.getByRole("checkbox", {
       name: /message notification sound/i,
@@ -626,7 +632,7 @@ describe("SettingsClient", () => {
   });
 
   it("shows notification sound description text", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(
       screen.getByText(/play a sound when you receive a new chat message/i)
@@ -641,7 +647,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     // Uncheck the checkbox first
     const checkbox = screen.getByRole("checkbox", {
@@ -664,7 +670,7 @@ describe("SettingsClient", () => {
   });
 
   it("renders Bio section with editor", () => {
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     expect(screen.getByText("Bio")).toBeInTheDocument();
     expect(screen.getByTestId("bio-editor")).toBeInTheDocument();
@@ -673,6 +679,7 @@ describe("SettingsClient", () => {
   it("renders Bio editor with initial content", () => {
     render(
       <SettingsClient
+        userId="user-1"
         initialSettings={{ ...defaultSettings, bio: "<p>Hello world</p>" }}
         userRole="DOMME"
       />
@@ -689,7 +696,7 @@ describe("SettingsClient", () => {
     });
     vi.stubGlobal("fetch", mockFetch);
 
-    render(<SettingsClient initialSettings={defaultSettings} userRole="DOMME" />);
+    render(<SettingsClient userId="user-1" initialSettings={defaultSettings} userRole="DOMME" />);
 
     // Simulate bio change via the mock onChange
     const bioEditor = screen.getByTestId("bio-editor");

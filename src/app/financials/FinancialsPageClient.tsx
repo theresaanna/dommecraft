@@ -75,18 +75,20 @@ export default function FinancialsPageClient({
           href="/financials/new"
           className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          Add Entry
+          New Send
         </Link>
       </div>
 
-      <FinancialsFilters
-        currentParams={currentParams}
-        availableSubs={availableSubs}
-      />
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <FinancialsFilters
+          currentParams={currentParams}
+          availableSubs={availableSubs}
+        />
 
-      <FinancialsSummary summary={summary} currency={currency} />
+        <FinancialsSummary summary={summary} currency={currency} />
 
-      <FinancialsList entries={entries} currency={currency} />
+        <FinancialsList entries={entries} currency={currency} />
+      </div>
     </>
   );
 }

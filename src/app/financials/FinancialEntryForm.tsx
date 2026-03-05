@@ -113,7 +113,7 @@ export default function FinancialEntryForm({
   return (
     <div className="rounded-md border border-zinc-200 p-4 dark:border-zinc-800">
       <h3 className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
-        {isEditing ? "Edit Entry" : "New Entry"}
+        {isEditing ? "Edit Send" : "New Send"}
       </h3>
 
       {error && (
@@ -287,8 +287,8 @@ export default function FinancialEntryForm({
             {submitting
               ? "Saving..."
               : isEditing
-                ? "Update Entry"
-                : "Add Entry"}
+                ? "Update Send"
+                : "Add Send"}
           </button>
         </div>
       </form>

@@ -75,7 +75,7 @@ export default async function SubTasksPage({
   );
 
   return (
-    <div>
+    <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
       <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
         Tasks
       </h2>

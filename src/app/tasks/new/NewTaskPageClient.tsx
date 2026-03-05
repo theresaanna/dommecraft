@@ -34,9 +34,9 @@ export default function NewTaskPageClient({
         </Link>
       </div>
       <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-        New Task
+        New Sub Task
       </h1>
-      <div className="mt-6">
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
         <TaskForm
           availableSubs={availableSubs}
           availableProjects={availableProjects}

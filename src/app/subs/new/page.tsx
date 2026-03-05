@@ -108,7 +108,7 @@ export default function NewSubPage() {
         </p>
       )}
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+      <form onSubmit={handleSubmit} className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 space-y-6 dark:border-zinc-800 dark:bg-zinc-900/60">
         {/* Full Name */}
         <div>
           <label

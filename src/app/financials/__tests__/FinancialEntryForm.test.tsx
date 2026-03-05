@@ -42,16 +42,16 @@ describe("FinancialEntryForm", () => {
     expect(screen.getByLabelText("Notes")).toBeInTheDocument();
   });
 
-  it("shows New Entry title for new entries", () => {
+  it("shows New Send title for new entries", () => {
     render(
       <FinancialEntryForm subs={availableSubs} onClose={mockOnClose} />
     );
 
-    expect(screen.getByText("New Entry")).toBeInTheDocument();
-    expect(screen.getByText("Add Entry")).toBeInTheDocument();
+    expect(screen.getByText("New Send")).toBeInTheDocument();
+    expect(screen.getByText("Add Send")).toBeInTheDocument();
   });
 
-  it("shows Edit Entry title when editing", () => {
+  it("shows Edit Send title when editing", () => {
     render(
       <FinancialEntryForm
         subs={availableSubs}
@@ -69,8 +69,8 @@ describe("FinancialEntryForm", () => {
       />
     );
 
-    expect(screen.getByText("Edit Entry")).toBeInTheDocument();
-    expect(screen.getByText("Update Entry")).toBeInTheDocument();
+    expect(screen.getByText("Edit Send")).toBeInTheDocument();
+    expect(screen.getByText("Update Send")).toBeInTheDocument();
   });
 
   it("sub dropdown shows available subs", () => {
@@ -111,7 +111,7 @@ describe("FinancialEntryForm", () => {
 
     await user.type(screen.getByLabelText("Amount *"), "100");
     await user.selectOptions(screen.getByLabelText("Category *"), "Tribute");
-    await user.click(screen.getByText("Add Entry"));
+    await user.click(screen.getByText("Add Send"));
 
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith("/api/financials", {
@@ -147,7 +147,7 @@ describe("FinancialEntryForm", () => {
       />
     );
 
-    await user.click(screen.getByText("Update Entry"));
+    await user.click(screen.getByText("Update Send"));
 
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith("/api/financials/entry-1", {
@@ -174,7 +174,7 @@ describe("FinancialEntryForm", () => {
 
     await user.type(screen.getByLabelText("Amount *"), "50");
     await user.selectOptions(screen.getByLabelText("Category *"), "Tip");
-    await user.click(screen.getByText("Add Entry"));
+    await user.click(screen.getByText("Add Send"));
 
     await waitFor(() => {
       expect(mockRefresh).toHaveBeenCalled();
@@ -198,7 +198,7 @@ describe("FinancialEntryForm", () => {
 
     await user.type(screen.getByLabelText("Amount *"), "50");
     await user.selectOptions(screen.getByLabelText("Category *"), "Tip");
-    await user.click(screen.getByText("Add Entry"));
+    await user.click(screen.getByText("Add Send"));
 
     await waitFor(() => {
       expect(screen.getByText("Something went wrong")).toBeInTheDocument();
