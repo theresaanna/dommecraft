@@ -119,7 +119,7 @@ export default function ProjectDetailClient({
       </div>
 
       {showEditForm && (
-        <div className="mb-6">
+        <div className="mb-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
           <ProjectForm
             categoryId={project.categoryId}
             project={project}
@@ -132,69 +132,74 @@ export default function ProjectDetailClient({
       )}
 
       {/* Todos Section */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Todos
-        </h2>
-        <button
-          onClick={() => setShowTaskForm(!showTaskForm)}
-          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-        >
-          {showTaskForm ? "Cancel" : "New Todo"}
-        </button>
-      </div>
-
-      {showTaskForm && (
-        <div className="mb-4">
-          <ProjectTodoForm
-            projectId={project.id}
-            onCreated={() => {
-              setShowTaskForm(false);
-              router.refresh();
-            }}
-          />
+      <div className="rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+            Todos
+          </h2>
+          <button
+            onClick={() => setShowTaskForm(!showTaskForm)}
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          >
+            {showTaskForm ? "Cancel" : "New Todo"}
+          </button>
         </div>
-      )}
 
-      <ProjectTodoList tasks={initialTasks} />
+        {showTaskForm && (
+          <div className="mb-4">
+            <ProjectTodoForm
+              projectId={project.id}
+              onCreated={() => {
+                setShowTaskForm(false);
+                router.refresh();
+              }}
+            />
+          </div>
+        )}
 
-      <div className="mt-10 mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Notes
-        </h2>
-        <button
-          onClick={() => {
-            setEditingNote(null);
-            setShowNoteForm(!showNoteForm);
-          }}
-          className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
-        >
-          {showNoteForm && !editingNote ? "Cancel" : "New Note"}
-        </button>
+        <ProjectTodoList tasks={initialTasks} />
       </div>
 
-      {(showNoteForm || editingNote) && (
-        <div className="mb-4">
-          <NoteForm
-            projectId={project.id}
-            note={editingNote || undefined}
-            onClose={() => {
-              setShowNoteForm(false);
+      {/* Notes Section */}
+      <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+            Notes
+          </h2>
+          <button
+            onClick={() => {
               setEditingNote(null);
-              router.refresh();
+              setShowNoteForm(!showNoteForm);
             }}
-          />
+            className="rounded-md bg-zinc-800 px-4 py-2 text-base font-medium text-zinc-50 hover:bg-zinc-700 dark:bg-zinc-200 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          >
+            {showNoteForm && !editingNote ? "Cancel" : "New Note"}
+          </button>
         </div>
-      )}
 
-      <NotesList
-        notes={initialNotes}
-        editingNoteId={editingNote?.id ?? null}
-        onEdit={(note) => {
-          setEditingNote(note);
-          setShowNoteForm(false);
-        }}
-      />
+        {(showNoteForm || editingNote) && (
+          <div className="mb-4">
+            <NoteForm
+              projectId={project.id}
+              note={editingNote || undefined}
+              onClose={() => {
+                setShowNoteForm(false);
+                setEditingNote(null);
+                router.refresh();
+              }}
+            />
+          </div>
+        )}
+
+        <NotesList
+          notes={initialNotes}
+          editingNoteId={editingNote?.id ?? null}
+          onEdit={(note) => {
+            setEditingNote(note);
+            setShowNoteForm(false);
+          }}
+        />
+      </div>
     </div>
   );
 }
