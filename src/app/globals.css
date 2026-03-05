@@ -72,7 +72,7 @@ body {
   --sx-color-surface-container: rgba(24, 24, 27, 0.5);
   --sx-color-surface-container-low: rgba(18, 18, 21, 0.5);
   --sx-color-surface-container-high: rgba(39, 39, 42, 0.6);
-  --sx-color-on-surface: #e6e1e5;
+  --sx-color-on-surface: #f4f4f5;
   --sx-color-primary: #d0bcff;
   --sx-color-on-primary: #371e73;
   --sx-color-primary-container: #4f378b;
@@ -82,7 +82,13 @@ body {
   --sx-color-secondary-container: #4a4458;
   --sx-color-on-secondary-container: #e8def8;
   --sx-color-surface-tint: #d0bcff;
-  --sx-color-outline-variant: #49454e;
+  --sx-color-outline: rgba(161, 161, 170, 0.5);
+  --sx-color-outline-variant: rgba(113, 113, 122, 0.4);
+  --sx-color-neutral: var(--sx-color-outline);
+  --sx-color-neutral-variant: var(--sx-color-outline-variant);
+  --sx-internal-color-text: #fff;
+  --sx-internal-color-gray-ripple-background: rgba(63, 63, 70, 0.5);
+  --sx-internal-color-light-gray: rgba(39, 39, 42, 0.4);
   --sx-border: 1px solid var(--sx-color-outline-variant);
   border-color: rgba(63, 63, 70, 0.8);
 }

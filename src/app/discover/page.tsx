@@ -42,11 +42,11 @@ export default async function DiscoverPage() {
       </p>
 
       {photos.length === 0 ? (
-        <div className="mt-12 text-center text-base text-zinc-500 dark:text-zinc-400">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 text-center text-base text-zinc-500 dark:text-zinc-400">
           No photos yet.
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <div className="mt-6 rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm p-4 dark:border-zinc-800 dark:bg-zinc-900/60 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
           {photos.map((photo) => {
             const profileHref = photo.user.slug
               ? `/u/${photo.user.slug}`
@@ -54,7 +54,7 @@ export default async function DiscoverPage() {
             return (
               <div
                 key={photo.id}
-                className="overflow-hidden rounded-lg border border-zinc-200 bg-white/40 backdrop-blur-sm dark:border-zinc-800 dark:bg-zinc-900/60"
+                className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
               >
                 <img
                   src={photo.fileUrl}
