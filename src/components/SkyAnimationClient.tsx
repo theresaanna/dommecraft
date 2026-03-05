@@ -42,6 +42,12 @@ function injectStyles() {
       from { transform: translateY(calc(100vh + 100px)); }
       to { transform: translateY(calc(-100vh - 100px)); }
     }
+    @keyframes sparkle-rise {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: var(--sparkle-peak-opacity); }
+      70% { opacity: var(--sparkle-peak-opacity); }
+      100% { transform: translateY(calc(-100vh - 50px)) translateX(var(--sparkle-drift)); opacity: 0; }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -51,6 +57,26 @@ function createContainer(): HTMLDivElement {
   container.className = "sky-animation-container";
   document.body.appendChild(container);
   return container;
+}
+
+function spawnSparkle(container: HTMLDivElement) {
+  const el = document.createElement("div");
+  el.style.position = "absolute";
+  el.textContent = "·";
+  const size = 10 + Math.random() * 14;
+  el.style.fontSize = size + "px";
+  el.style.color = "rgba(255,255,255,0.8)";
+  el.style.left = Math.random() * 100 + "%";
+  el.style.bottom = "0";
+  el.style.pointerEvents = "none";
+  const drift = (Math.random() - 0.5) * 80;
+  const peakOpacity = 0.4 + Math.random() * 0.5;
+  el.style.setProperty("--sparkle-drift", drift + "px");
+  el.style.setProperty("--sparkle-peak-opacity", String(peakOpacity));
+  const duration = 6 + Math.random() * 8;
+  el.style.animation = `sparkle-rise ${duration}s ease-out forwards`;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), duration * 1000);
 }
 
 function spawnAnimation(container: HTMLDivElement) {
@@ -85,6 +111,8 @@ export default function SkyAnimationClient() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const darkContainerRef = useRef<HTMLDivElement | null>(null);
+  const darkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     function start() {
@@ -120,6 +148,28 @@ export default function SkyAnimationClient() {
       }
     }
 
+    function startDarkSparkles() {
+      injectStyles();
+      darkContainerRef.current = createContainer();
+      darkIntervalRef.current = setInterval(
+        () => {
+          if (darkContainerRef.current) spawnSparkle(darkContainerRef.current);
+        },
+        400 + Math.random() * 600
+      );
+    }
+
+    function stopDarkSparkles() {
+      if (darkIntervalRef.current) {
+        clearInterval(darkIntervalRef.current);
+        darkIntervalRef.current = null;
+      }
+      if (darkContainerRef.current) {
+        darkContainerRef.current.remove();
+        darkContainerRef.current = null;
+      }
+    }
+
     function isMobile() {
       return window.matchMedia("(max-width: 767px)").matches;
     }
@@ -130,6 +180,11 @@ export default function SkyAnimationClient() {
         start();
       } else if ((isDark || isMobile()) && containerRef.current) {
         stop();
+      }
+      if (isDark && !darkContainerRef.current) {
+        startDarkSparkles();
+      } else if (!isDark && darkContainerRef.current) {
+        stopDarkSparkles();
       }
     }
 
@@ -148,6 +203,7 @@ export default function SkyAnimationClient() {
       observer.disconnect();
       mql.removeEventListener("change", update);
       stop();
+      stopDarkSparkles();
     };
   }, []);
 
